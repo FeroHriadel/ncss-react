@@ -1,3 +1,5 @@
+import React from 'react'
+
 interface VirtualizedTableProps {
   data: { [key: string]: string | number | boolean | null | undefined | [] | object | React.ReactNode }[];
   columnNames?: { column: string; displayValue: string }[];
@@ -41,13 +43,33 @@ function VirtualizedTable(props: VirtualizedTableProps) {
         <tbody>
           {data.map((row, index) => (
             <tr key={index}>
-              {columns.map((col) => (
-                <td key={col.column} className="px-4 py-2">
-                  {typeof row[col.column] === 'object' && row[col.column] !== null && !Array.isArray(row[col.column])
-                    ? row[col.column] as React.ReactNode
-                    : String(row[col.column])}
-                </td>
-              ))}
+              {columns.map((col) => {
+                const cellValue = row[col.column]
+                
+                // Handle different data types
+                let renderedValue
+                if (cellValue === null || cellValue === undefined) {
+                  renderedValue = ''
+                } else if (Array.isArray(cellValue)) {
+                  // Arrays: keep as comma-separated string
+                  renderedValue = String(cellValue)
+                } else if (React.isValidElement(cellValue)) {
+                  // JSX/React elements: render as ReactNode
+                  renderedValue = cellValue as React.ReactNode
+                } else if (typeof cellValue === 'object') {
+                  // Plain objects: stringify as JSON
+                  renderedValue = JSON.stringify(cellValue)
+                } else {
+                  // Primitives: convert to string
+                  renderedValue = String(cellValue)
+                }
+
+                return (
+                  <td key={col.column} className="px-4 py-2">
+                    {renderedValue}
+                  </td>
+                )
+              })}
             </tr>
           ))}
         </tbody>
