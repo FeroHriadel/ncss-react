@@ -33,7 +33,7 @@ function generateData(count: number) {
         ? <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm">Active</span>
         : <span className="px-2 py-1 bg-red-100 text-red-800 rounded-full text-sm">Inactive</span>,
       description: i % 2 === 0 
-        ? 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+        ? 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
         : <em>Ut enim ad minim veniam, quis nostrud exercitation.</em>,
       tags: skills[i % skills.length],
       metadata: { 
