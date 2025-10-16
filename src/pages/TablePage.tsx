@@ -54,9 +54,12 @@ export default function TablePage() {
   return (
     <div>
       <h1 className="mb-10">Virtualized Table</h1>
-      <VirtualizedTable
-        data={data}
-        columnNames={[
+      <VirtualizedTable 
+        data={data} 
+        height="500px"
+        horizontalSeparators={true}
+        verticalSeparators={true}
+        columnsConfig={[
           { column: 'id', displayValue: 'ID', width: '80px' },
           { column: 'name', displayValue: 'Full Name', width: '200px' },
           { column: 'age', displayValue: 'Age', width: '80px' },
