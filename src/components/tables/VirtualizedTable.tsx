@@ -14,87 +14,137 @@ function VirtualizedTable(props: VirtualizedTableProps) {
   const { data, columnNames } = props
   const headerRef = React.useRef<HTMLDivElement>(null)
   const bodyRef = React.useRef<HTMLDivElement>(null)
-  const rowRefs = React.useRef<(HTMLTableRowElement | null)[]>([])
   const columns = getColumns()
 
-  // Virtualization state
-  const [scrollTop, setScrollTop] = React.useState(0)
-  const [containerHeight] = React.useState(600) // Fixed container height
-  const [rowHeights, setRowHeights] = React.useState<number[]>([]) // Track actual row heights
-  const [estimatedRowHeight] = React.useState(50) // Initial estimate
-  const overscan = 10 // Number of extra rows to render above/below
-
-  // Calculate row positions and visible range
-  const getRowHeight = (index: number): number => {
-    return rowHeights[index] || estimatedRowHeight
+  // Pagination-style rendering state
+  const [currentPage, setCurrentPage] = React.useState(0)
+  const rowsPerPage = 10
+  const [isChangingPage, setIsChangingPage] = React.useState(false) // Prevent scroll loops
+  const lastScrollTop = React.useRef(0) // Track scroll direction
+  const [isDraggingScrollbar, setIsDraggingScrollbar] = React.useState(false)
+  const scrollbarRef = React.useRef<HTMLDivElement>(null)
+  
+  // Calculate visible rows based on current page
+  const getVisibleRows = () => {
+    const start = currentPage * rowsPerPage
+    const end = Math.min(start + rowsPerPage, data.length)
+    return { start, end, rows: data.slice(start, end) }
   }
 
-  const getRowOffset = (index: number): number => {
-    let offset = 0
-    for (let i = 0; i < index; i++) {
-      offset += getRowHeight(i)
-    }
-    return offset
-  }
+  const { start: visibleStart, rows: visibleRows } = getVisibleRows()
+  const totalPages = Math.ceil(data.length / rowsPerPage)
 
-  const getTotalHeight = (): number => {
-    return getRowOffset(data.length)
-  }
-
-  // Calculate which rows should be visible based on actual positions
-  const getVisibleRange = () => {
-    let start = 0
-    let end = data.length - 1
+  // Custom scrollbar logic
+  const handleScrollbarDrag = React.useCallback((e: React.MouseEvent | MouseEvent) => {
+    if (!scrollbarRef.current) return
     
-    // Find first visible row
-    let currentOffset = 0
-    for (let i = 0; i < data.length; i++) {
-      const rowHeight = getRowHeight(i)
-      if (currentOffset + rowHeight >= scrollTop) {
-        start = i
-        break
+    const rect = scrollbarRef.current.getBoundingClientRect()
+    const relativeY = e.clientY - rect.top
+    const percentage = Math.max(0, Math.min(1, relativeY / rect.height))
+    const targetPage = Math.floor(percentage * totalPages)
+    
+    if (targetPage !== currentPage && targetPage >= 0 && targetPage < totalPages) {
+      setCurrentPage(targetPage)
+    }
+  }, [totalPages, currentPage])
+
+  const handleScrollbarMouseDown = (e: React.MouseEvent) => {
+    setIsDraggingScrollbar(true)
+    handleScrollbarDrag(e)
+  }
+
+  React.useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isDraggingScrollbar) {
+        handleScrollbarDrag(e)
       }
-      currentOffset += rowHeight
     }
-    
-    // Find last visible row
-    currentOffset = getRowOffset(start)
-    for (let i = start; i < data.length; i++) {
-      if (currentOffset >= scrollTop + containerHeight) {
-        end = i - 1
-        break
-      }
-      currentOffset += getRowHeight(i)
-    }
-    
-    return {
-      start: Math.max(0, start - overscan),
-      end: Math.min(data.length - 1, end + overscan)
-    }
-  }
 
-  const visibleRange = getVisibleRange()
-
-  // Row height measurement
-  const measureRowHeight = React.useCallback((rowIndex: number, element: HTMLTableRowElement | null) => {
-    if (element && rowHeights[rowIndex] !== element.offsetHeight) {
-      setRowHeights(prev => {
-        const newHeights = [...prev]
-        newHeights[rowIndex] = element.offsetHeight
-        return newHeights
-      })
+    const handleMouseUp = () => {
+      setIsDraggingScrollbar(false)
     }
-  }, [rowHeights])
 
-  // Scroll synchronization
+    if (isDraggingScrollbar) {
+      document.addEventListener('mousemove', handleMouseMove)
+      document.addEventListener('mouseup', handleMouseUp)
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+    }
+  }, [isDraggingScrollbar, handleScrollbarDrag])
+
+  // Scroll synchronization + auto-pagination
   function handleBodyScroll(e: React.UIEvent<HTMLDivElement>) {
     // Sync horizontal scroll with header
     if (headerRef.current) {
       headerRef.current.scrollLeft = e.currentTarget.scrollLeft
     }
     
-    // Track vertical scroll for virtualization
-    setScrollTop(e.currentTarget.scrollTop)
+    // Skip auto-pagination if we're currently changing pages
+    if (isChangingPage) {
+      return
+    }
+    
+    // Auto-pagination based on scroll position
+    const scrollTop = e.currentTarget.scrollTop
+    const scrollHeight = e.currentTarget.scrollHeight
+    const clientHeight = e.currentTarget.clientHeight
+    
+    // Determine scroll direction
+    const scrollingDown = scrollTop > lastScrollTop.current
+    const scrollingUp = scrollTop < lastScrollTop.current
+    lastScrollTop.current = scrollTop
+    
+    // Debug logging
+    console.log('Scroll Debug:', {
+      scrollTop,
+      scrollHeight,
+      clientHeight,
+      scrollingDown,
+      scrollingUp,
+      currentPage,
+      totalPages,
+      isChangingPage
+    })
+    
+    // Only trigger page changes at the very edges with clear direction
+    const atBottom = scrollTop + clientHeight >= scrollHeight - 5 // Very close to bottom
+    const atTop = scrollTop <= 5 // Very close to top
+    
+    // Go to next page only when scrolling down and at bottom
+    if (scrollingDown && atBottom && currentPage < totalPages - 1) {
+      console.log('Triggering next page')
+      setIsChangingPage(true)
+      setCurrentPage(currentPage + 1)
+      
+      // Reset scroll and clear the flag after a delay
+      setTimeout(() => {
+        if (bodyRef.current) {
+          bodyRef.current.scrollTop = 0
+          lastScrollTop.current = 0 // Reset scroll tracking
+        }
+        setTimeout(() => setIsChangingPage(false), 200) // Longer delay
+      }, 50)
+    }
+    
+    // Go to previous page only when scrolling up and at top
+    if (scrollingUp && atTop && currentPage > 0) {
+      console.log('Triggering previous page')
+      setIsChangingPage(true)
+      setCurrentPage(currentPage - 1)
+      
+      // Reset scroll and clear the flag after a delay
+      setTimeout(() => {
+        if (bodyRef.current) {
+          const maxScroll = bodyRef.current.scrollHeight - bodyRef.current.clientHeight
+          bodyRef.current.scrollTop = maxScroll - 5 // Near bottom but not exactly
+          lastScrollTop.current = maxScroll - 5
+        }
+        setTimeout(() => setIsChangingPage(false), 200) // Longer delay
+      }, 50)
+    }
   }
 
   const handleHeaderScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -154,35 +204,26 @@ function VirtualizedTable(props: VirtualizedTableProps) {
         </div>
       </div>
 
-      {/* Scrollable Body */}
-      <div 
-        ref={bodyRef}
-        className="h-[600px] overflow-auto border-l border-r border-b border-gray-300"
-        onScroll={handleBodyScroll}
-      >
-        {/* Simple virtualization with container transform */}
+      {/* Scrollable Body with Custom Scrollbar */}
+      <div className="flex">
         <div 
+          ref={bodyRef}
+          className="h-[400px] overflow-auto border-l border-r border-b border-gray-300 [&::-webkit-scrollbar]:hidden flex-1"
           style={{ 
-            height: getTotalHeight(),
-            position: 'relative',
-            transform: `translateY(-${getRowOffset(visibleRange.start)}px)`
+            scrollbarWidth: 'none', /* Firefox */
+            msOverflowStyle: 'none', /* Internet Explorer 10+ */
           }}
+          onScroll={handleBodyScroll}
         >
-          <table className="w-full" style={{ tableLayout: 'fixed' }}>
+          <table className="w-full min-h-full" style={{ tableLayout: 'fixed' }}>
             <tbody>
-              {/* Render only visible rows */}
-              {Array.from({ length: visibleRange.end - visibleRange.start + 1 }, (_, i) => {
-                const rowIndex = visibleRange.start + i
-                const row = data[rowIndex]
-                if (!row) return null
+              {/* Render only current page rows */}
+              {visibleRows.map((row, i) => {
+                const rowIndex = visibleStart + i
                 
                 return (
                   <tr 
                     key={rowIndex} 
-                    ref={(el) => {
-                      rowRefs.current[rowIndex] = el
-                      measureRowHeight(rowIndex, el)
-                    }}
                     className="hover:bg-gray-50 border-b border-gray-200"
                   >
                     {columns.map((col) => {
@@ -221,6 +262,29 @@ function VirtualizedTable(props: VirtualizedTableProps) {
               })}
             </tbody>
           </table>
+        </div>
+
+        {/* Custom Scrollbar */}
+        <div 
+          ref={scrollbarRef}
+          className="w-2 h-[400px] bg-gray-50 border-r border-b border-gray-300 relative cursor-pointer select-none"
+          onMouseDown={handleScrollbarMouseDown}
+        >
+          {/* Scrollbar Track */}
+          <div className="absolute inset-x-0 top-1 bottom-1 bg-gray-200 rounded-full mx-0.5"></div>
+          
+          {/* Scrollbar Thumb */}
+          <div 
+            className={`absolute bg-gray-400 rounded-full transition-all duration-200 ease-out mx-0.5 ${
+              isDraggingScrollbar ? 'bg-gray-600 scale-110' : 'hover:bg-gray-500'
+            }`}
+            style={{
+              height: `${Math.max(20, (1 / totalPages) * 80)}%`,
+              top: `${2 + (currentPage / Math.max(1, totalPages - 1)) * (96 - Math.max(20, (1 / totalPages) * 80))}%`,
+              left: '1px',
+              right: '1px'
+            }}
+          />
         </div>
       </div>
     </section>
