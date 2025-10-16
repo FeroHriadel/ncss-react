@@ -1,5 +1,6 @@
 import React from 'react'
 import { CiZoomIn, CiZoomOut } from "react-icons/ci"
+import { HiOutlineViewColumns } from "react-icons/hi2"
 
 interface VirtualizedTableProps {
   data: { [key: string]: string | number | boolean | null | undefined | [] | object | React.ReactNode }[];
@@ -48,6 +49,9 @@ function VirtualizedTable(props: VirtualizedTableProps) {
   const [isDraggingTable, setIsDraggingTable] = React.useState(false)
   const lastMousePosition = React.useRef({ x: 0, y: 0 })
   const [zoomLevel, setZoomLevel] = React.useState(1) // Zoom state (1 = 100%, 0.8 = 80%, 1.2 = 120%)
+  const [showColumnOptions, setShowColumnOptions] = React.useState(false) // Column visibility dropdown
+  const [visibleColumns, setVisibleColumns] = React.useState<{ [key: string]: boolean }>({}) // Track visible columns
+  const columnOptionsRef = React.useRef<HTMLDivElement>(null) // Ref for dropdown
   
   // Zoom controls
   const minZoom = 0.5 // 50%
@@ -133,6 +137,49 @@ function VirtualizedTable(props: VirtualizedTableProps) {
 
   const handleZoomOut = () => {
     setZoomLevel(prev => Math.max(minZoom, prev - zoomStep))
+  }
+
+  // Initialize visible columns when columns change
+  React.useEffect(() => {
+    const initialVisibility: { [key: string]: boolean } = {}
+    columns.forEach(col => {
+      initialVisibility[col.column] = true // All columns visible by default
+    })
+    setVisibleColumns(initialVisibility)
+  }, [columns])
+
+  // Column visibility handlers
+  const toggleColumnVisibility = (columnKey: string) => {
+    setVisibleColumns(prev => ({
+      ...prev,
+      [columnKey]: !prev[columnKey]
+    }))
+  }
+
+  const toggleColumnOptions = () => {
+    setShowColumnOptions(prev => !prev)
+  }
+
+  // Click outside to close dropdown
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (columnOptionsRef.current && !columnOptionsRef.current.contains(event.target as Node)) {
+        setShowColumnOptions(false)
+      }
+    }
+
+    if (showColumnOptions) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showColumnOptions])
+
+  // Filter visible columns
+  const getVisibleColumns = () => {
+    return columns.filter(col => visibleColumns[col.column] !== false)
   }
 
   // Scroll synchronization + auto-pagination
@@ -236,7 +283,44 @@ function VirtualizedTable(props: VirtualizedTableProps) {
         <div className="flex items-center">
           <span className="text-sm text-gray-600">Controls</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 relative">
+          {/* Column Visibility Toggle */}
+          <div className="relative" ref={columnOptionsRef}>
+            <button 
+              className="p-1 hover:bg-gray-200 rounded transition-colors"
+              title="Toggle Columns"
+              onClick={toggleColumnOptions}
+            >
+              <HiOutlineViewColumns size={20} />
+            </button>
+            
+            {/* Column Options Dropdown */}
+            {showColumnOptions && (
+              <div className="absolute top-full right-0 mt-1 bg-white border border-gray-300 rounded shadow-lg z-10 min-w-[200px]">
+                <div className="p-2 border-b border-gray-200">
+                  <span className="text-sm font-medium text-gray-700">Show/Hide Columns</span>
+                </div>
+                <div className="max-h-60 overflow-y-auto">
+                  {columns.map(col => (
+                    <label
+                      key={col.column}
+                      className="flex items-center p-2 hover:bg-gray-50 cursor-pointer"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={visibleColumns[col.column] !== false}
+                        onChange={() => toggleColumnVisibility(col.column)}
+                        className="mr-2"
+                      />
+                      <span className="text-sm text-gray-700">{col.displayValue}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          
+          {/* Zoom Controls */}
           <button 
             className="p-1 hover:bg-gray-200 rounded transition-colors"
             title="Zoom Out"
@@ -280,11 +364,11 @@ function VirtualizedTable(props: VirtualizedTableProps) {
             }}>
               <thead className="bg-gray-50">
                 <tr>
-                  {columns.map((col, index) => (
+                  {getVisibleColumns().map((col, index) => (
                     <th 
                       key={col.column} 
                       className={`px-4 py-2 text-left break-words ${
-                        verticalSeparators && index < columns.length - 1 ? 'border-r border-gray-200' : ''
+                        verticalSeparators && index < getVisibleColumns().length - 1 ? 'border-r border-gray-200' : ''
                       }`}
                       style={getColumnStyle(col)}
                     >
@@ -348,7 +432,7 @@ function VirtualizedTable(props: VirtualizedTableProps) {
                       e.currentTarget.style.backgroundColor = stripedBg
                     } : undefined}
                   >
-                    {columns.map((col, index) => {
+                    {getVisibleColumns().map((col, index) => {
                       const cellValue = row[col.column]
                       
                       // Handle different data types
@@ -373,7 +457,7 @@ function VirtualizedTable(props: VirtualizedTableProps) {
                         <td 
                           key={col.column} 
                           className={`px-4 py-2 break-words ${
-                            verticalSeparators && index < columns.length - 1 ? 'border-r border-gray-200' : ''
+                            verticalSeparators && index < getVisibleColumns().length - 1 ? 'border-r border-gray-200' : ''
                           }`}
                           style={getColumnStyle(col)}
                         >
