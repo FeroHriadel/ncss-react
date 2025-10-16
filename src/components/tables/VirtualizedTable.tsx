@@ -175,33 +175,39 @@ function VirtualizedTable(props: VirtualizedTableProps) {
       <div className="virtualized-table-controls h-[2rem]">Controls</div>
       
       {/* Fixed Header */}
-      <div className="border border-gray-300 overflow-hidden">
-        <div 
-          ref={headerRef}
-          style={{ 
-            overflow: 'auto', /* Both x and y scrolling */
-            scrollbarWidth: 'none', /* Firefox */
-            msOverflowStyle: 'none', /* Internet Explorer 10+ */
-          }}
-          className="[&::-webkit-scrollbar]:hidden" /* Chrome, Safari and Opera */
-          onScroll={handleHeaderScroll}
-        >
-          <table className="w-full" style={{ tableLayout: 'fixed' }}>
-            <thead className="bg-gray-50">
-              <tr>
-                {columns.map((col) => (
-                  <th 
-                    key={col.column} 
-                    className="px-4 py-2 text-left border-r border-gray-200 last:border-r-0 break-words"
-                    style={getColumnStyle(col)}
-                  >
-                    {col.displayValue}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-          </table>
+      <div className="flex">
+        <div className="border border-gray-300 overflow-hidden flex-1">
+          <div 
+            ref={headerRef}
+            style={{ 
+              overflow: 'auto',
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+            }}
+            className="[&::-webkit-scrollbar]:hidden"
+            onScroll={handleHeaderScroll}
+          >
+            <table className="w-full border-collapse" style={{ tableLayout: 'fixed' }}>
+              <thead className="bg-gray-50">
+                <tr>
+                  {columns.map((col, index) => (
+                    <th 
+                      key={col.column} 
+                      className={`px-4 py-2 text-left break-words ${
+                        index < columns.length - 1 ? 'border-r border-gray-200' : ''
+                      }`}
+                      style={getColumnStyle(col)}
+                    >
+                      {col.displayValue}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+            </table>
+          </div>
         </div>
+        {/* Spacer to account for custom scrollbar */}
+        <div className="w-2 border-t border-r border-gray-300 bg-gray-50"></div>
       </div>
 
       {/* Scrollable Body with Custom Scrollbar */}
@@ -215,7 +221,7 @@ function VirtualizedTable(props: VirtualizedTableProps) {
           }}
           onScroll={handleBodyScroll}
         >
-          <table className="w-full min-h-full" style={{ tableLayout: 'fixed' }}>
+          <table className="w-full min-h-full border-collapse" style={{ tableLayout: 'fixed' }}>
             <tbody>
               {/* Render only current page rows */}
               {visibleRows.map((row, i) => {
@@ -226,7 +232,7 @@ function VirtualizedTable(props: VirtualizedTableProps) {
                     key={rowIndex} 
                     className="hover:bg-gray-50 border-b border-gray-200"
                   >
-                    {columns.map((col) => {
+                    {columns.map((col, index) => {
                       const cellValue = row[col.column]
                       
                       // Handle different data types
@@ -250,7 +256,9 @@ function VirtualizedTable(props: VirtualizedTableProps) {
                       return (
                         <td 
                           key={col.column} 
-                          className="px-4 py-2 border-r border-gray-200 last:border-r-0 break-words"
+                          className={`px-4 py-2 break-words ${
+                            index < columns.length - 1 ? 'border-r border-gray-200' : ''
+                          }`}
                           style={getColumnStyle(col)}
                         >
                           {renderedValue}
