@@ -1,4 +1,5 @@
 import React from 'react'
+import { CiZoomIn, CiZoomOut } from "react-icons/ci"
 
 interface VirtualizedTableProps {
   data: { [key: string]: string | number | boolean | null | undefined | [] | object | React.ReactNode }[];
@@ -46,6 +47,12 @@ function VirtualizedTable(props: VirtualizedTableProps) {
   const scrollbarRef = React.useRef<HTMLDivElement>(null)
   const [isDraggingTable, setIsDraggingTable] = React.useState(false)
   const lastMousePosition = React.useRef({ x: 0, y: 0 })
+  const [zoomLevel, setZoomLevel] = React.useState(1) // Zoom state (1 = 100%, 0.8 = 80%, 1.2 = 120%)
+  
+  // Zoom controls
+  const minZoom = 0.5 // 50%
+  const maxZoom = 2.0 // 200%
+  const zoomStep = 0.1 // 10% increments
   
   // Calculate visible rows based on current page
   const getVisibleRows = () => {
@@ -117,6 +124,15 @@ function VirtualizedTable(props: VirtualizedTableProps) {
 
   const handleTableMouseLeave = () => {
     setIsDraggingTable(false)
+  }
+
+  // Zoom handler functions
+  const handleZoomIn = () => {
+    setZoomLevel(prev => Math.min(maxZoom, prev + zoomStep))
+  }
+
+  const handleZoomOut = () => {
+    setZoomLevel(prev => Math.max(minZoom, prev - zoomStep))
   }
 
   // Scroll synchronization + auto-pagination
@@ -216,7 +232,32 @@ function VirtualizedTable(props: VirtualizedTableProps) {
   // Render
   return (
     <section className='virtualized-table-wrap'>
-      <div className="virtualized-table-controls">Controls</div>
+      <div className="w-full flex justify-between items-center p-2 border border-gray-300 bg-gray-50">
+        <div className="flex items-center">
+          <span className="text-sm text-gray-600">Controls</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <button 
+            className="p-1 hover:bg-gray-200 rounded transition-colors"
+            title="Zoom Out"
+            onClick={handleZoomOut}
+            disabled={zoomLevel <= minZoom}
+          >
+            <CiZoomOut size={20} className={zoomLevel <= minZoom ? 'text-gray-400' : ''} />
+          </button>
+          <span className="text-xs text-gray-500 min-w-[40px] text-center">
+            {Math.round(zoomLevel * 100)}%
+          </span>
+          <button 
+            className="p-1 hover:bg-gray-200 rounded transition-colors"
+            title="Zoom In"
+            onClick={handleZoomIn}
+            disabled={zoomLevel >= maxZoom}
+          >
+            <CiZoomIn size={20} className={zoomLevel >= maxZoom ? 'text-gray-400' : ''} />
+          </button>
+        </div>
+      </div>
       
       {/* Fixed Header */}
       <div className="flex">
@@ -231,7 +272,12 @@ function VirtualizedTable(props: VirtualizedTableProps) {
             className="[&::-webkit-scrollbar]:hidden"
             onScroll={handleHeaderScroll}
           >
-            <table className="w-full border-collapse" style={{ tableLayout: 'fixed' }}>
+            <table className="w-full border-collapse" style={{ 
+              tableLayout: 'fixed',
+              transform: `scale(${zoomLevel})`,
+              transformOrigin: 'top left',
+              transition: 'transform 0.2s ease-out'
+            }}>
               <thead className="bg-gray-50">
                 <tr>
                   {columns.map((col, index) => (
@@ -268,7 +314,12 @@ function VirtualizedTable(props: VirtualizedTableProps) {
           onMouseDown={handleTableMouseDown}
           onMouseLeave={handleTableMouseLeave}
         >
-          <table className="w-full min-h-full border-collapse" style={{ tableLayout: 'fixed' }}>
+          <table className="w-full min-h-full border-collapse" style={{ 
+            tableLayout: 'fixed',
+            transform: `scale(${zoomLevel})`,
+            transformOrigin: 'top left',
+            transition: 'transform 0.2s ease-out'
+          }}>
             <tbody>
               {/* Render only current page rows */}
               {visibleRows.map((row, i) => {
