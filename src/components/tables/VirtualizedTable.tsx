@@ -41,7 +41,7 @@ function VirtualizedTable(props: VirtualizedTableProps) {
 
   // Row-based rendering state
   const [startRowIndex, setStartRowIndex] = React.useState(0)
-  const rowsPerPage = 10
+  const rowsPerPage = 15 // Reasonable number for font-size scaling approach
   const [isChangingRows, setIsChangingRows] = React.useState(false) // Prevent scroll loops
   const lastScrollTop = React.useRef(0) // Track scroll direction
   const [isDraggingScrollbar, setIsDraggingScrollbar] = React.useState(false)
@@ -55,7 +55,7 @@ function VirtualizedTable(props: VirtualizedTableProps) {
   
   // Zoom controls
   const minZoom = 0.5 // 50%
-  const maxZoom = 2.0 // 200%
+  const maxZoom = 1.5 // 150%
   const zoomStep = 0.1 // 10% increments
   
   // Column drag and drop state
@@ -72,7 +72,6 @@ function VirtualizedTable(props: VirtualizedTableProps) {
   }
 
   const { start: visibleStart, rows: visibleRows } = getVisibleRows()
-  const maxStartIndex = Math.max(0, data.length - rowsPerPage)
 
   // Custom scrollbar logic
   const handleScrollbarDrag = React.useCallback((e: React.MouseEvent | MouseEvent) => {
@@ -325,35 +324,84 @@ function VirtualizedTable(props: VirtualizedTableProps) {
     const scrollHeight = e.currentTarget.scrollHeight
     const clientHeight = e.currentTarget.clientHeight
     
-    // Simple threshold for now - let's get basic functionality working first
-    const threshold = 5
+    // Simple threshold
+    const baseThreshold = 5
+    const zoomAdjustedThreshold = baseThreshold
     
     // Determine scroll direction
     const scrollingDown = scrollTop > lastScrollTop.current
     const scrollingUp = scrollTop < lastScrollTop.current
     lastScrollTop.current = scrollTop
     
+    // Zoom-adjusted calculations
+    // When zoomed out, the actual content height is smaller than scrollHeight indicates
+    const effectiveContentHeight = scrollHeight * zoomLevel
+    const availableHeight = clientHeight
+    
     // Enhanced debug logging
     console.log('Scroll Debug:', {
       scrollTop,
       scrollHeight,
       clientHeight,
+      effectiveContentHeight,
+      availableHeight,
+      zoomLevel,
+      zoomAdjustedThreshold,
       scrollingDown,
       scrollingUp,
       startRowIndex,
       maxRows: data.length,
       isChangingRows,
-      atTop: scrollTop <= threshold,
-      atBottom: scrollTop + clientHeight >= scrollHeight - threshold
+      atTop: scrollTop <= zoomAdjustedThreshold,
+      atBottom: scrollTop + clientHeight >= scrollHeight - zoomAdjustedThreshold,
+      contentFitsInView: effectiveContentHeight <= availableHeight
     })
     
-    // Simple detection without zoom complications for now
-    const atBottom = scrollTop + clientHeight >= scrollHeight - threshold
-    const atTop = scrollTop <= threshold
+    // Zoom-adjusted detection
+    const atBottom = scrollTop + clientHeight >= scrollHeight - zoomAdjustedThreshold
+    const atTop = scrollTop <= zoomAdjustedThreshold
     
+    // Additional check: if content fits entirely in the view due to zoom, handle it differently
+    const contentFitsInView = effectiveContentHeight <= availableHeight
+    
+    // Special handling when content fits entirely in view (common when zoomed out)
+    if (contentFitsInView) {
+      // When content fits, any scroll indicates desire to change rows
+      if (scrollingDown && startRowIndex < data.length - rowsPerPage) {
+        console.log('Content fits in view - scrolling down triggers next row')
+        setIsChangingRows(true)
+        setStartRowIndex(Math.min(data.length - rowsPerPage, startRowIndex + 1))
+        
+        setTimeout(() => {
+          if (bodyRef.current) {
+            bodyRef.current.scrollTop = 0
+            lastScrollTop.current = 0
+          }
+          setTimeout(() => setIsChangingRows(false), 100)
+        }, 30)
+        return
+      }
+      
+      if (scrollingUp && startRowIndex > 0) {
+        console.log('Content fits in view - scrolling up triggers previous row')
+        setIsChangingRows(true)
+        setStartRowIndex(Math.max(0, startRowIndex - 1))
+        
+        setTimeout(() => {
+          if (bodyRef.current) {
+            bodyRef.current.scrollTop = 0
+            lastScrollTop.current = 0
+          }
+          setTimeout(() => setIsChangingRows(false), 100)
+        }, 30)
+        return
+      }
+    }
+    
+    // Normal scroll boundary detection (when content doesn't fit in view)
     // Go to next row only when scrolling down and at bottom
     if (scrollingDown && atBottom && startRowIndex < data.length - rowsPerPage) {
-      console.log('Triggering next row')
+      console.log('Triggering next row at scroll bottom')
       setIsChangingRows(true)
       setStartRowIndex(Math.min(data.length - rowsPerPage, startRowIndex + 1))
       
@@ -377,15 +425,15 @@ function VirtualizedTable(props: VirtualizedTableProps) {
       setTimeout(() => {
         if (bodyRef.current) {
           const maxScroll = bodyRef.current.scrollHeight - bodyRef.current.clientHeight
-          bodyRef.current.scrollTop = maxScroll - 5 // Near bottom but not exactly
-          lastScrollTop.current = maxScroll - 5
+          bodyRef.current.scrollTop = Math.max(0, maxScroll - zoomAdjustedThreshold) // Use zoom-adjusted threshold
+          lastScrollTop.current = Math.max(0, maxScroll - zoomAdjustedThreshold)
         }
         setTimeout(() => setIsChangingRows(false), 200) // Longer delay
       }, 50)
     } else if (scrollingUp && atTop) {
       console.log('Scroll up at top but startRowIndex is 0:', { startRowIndex })
     } else if (scrollingUp && startRowIndex > 0) {
-      console.log('Scrolling up with rows available but not at top:', { atTop, scrollTop, threshold: 5 })
+      console.log('Scrolling up with rows available but not at top:', { atTop, scrollTop, zoomAdjustedThreshold })
     }
   }
 
@@ -493,23 +541,25 @@ function VirtualizedTable(props: VirtualizedTableProps) {
           >
             <table className="w-full border-collapse" style={{ 
               tableLayout: 'fixed',
-              transform: `scale(${zoomLevel})`,
-              transformOrigin: 'top left',
-              transition: 'transform 0.2s ease-out'
+              fontSize: `${zoomLevel}rem`, // Scale font size instead of transform
+              transition: 'font-size 0.2s ease-out'
             }}>
               <thead className="bg-gray-50">
                 <tr>
                   {getVisibleColumns().map((col, index) => (
                     <th 
                       key={col.column} 
-                      className={`px-4 py-2 text-left break-words cursor-move select-none transition-colors ${
+                      className={`text-left break-words cursor-move select-none transition-colors ${
                         verticalSeparators && index < getVisibleColumns().length - 1 ? 'border-r border-gray-200' : ''
                       } ${
                         draggedColumn === col.column ? 'opacity-50' : ''
                       } ${
                         dragOverColumn === col.column ? 'bg-blue-100' : ''
                       }`}
-                      style={getColumnStyle(col)}
+                      style={{
+                        ...getColumnStyle(col),
+                        padding: `${zoomLevel * 0.5}rem ${zoomLevel * 1}rem` // Scale padding with zoom
+                      }}
                       onMouseDown={(e) => handleColumnMouseDown(e, col.column, col.displayValue)}
                       onMouseUp={() => handleColumnMouseUp(col.column)}
                       onMouseEnter={() => handleColumnMouseEnter(col.column)}
@@ -533,7 +583,7 @@ function VirtualizedTable(props: VirtualizedTableProps) {
           ref={bodyRef}
           className="overflow-auto border-l border-r border-b border-gray-300 [&::-webkit-scrollbar]:hidden flex-1"
           style={{ 
-            height: height,
+            height: height, // Keep original height
             scrollbarWidth: 'none', /* Firefox */
             msOverflowStyle: 'none', /* Internet Explorer 10+ */
           }}
@@ -544,9 +594,8 @@ function VirtualizedTable(props: VirtualizedTableProps) {
         >
           <table className="w-full min-h-full border-collapse" style={{ 
             tableLayout: 'fixed',
-            transform: `scale(${zoomLevel})`,
-            transformOrigin: 'top left',
-            transition: 'transform 0.2s ease-out'
+            fontSize: `${zoomLevel}rem`, // Scale font size instead of transform
+            transition: 'font-size 0.2s ease-out'
           }}>
             <tbody>
               {/* Render only current page rows */}
@@ -600,10 +649,13 @@ function VirtualizedTable(props: VirtualizedTableProps) {
                       return (
                         <td 
                           key={col.column} 
-                          className={`px-4 py-2 break-words ${
+                          className={`break-words ${
                             verticalSeparators && index < getVisibleColumns().length - 1 ? 'border-r border-gray-200' : ''
                           }`}
-                          style={getColumnStyle(col)}
+                          style={{
+                            ...getColumnStyle(col),
+                            padding: `${zoomLevel * 0.5}rem ${zoomLevel * 1}rem` // Scale padding with zoom
+                          }}
                         >
                           {renderedValue}
                         </td>
@@ -620,7 +672,7 @@ function VirtualizedTable(props: VirtualizedTableProps) {
         <div 
           ref={scrollbarRef}
           className="w-2 bg-gray-50 border-r border-b border-gray-300 relative cursor-pointer select-none"
-          style={{ height: height }}
+          style={{ height: height }} // Keep original height
           onMouseDown={handleScrollbarMouseDown}
         >
           {/* Scrollbar Track */}
