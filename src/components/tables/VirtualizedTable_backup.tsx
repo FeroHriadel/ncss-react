@@ -1,6 +1,7 @@
 import React from 'react'
 import { CiZoomIn, CiZoomOut } from "react-icons/ci"
 import { HiOutlineViewColumns } from "react-icons/hi2"
+import { LuFilter } from "react-icons/lu"
 
 interface VirtualizedTableProps {
   data: { [key: string]: string | number | boolean | null | undefined | [] | object | React.ReactNode }[];
@@ -17,9 +18,21 @@ interface VirtualizedTableProps {
 
 
 function VirtualizedTable(props: VirtualizedTableProps) {
-
+  // ========================================
+  // PROP DESTRUCTURING & BASIC SETUP
+  // ========================================
   const { data, columnsConfig, height = "400px", horizontalSeparators = true, verticalSeparators = true, striped = true, hover = true } = props
+  
+  // Refs for DOM elements
+  const headerRef = React.useRef<HTMLDivElement>(null)
+  const bodyRef = React.useRef<HTMLDivElement>(null)
+  const scrollbarRef = React.useRef<HTMLDivElement>(null)
+  const columnOptionsRef = React.useRef<HTMLDivElement>(null)
 
+  // ========================================
+  // MEMOS & COMPUTED VALUES
+  // ========================================
+  
   // Process hover prop - handle both boolean and object formats
   const hoverConfig = React.useMemo(() => {
     if (typeof hover === 'boolean') {
@@ -35,65 +48,139 @@ function VirtualizedTable(props: VirtualizedTableProps) {
     }
     return { enabled: striped.enabled, color: striped.color }
   }, [striped])
-  const headerRef = React.useRef<HTMLDivElement>(null)
-  const bodyRef = React.useRef<HTMLDivElement>(null)
+
+  // ========================================
+  // ZOOM FUNCTIONALITY
+  // ========================================
+  const [zoomLevel, setZoomLevel] = React.useState(1)
+  const minZoom = 0.5
+  const maxZoom = 2.0
+  const zoomStep = 0.1
+
+  const handleZoomIn = () => {
+    setZoomLevel(prev => Math.min(maxZoom, prev + zoomStep))
+  }
+
+  const handleZoomOut = () => {
+    setZoomLevel(prev => Math.max(minZoom, prev - zoomStep))
+  }
+
+  // ========================================
+  // COLUMN SHOW/HIDE FUNCTIONALITY
+  // ========================================
+  const [showColumnOptions, setShowColumnOptions] = React.useState(false)
+  const [visibleColumns, setVisibleColumns] = React.useState<{ [key: string]: boolean }>({})
+
   const columns = getColumns()
 
-  // Row-based rendering state
-  const [startRowIndex, setStartRowIndex] = React.useState(0)
+  // Initialize visible columns when columns change
+  React.useEffect(() => {
+    const initialVisibility: { [key: string]: boolean } = {}
+    columns.forEach(col => {
+      initialVisibility[col.column] = true // All columns visible by default
+    })
+    setVisibleColumns(initialVisibility)
+  }, [columns])
+
+  // Click outside to close dropdown
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (columnOptionsRef.current && !columnOptionsRef.current.contains(event.target as Node)) {
+        setShowColumnOptions(false)
+      }
+    }
+
+    if (showColumnOptions) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showColumnOptions])
+
+  const toggleColumnVisibility = (columnKey: string) => {
+    setVisibleColumns(prev => ({
+      ...prev,
+      [columnKey]: !prev[columnKey]
+    }))
+  }
+
+  const toggleColumnOptions = () => {
+    setShowColumnOptions(prev => !prev)
+  }
+
+  const getVisibleColumns = () => {
+    return columns.filter(col => visibleColumns[col.column] !== false)
+  }
+
+  // ========================================
+  // PAGINATION FUNCTIONALITY
+  // ========================================
+  const [currentPage, setCurrentPage] = React.useState(0)
+  const [isChangingPage, setIsChangingPage] = React.useState(false)
+  const lastScrollTop = React.useRef(0)
   const rowsPerPage = 10
-  const [isChangingRows, setIsChangingRows] = React.useState(false) // Prevent scroll loops
-  const lastScrollTop = React.useRef(0) // Track scroll direction
-  const [isDraggingScrollbar, setIsDraggingScrollbar] = React.useState(false)
-  const scrollbarRef = React.useRef<HTMLDivElement>(null)
-  const [isDraggingTable, setIsDraggingTable] = React.useState(false)
-  const lastMousePosition = React.useRef({ x: 0, y: 0 })
-  const [zoomLevel, setZoomLevel] = React.useState(1) // Zoom state (1 = 100%, 0.8 = 80%, 1.2 = 120%)
-  const [showColumnOptions, setShowColumnOptions] = React.useState(false) // Column visibility dropdown
-  const [visibleColumns, setVisibleColumns] = React.useState<{ [key: string]: boolean }>({}) // Track visible columns
-  const columnOptionsRef = React.useRef<HTMLDivElement>(null) // Ref for dropdown
-  
-  // Zoom controls
-  const minZoom = 0.5 // 50%
-  const maxZoom = 2.0 // 200%
-  const zoomStep = 0.1 // 10% increments
-  
-  // Column drag and drop state
-  const [draggedColumn, setDraggedColumn] = React.useState<string | null>(null)
-  const [dragOverColumn, setDragOverColumn] = React.useState<string | null>(null)
-  const [columnOrder, setColumnOrder] = React.useState<string[]>([])
-  const [ghostElement, setGhostElement] = React.useState<{ x: number; y: number; text: string } | null>(null)
-  
-  // Calculate visible rows based on start row index
+
   const getVisibleRows = () => {
-    const start = startRowIndex
+    const start = currentPage * rowsPerPage
     const end = Math.min(start + rowsPerPage, data.length)
     return { start, end, rows: data.slice(start, end) }
   }
 
   const { start: visibleStart, rows: visibleRows } = getVisibleRows()
-  const maxStartIndex = Math.max(0, data.length - rowsPerPage)
+  const totalPages = Math.ceil(data.length / rowsPerPage)
+
+  // ========================================
+  // SCROLLBAR & DRAG FUNCTIONALITY
+  // ========================================
+  const [isDraggingScrollbar, setIsDraggingScrollbar] = React.useState(false)
+  const [isDraggingTable, setIsDraggingTable] = React.useState(false)
+  const lastMousePosition = React.useRef({ x: 0, y: 0 })
+
+
 
   // Custom scrollbar logic
   const handleScrollbarDrag = React.useCallback((e: React.MouseEvent | MouseEvent) => {
     if (!scrollbarRef.current) return
-    
     const rect = scrollbarRef.current.getBoundingClientRect()
     const relativeY = e.clientY - rect.top
     const percentage = Math.max(0, Math.min(1, relativeY / rect.height))
-    const maxStartIndex = Math.max(0, data.length - rowsPerPage)
-    const targetRowIndex = Math.floor(percentage * maxStartIndex)
-    
-    if (targetRowIndex !== startRowIndex && targetRowIndex >= 0 && targetRowIndex <= maxStartIndex) {
-      setStartRowIndex(targetRowIndex)
+    const targetPage = Math.floor(percentage * totalPages)
+    if (targetPage !== currentPage && targetPage >= 0 && targetPage < totalPages) {
+      setCurrentPage(targetPage)
     }
-  }, [data.length, rowsPerPage, startRowIndex])
+  }, [totalPages, currentPage])
 
   const handleScrollbarMouseDown = (e: React.MouseEvent) => {
     setIsDraggingScrollbar(true)
     handleScrollbarDrag(e)
   }
 
+  const handleTableMouseDown = (e: React.MouseEvent) => {
+    setIsDraggingTable(true)
+    lastMousePosition.current = { x: e.clientX, y: e.clientY }
+    e.preventDefault() // Prevent text selection
+  }
+
+  const handleTableMouseLeave = () => {
+    setIsDraggingTable(false)
+  }
+
+  // ========================================
+  // FILTER FUNCTIONALITY
+  // ========================================
+  const [showFilterModal, setShowFilterModal] = React.useState(false)
+
+  const toggleFilterModal = () => {
+    setShowFilterModal(prev => !prev)
+  }
+
+  // ========================================
+  // EFFECTS
+  // ========================================
+  
+  // Mouse events for dragging (scrollbar and table)
   React.useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (isDraggingScrollbar) {
@@ -102,10 +189,8 @@ function VirtualizedTable(props: VirtualizedTableProps) {
       if (isDraggingTable && bodyRef.current) {
         const deltaX = e.clientX - lastMousePosition.current.x
         const deltaY = e.clientY - lastMousePosition.current.y
-        
         bodyRef.current.scrollLeft -= deltaX
         bodyRef.current.scrollTop -= deltaY
-        
         lastMousePosition.current = { x: e.clientX, y: e.clientY }
       }
     }
@@ -126,187 +211,59 @@ function VirtualizedTable(props: VirtualizedTableProps) {
     }
   }, [isDraggingScrollbar, isDraggingTable, handleScrollbarDrag])
 
-  // Table drag-to-scroll handlers
-  const handleTableMouseDown = (e: React.MouseEvent) => {
-    setIsDraggingTable(true)
-    lastMousePosition.current = { x: e.clientX, y: e.clientY }
-    e.preventDefault() // Prevent text selection
+  // ========================================
+  // UTILITY FUNCTIONS
+  // ========================================
+  
+  // Get column headers - use columnsConfig if provided, otherwise use data keys
+  function getColumns() {
+    if (columnsConfig && columnsConfig.length > 0) return columnsConfig
+    if (data.length > 0) return Object.keys(data[0]).map(key => ({ column: key, displayValue: key }))
+    return []
   }
 
-  const handleTableMouseLeave = () => {
-    setIsDraggingTable(false)
-  }
-
-  // Zoom handler functions
-  const handleZoomIn = () => {
-    setZoomLevel(prev => Math.min(maxZoom, prev + zoomStep))
-  }
-
-  const handleZoomOut = () => {
-    setZoomLevel(prev => Math.max(minZoom, prev - zoomStep))
-  }
-
-  // Column drag and drop handlers
-  const handleColumnMouseDown = (e: React.MouseEvent, columnKey: string, displayValue: string) => {
-    setDraggedColumn(columnKey)
-    setGhostElement({
-      x: e.clientX,
-      y: e.clientY,
-      text: displayValue
-    })
-    e.preventDefault()
-  }
-
-  const handleColumnMouseMove = React.useCallback((e: MouseEvent) => {
-    if (draggedColumn && ghostElement) {
-      setGhostElement(prev => prev ? {
-        ...prev,
-        x: e.clientX,
-        y: e.clientY
-      } : null)
+  // Get column width style
+  function getColumnStyle(columnObj: { column: string; displayValue: string; width?: string }) {
+    if (columnObj.width) {
+      return { width: columnObj.width }
     }
-  }, [draggedColumn, ghostElement])
+    return {}
+  }
 
-  const handleColumnMouseUp = React.useCallback((targetColumnKey?: string) => {
-    if (draggedColumn && targetColumnKey && draggedColumn !== targetColumnKey) {
-      // Reorder columns
-      const newOrder = [...(columnOrder.length > 0 ? columnOrder : columns.map(c => c.column))]
-      const draggedIndex = newOrder.indexOf(draggedColumn)
-      const targetIndex = newOrder.indexOf(targetColumnKey)
-      
-      if (draggedIndex !== -1 && targetIndex !== -1) {
-        // Remove dragged column and insert at target position
-        const [draggedItem] = newOrder.splice(draggedIndex, 1)
-        newOrder.splice(targetIndex, 0, draggedItem)
-        setColumnOrder(newOrder)
+
+
+  React.useEffect(() => {
+    function handleMouseMove(e: MouseEvent) {
+      if (isDraggingScrollbar) handleScrollbarDrag(e);
+      if (isDraggingTable && bodyRef.current) {
+        const deltaX = e.clientX - lastMousePosition.current.x
+        const deltaY = e.clientY - lastMousePosition.current.y
+        bodyRef.current.scrollLeft -= deltaX
+        bodyRef.current.scrollTop -= deltaY
+        lastMousePosition.current = { x: e.clientX, y: e.clientY }
       }
     }
-    
-    setDraggedColumn(null)
-    setDragOverColumn(null)
-    setGhostElement(null)
-  }, [draggedColumn, columnOrder, columns])
-
-  const handleColumnMouseEnter = (columnKey: string) => {
-    if (draggedColumn && draggedColumn !== columnKey) {
-      setDragOverColumn(columnKey)
+    function handleMouseUp () {
+      setIsDraggingScrollbar(false)
+      setIsDraggingTable(false)
     }
-  }
-
-  const handleColumnMouseLeave = () => {
-    setDragOverColumn(null)
-  }
-
-  // Initialize visible columns when columns change
-  React.useEffect(() => {
-    const initialVisibility: { [key: string]: boolean } = {}
-    columns.forEach(col => {
-      initialVisibility[col.column] = true // All columns visible by default
-    })
-    setVisibleColumns(initialVisibility)
-  }, [columns])
-
-  // Initialize column order when columns change
-  React.useEffect(() => {
-    if (columns.length > 0 && columnOrder.length === 0) {
-      setColumnOrder(columns.map(col => col.column))
+    if (isDraggingScrollbar || isDraggingTable) {
+      document.addEventListener('mousemove', handleMouseMove)
+      document.addEventListener('mouseup', handleMouseUp)
     }
-  }, [columns, columnOrder.length])
-
-  // Handle global mouse events for column dragging
-  React.useEffect(() => {
-    if (draggedColumn) {
-      document.addEventListener('mousemove', handleColumnMouseMove)
-      document.addEventListener('mouseup', () => handleColumnMouseUp())
-    }
-
     return () => {
-      document.removeEventListener('mousemove', handleColumnMouseMove)
-      document.removeEventListener('mouseup', () => handleColumnMouseUp())
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
     }
-  }, [draggedColumn, handleColumnMouseMove, handleColumnMouseUp])
+  }, [isDraggingScrollbar, isDraggingTable, handleScrollbarDrag])
 
-  // Column visibility handlers
-  const toggleColumnVisibility = (columnKey: string) => {
-    setVisibleColumns(prev => ({
-      ...prev,
-      [columnKey]: !prev[columnKey]
-    }))
-  }
 
-  const toggleColumnOptions = () => {
-    setShowColumnOptions(prev => !prev)
-  }
+ 
 
-  // Click outside to close dropdown
-  React.useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (columnOptionsRef.current && !columnOptionsRef.current.contains(event.target as Node)) {
-        setShowColumnOptions(false)
-      }
-    }
 
-    if (showColumnOptions) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
 
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [showColumnOptions])
 
-  // Filter visible columns and apply custom order
-  const getVisibleColumns = () => {
-    const orderedColumns = columnOrder.length > 0 ? columnOrder : columns.map(c => c.column)
-    return orderedColumns
-      .map(colKey => columns.find(col => col.column === colKey))
-      .filter(col => col && visibleColumns[col.column] !== false) as { column: string; displayValue: string; width?: string }[]
-  }
 
-  // Handle mouse wheel events for row-by-row scrolling
-  function handleWheelEvent(e: React.WheelEvent<HTMLDivElement>) {
-    // Skip if we're currently changing rows
-    if (isChangingRows) {
-      return
-    }
-
-    // Prevent default scrolling behavior
-    e.preventDefault()
-
-    // Determine scroll direction from wheel delta
-    const scrollingUp = e.deltaY < 0
-    const scrollingDown = e.deltaY > 0
-
-    console.log('Wheel Event:', {
-      deltaY: e.deltaY,
-      scrollingUp,
-      scrollingDown,
-      startRowIndex,
-      maxRows: data.length
-    })
-
-    // Handle wheel up (previous row)
-    if (scrollingUp && startRowIndex > 0) {
-      console.log('Wheel up - scrolling to previous row')
-      setIsChangingRows(true)
-      setStartRowIndex(Math.max(0, startRowIndex - 1))
-      
-      setTimeout(() => {
-        setIsChangingRows(false)
-      }, 50) // Shorter delay for smoother scrolling
-    }
-    
-    // Handle wheel down (next row)
-    if (scrollingDown && startRowIndex < data.length - rowsPerPage) {
-      console.log('Wheel down - scrolling to next row')
-      setIsChangingRows(true)
-      setStartRowIndex(Math.min(data.length - rowsPerPage, startRowIndex + 1))
-      
-      setTimeout(() => {
-        setIsChangingRows(false)
-      }, 50) // Shorter delay for smoother scrolling
-    }
-  }
 
   // Scroll synchronization + auto-pagination
   function handleBodyScroll(e: React.UIEvent<HTMLDivElement>) {
@@ -315,47 +272,42 @@ function VirtualizedTable(props: VirtualizedTableProps) {
       headerRef.current.scrollLeft = e.currentTarget.scrollLeft
     }
     
-    // Skip auto-pagination if we're currently changing rows
-    if (isChangingRows) {
+    // Skip auto-pagination if we're currently changing pages
+    if (isChangingPage) {
       return
     }
     
-    // Auto-pagination based on scroll position (adjusted for zoom)
+    // Auto-pagination based on scroll position
     const scrollTop = e.currentTarget.scrollTop
     const scrollHeight = e.currentTarget.scrollHeight
     const clientHeight = e.currentTarget.clientHeight
-    
-    // Simple threshold for now - let's get basic functionality working first
-    const threshold = 5
     
     // Determine scroll direction
     const scrollingDown = scrollTop > lastScrollTop.current
     const scrollingUp = scrollTop < lastScrollTop.current
     lastScrollTop.current = scrollTop
     
-    // Enhanced debug logging
+    // Debug logging
     console.log('Scroll Debug:', {
       scrollTop,
       scrollHeight,
       clientHeight,
       scrollingDown,
       scrollingUp,
-      startRowIndex,
-      maxRows: data.length,
-      isChangingRows,
-      atTop: scrollTop <= threshold,
-      atBottom: scrollTop + clientHeight >= scrollHeight - threshold
+      currentPage,
+      totalPages,
+      isChangingPage
     })
     
-    // Simple detection without zoom complications for now
-    const atBottom = scrollTop + clientHeight >= scrollHeight - threshold
-    const atTop = scrollTop <= threshold
+    // Only trigger page changes at the very edges with clear direction
+    const atBottom = scrollTop + clientHeight >= scrollHeight - 5 // Very close to bottom
+    const atTop = scrollTop <= 5 // Very close to top
     
-    // Go to next row only when scrolling down and at bottom
-    if (scrollingDown && atBottom && startRowIndex < data.length - rowsPerPage) {
-      console.log('Triggering next row')
-      setIsChangingRows(true)
-      setStartRowIndex(Math.min(data.length - rowsPerPage, startRowIndex + 1))
+    // Go to next page only when scrolling down and at bottom
+    if (scrollingDown && atBottom && currentPage < totalPages - 1) {
+      console.log('Triggering next page')
+      setIsChangingPage(true)
+      setCurrentPage(currentPage + 1)
       
       // Reset scroll and clear the flag after a delay
       setTimeout(() => {
@@ -363,15 +315,15 @@ function VirtualizedTable(props: VirtualizedTableProps) {
           bodyRef.current.scrollTop = 0
           lastScrollTop.current = 0 // Reset scroll tracking
         }
-        setTimeout(() => setIsChangingRows(false), 200) // Longer delay
+        setTimeout(() => setIsChangingPage(false), 200) // Longer delay
       }, 50)
     }
     
-    // Go to previous row only when scrolling up and at top
-    if (scrollingUp && atTop && startRowIndex > 0) {
-      console.log('Triggering previous row - conditions met:', { scrollingUp, atTop, startRowIndex })
-      setIsChangingRows(true)
-      setStartRowIndex(Math.max(0, startRowIndex - 1))
+    // Go to previous page only when scrolling up and at top
+    if (scrollingUp && atTop && currentPage > 0) {
+      console.log('Triggering previous page')
+      setIsChangingPage(true)
+      setCurrentPage(currentPage - 1)
       
       // Reset scroll and clear the flag after a delay
       setTimeout(() => {
@@ -380,12 +332,8 @@ function VirtualizedTable(props: VirtualizedTableProps) {
           bodyRef.current.scrollTop = maxScroll - 5 // Near bottom but not exactly
           lastScrollTop.current = maxScroll - 5
         }
-        setTimeout(() => setIsChangingRows(false), 200) // Longer delay
+        setTimeout(() => setIsChangingPage(false), 200) // Longer delay
       }, 50)
-    } else if (scrollingUp && atTop) {
-      console.log('Scroll up at top but startRowIndex is 0:', { startRowIndex })
-    } else if (scrollingUp && startRowIndex > 0) {
-      console.log('Scrolling up with rows available but not at top:', { atTop, scrollTop, threshold: 5 })
     }
   }
 
@@ -419,6 +367,15 @@ function VirtualizedTable(props: VirtualizedTableProps) {
           <span className="text-sm text-gray-600">Controls</span>
         </div>
         <div className="flex items-center gap-2 relative">
+          {/* Filter Modal Toggle */}
+          <button 
+            className="p-1 hover:bg-gray-200 rounded transition-colors"
+            title="Filter Data"
+            onClick={toggleFilterModal}
+          >
+            <LuFilter size={20} />
+          </button>
+          
           {/* Column Visibility Toggle */}
           <div className="relative" ref={columnOptionsRef}>
             <button 
@@ -502,18 +459,10 @@ function VirtualizedTable(props: VirtualizedTableProps) {
                   {getVisibleColumns().map((col, index) => (
                     <th 
                       key={col.column} 
-                      className={`px-4 py-2 text-left break-words cursor-move select-none transition-colors ${
+                      className={`px-4 py-2 text-left break-words ${
                         verticalSeparators && index < getVisibleColumns().length - 1 ? 'border-r border-gray-200' : ''
-                      } ${
-                        draggedColumn === col.column ? 'opacity-50' : ''
-                      } ${
-                        dragOverColumn === col.column ? 'bg-blue-100' : ''
                       }`}
                       style={getColumnStyle(col)}
-                      onMouseDown={(e) => handleColumnMouseDown(e, col.column, col.displayValue)}
-                      onMouseUp={() => handleColumnMouseUp(col.column)}
-                      onMouseEnter={() => handleColumnMouseEnter(col.column)}
-                      onMouseLeave={handleColumnMouseLeave}
                     >
                       {col.displayValue}
                     </th>
@@ -538,7 +487,6 @@ function VirtualizedTable(props: VirtualizedTableProps) {
             msOverflowStyle: 'none', /* Internet Explorer 10+ */
           }}
           onScroll={handleBodyScroll}
-          onWheel={handleWheelEvent}
           onMouseDown={handleTableMouseDown}
           onMouseLeave={handleTableMouseLeave}
         >
@@ -632,8 +580,8 @@ function VirtualizedTable(props: VirtualizedTableProps) {
               isDraggingScrollbar ? 'bg-gray-600 scale-110' : 'hover:bg-gray-500'
             }`}
             style={{
-              height: `${Math.max(20, (rowsPerPage / data.length) * 80)}%`,
-              top: `${2 + (startRowIndex / Math.max(1, data.length - rowsPerPage)) * (96 - Math.max(20, (rowsPerPage / data.length) * 80))}%`,
+              height: `${Math.max(20, (1 / totalPages) * 80)}%`,
+              top: `${2 + (currentPage / Math.max(1, totalPages - 1)) * (96 - Math.max(20, (1 / totalPages) * 80))}%`,
               left: '1px',
               right: '1px'
             }}
@@ -641,17 +589,85 @@ function VirtualizedTable(props: VirtualizedTableProps) {
         </div>
       </div>
 
-      {/* Ghost element for column dragging */}
-      {ghostElement && (
-        <div
-          className="fixed pointer-events-none z-50 bg-white border border-gray-300 px-2 py-1 rounded shadow-lg text-sm"
-          style={{
-            left: ghostElement.x + 15,
-            top: ghostElement.y - 5,
-            transform: 'translateY(-50%)'
-          }}
-        >
-          {ghostElement.text}
+      {/* Filter Modal */}
+      {showFilterModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[80vh] overflow-hidden">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-4 border-b border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900">Filter Data</h3>
+              <button
+                onClick={toggleFilterModal}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            {/* Modal Body */}
+            <div className="p-4 overflow-y-auto">
+              <p className="text-gray-600 mb-4">Filter options will be implemented here.</p>
+              
+              {/* Placeholder content */}
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                  <input 
+                    type="text" 
+                    placeholder="Search in all columns..."
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Column</label>
+                  <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option value="">Select column...</option>
+                    {getVisibleColumns().map(col => (
+                      <option key={col.column} value={col.column}>{col.displayValue}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Filter Type</label>
+                  <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option value="contains">Contains</option>
+                    <option value="equals">Equals</option>
+                    <option value="starts">Starts with</option>
+                    <option value="ends">Ends with</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Value</label>
+                  <input 
+                    type="text" 
+                    placeholder="Filter value..."
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+            </div>
+            
+            {/* Modal Footer */}
+            <div className="flex items-center justify-end gap-3 p-4 border-t border-gray-200">
+              <button
+                onClick={toggleFilterModal}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={toggleFilterModal}
+                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+              >
+                Apply Filter
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </section>
