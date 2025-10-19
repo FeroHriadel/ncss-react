@@ -319,121 +319,29 @@ function VirtualizedTable(props: VirtualizedTableProps) {
       return
     }
     
-    // Auto-pagination based on scroll position (adjusted for zoom)
     const scrollTop = e.currentTarget.scrollTop
     const scrollHeight = e.currentTarget.scrollHeight
     const clientHeight = e.currentTarget.clientHeight
-    
-    // Simple threshold
     const baseThreshold = 5
     const zoomAdjustedThreshold = baseThreshold
-    
-    // Determine scroll direction
+
     const scrollingDown = scrollTop > lastScrollTop.current
     const scrollingUp = scrollTop < lastScrollTop.current
     lastScrollTop.current = scrollTop
-    
-    // Zoom-adjusted calculations
-    // When zoomed out, the actual content height is smaller than scrollHeight indicates
-    const effectiveContentHeight = scrollHeight * zoomLevel
-    const availableHeight = clientHeight
-    
-    // Enhanced debug logging
-    console.log('Scroll Debug:', {
-      scrollTop,
-      scrollHeight,
-      clientHeight,
-      effectiveContentHeight,
-      availableHeight,
-      zoomLevel,
-      zoomAdjustedThreshold,
-      scrollingDown,
-      scrollingUp,
-      startRowIndex,
-      maxRows: data.length,
-      isChangingRows,
-      atTop: scrollTop <= zoomAdjustedThreshold,
-      atBottom: scrollTop + clientHeight >= scrollHeight - zoomAdjustedThreshold,
-      contentFitsInView: effectiveContentHeight <= availableHeight
-    })
-    
-    // Zoom-adjusted detection
+
     const atBottom = scrollTop + clientHeight >= scrollHeight - zoomAdjustedThreshold
     const atTop = scrollTop <= zoomAdjustedThreshold
-    
-    // Additional check: if content fits entirely in the view due to zoom, handle it differently
-    const contentFitsInView = effectiveContentHeight <= availableHeight
-    
-    // Special handling when content fits entirely in view (common when zoomed out)
-    if (contentFitsInView) {
-      // When content fits, any scroll indicates desire to change rows
-      if (scrollingDown && startRowIndex < data.length - rowsPerPage) {
-        console.log('Content fits in view - scrolling down triggers next row')
-        setIsChangingRows(true)
-        setStartRowIndex(Math.min(data.length - rowsPerPage, startRowIndex + 1))
-        
-        setTimeout(() => {
-          if (bodyRef.current) {
-            bodyRef.current.scrollTop = 0
-            lastScrollTop.current = 0
-          }
-          setTimeout(() => setIsChangingRows(false), 100)
-        }, 30)
-        return
-      }
-      
-      if (scrollingUp && startRowIndex > 0) {
-        console.log('Content fits in view - scrolling up triggers previous row')
-        setIsChangingRows(true)
-        setStartRowIndex(Math.max(0, startRowIndex - 1))
-        
-        setTimeout(() => {
-          if (bodyRef.current) {
-            bodyRef.current.scrollTop = 0
-            lastScrollTop.current = 0
-          }
-          setTimeout(() => setIsChangingRows(false), 100)
-        }, 30)
-        return
-      }
-    }
-    
-    // Normal scroll boundary detection (when content doesn't fit in view)
-    // Go to next row only when scrolling down and at bottom
+
+    // Only update startRowIndex at boundaries, do not reset scrollTop
     if (scrollingDown && atBottom && startRowIndex < data.length - rowsPerPage) {
-      console.log('Triggering next row at scroll bottom')
       setIsChangingRows(true)
       setStartRowIndex(Math.min(data.length - rowsPerPage, startRowIndex + 1))
-      
-      // Reset scroll and clear the flag after a delay
-      setTimeout(() => {
-        if (bodyRef.current) {
-          bodyRef.current.scrollTop = 0
-          lastScrollTop.current = 0 // Reset scroll tracking
-        }
-        setTimeout(() => setIsChangingRows(false), 200) // Longer delay
-      }, 50)
+      setTimeout(() => setIsChangingRows(false), 50)
     }
-    
-    // Go to previous row only when scrolling up and at top
     if (scrollingUp && atTop && startRowIndex > 0) {
-      console.log('Triggering previous row - conditions met:', { scrollingUp, atTop, startRowIndex })
       setIsChangingRows(true)
       setStartRowIndex(Math.max(0, startRowIndex - 1))
-      
-      // Reset scroll and clear the flag after a delay
-      setTimeout(() => {
-        if (bodyRef.current) {
-          const maxScroll = bodyRef.current.scrollHeight - bodyRef.current.clientHeight
-          bodyRef.current.scrollTop = Math.max(0, maxScroll - zoomAdjustedThreshold) // Use zoom-adjusted threshold
-          lastScrollTop.current = Math.max(0, maxScroll - zoomAdjustedThreshold)
-        }
-        setTimeout(() => setIsChangingRows(false), 200) // Longer delay
-      }, 50)
-    } else if (scrollingUp && atTop) {
-      console.log('Scroll up at top but startRowIndex is 0:', { startRowIndex })
-    } else if (scrollingUp && startRowIndex > 0) {
-      console.log('Scrolling up with rows available but not at top:', { atTop, scrollTop, zoomAdjustedThreshold })
+      setTimeout(() => setIsChangingRows(false), 50)
     }
   }
 
