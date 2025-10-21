@@ -1,8 +1,11 @@
 import React from 'react'
+import { useVirtualizedTableRows } from "./useVirtualizedTableRows"
 import { CiZoomIn, CiZoomOut } from "react-icons/ci"
+import ButtonIcon from "../../buttons/ButtonIcon"
 import { HiOutlineViewColumns } from "react-icons/hi2"
+import DropdownIcon from "../../dropdowns/DropdownIcon"
 
-interface VirtualizedTableProps {
+export interface VirtualizedTableProps {
   data: { [key: string]: string | number | boolean | null | undefined | [] | object | React.ReactNode }[];
   columnsConfig?: { column: string; displayValue: string; width?: string }[];
   height?: string; // Optional height prop (e.g., "400px", "22rem", "50vh")
@@ -17,6 +20,7 @@ interface VirtualizedTableProps {
 
 
 function VirtualizedTable(props: VirtualizedTableProps) {
+  // ...existing code...
 
   const { data, columnsConfig, height = "400px", horizontalSeparators = true, verticalSeparators = true, striped = true, hover = true } = props
 
@@ -38,12 +42,22 @@ function VirtualizedTable(props: VirtualizedTableProps) {
   const headerRef = React.useRef<HTMLDivElement>(null)
   const bodyRef = React.useRef<HTMLDivElement>(null)
   const columns = getColumns()
+  const dropdownOptions = columns.map(col => ({
+    value: col.column,
+    displayValue: col.displayValue,
+    onClick: () => toggleColumnVisibility(col.column)
+  }));
+  const preselectedDropdownOptions = columns.map(col => col.column);
 
-  // Row-based rendering state
-  const [startRowIndex, setStartRowIndex] = React.useState(0)
-  const rowsPerPage = 15 // Reasonable number for font-size scaling approach
-  const [isChangingRows, setIsChangingRows] = React.useState(false) // Prevent scroll loops
-  const lastScrollTop = React.useRef(0) // Track scroll direction
+  // Row-based rendering state via hook
+  const {
+    startRowIndex,
+    setStartRowIndex,
+    rowsPerPage,
+    getVisibleRows,
+    handleWheelEvent,
+    handleBodyScroll,
+  } = useVirtualizedTableRows({ data, rowsPerPage: 15 })
   const [isDraggingScrollbar, setIsDraggingScrollbar] = React.useState(false)
   const scrollbarRef = React.useRef<HTMLDivElement>(null)
   const [isDraggingTable, setIsDraggingTable] = React.useState(false)
@@ -64,13 +78,6 @@ function VirtualizedTable(props: VirtualizedTableProps) {
   const [columnOrder, setColumnOrder] = React.useState<string[]>([])
   const [ghostElement, setGhostElement] = React.useState<{ x: number; y: number; text: string } | null>(null)
   
-  // Calculate visible rows based on start row index
-  const getVisibleRows = () => {
-    const start = startRowIndex
-    const end = Math.min(start + rowsPerPage, data.length)
-    return { start, end, rows: data.slice(start, end) }
-  }
-
   const { start: visibleStart, rows: visibleRows } = getVisibleRows()
 
   // Custom scrollbar logic
@@ -233,10 +240,6 @@ function VirtualizedTable(props: VirtualizedTableProps) {
     }))
   }
 
-  const toggleColumnOptions = () => {
-    setShowColumnOptions(prev => !prev)
-  }
-
   // Click outside to close dropdown
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -262,88 +265,7 @@ function VirtualizedTable(props: VirtualizedTableProps) {
       .filter(col => col && visibleColumns[col.column] !== false) as { column: string; displayValue: string; width?: string }[]
   }
 
-  // Handle mouse wheel events for row-by-row scrolling
-  function handleWheelEvent(e: React.WheelEvent<HTMLDivElement>) {
-    // Skip if we're currently changing rows
-    if (isChangingRows) {
-      return
-    }
-
-    // Prevent default scrolling behavior
-    e.preventDefault()
-
-    // Determine scroll direction from wheel delta
-    const scrollingUp = e.deltaY < 0
-    const scrollingDown = e.deltaY > 0
-
-    console.log('Wheel Event:', {
-      deltaY: e.deltaY,
-      scrollingUp,
-      scrollingDown,
-      startRowIndex,
-      maxRows: data.length
-    })
-
-    // Handle wheel up (previous row)
-    if (scrollingUp && startRowIndex > 0) {
-      console.log('Wheel up - scrolling to previous row')
-      setIsChangingRows(true)
-      setStartRowIndex(Math.max(0, startRowIndex - 1))
-      
-      setTimeout(() => {
-        setIsChangingRows(false)
-      }, 50) // Shorter delay for smoother scrolling
-    }
-    
-    // Handle wheel down (next row)
-    if (scrollingDown && startRowIndex < data.length - rowsPerPage) {
-      console.log('Wheel down - scrolling to next row')
-      setIsChangingRows(true)
-      setStartRowIndex(Math.min(data.length - rowsPerPage, startRowIndex + 1))
-      
-      setTimeout(() => {
-        setIsChangingRows(false)
-      }, 50) // Shorter delay for smoother scrolling
-    }
-  }
-
-  // Scroll synchronization + auto-pagination
-  function handleBodyScroll(e: React.UIEvent<HTMLDivElement>) {
-    // Sync horizontal scroll with header
-    if (headerRef.current) {
-      headerRef.current.scrollLeft = e.currentTarget.scrollLeft
-    }
-    
-    // Skip auto-pagination if we're currently changing rows
-    if (isChangingRows) {
-      return
-    }
-    
-    const scrollTop = e.currentTarget.scrollTop
-    const scrollHeight = e.currentTarget.scrollHeight
-    const clientHeight = e.currentTarget.clientHeight
-    const baseThreshold = 5
-    const zoomAdjustedThreshold = baseThreshold
-
-    const scrollingDown = scrollTop > lastScrollTop.current
-    const scrollingUp = scrollTop < lastScrollTop.current
-    lastScrollTop.current = scrollTop
-
-    const atBottom = scrollTop + clientHeight >= scrollHeight - zoomAdjustedThreshold
-    const atTop = scrollTop <= zoomAdjustedThreshold
-
-    // Only update startRowIndex at boundaries, do not reset scrollTop
-    if (scrollingDown && atBottom && startRowIndex < data.length - rowsPerPage) {
-      setIsChangingRows(true)
-      setStartRowIndex(Math.min(data.length - rowsPerPage, startRowIndex + 1))
-      setTimeout(() => setIsChangingRows(false), 50)
-    }
-    if (scrollingUp && atTop && startRowIndex > 0) {
-      setIsChangingRows(true)
-      setStartRowIndex(Math.max(0, startRowIndex - 1))
-      setTimeout(() => setIsChangingRows(false), 50)
-    }
-  }
+  // ...existing code...
 
   const handleHeaderScroll = (e: React.UIEvent<HTMLDivElement>) => {
     if (bodyRef.current) {
@@ -370,67 +292,41 @@ function VirtualizedTable(props: VirtualizedTableProps) {
   // Render
   return (
     <section className='virtualized-table-wrap'>
+      {/* Control Bar */}
       <div className="w-full flex justify-between items-center p-2 border border-gray-300 bg-gray-50">
         <div className="flex items-center">
           <span className="text-sm text-gray-600">Controls</span>
         </div>
         <div className="flex items-center gap-2 relative">
           {/* Column Visibility Toggle */}
-          <div className="relative" ref={columnOptionsRef}>
-            <button 
-              className="p-1 hover:bg-gray-200 rounded transition-colors"
-              title="Toggle Columns"
-              onClick={toggleColumnOptions}
-            >
-              <HiOutlineViewColumns size={20} />
-            </button>
-            
-            {/* Column Options Dropdown */}
-            {showColumnOptions && (
-              <div className="absolute top-full right-0 mt-1 bg-white border border-gray-300 rounded shadow-lg z-10 min-w-[200px]">
-                <div className="p-2 border-b border-gray-200">
-                  <span className="text-sm font-medium text-gray-700">Show/Hide Columns</span>
-                </div>
-                <div className="max-h-60 overflow-y-auto">
-                  {columns.map(col => (
-                    <label
-                      key={col.column}
-                      className="flex items-center p-2 hover:bg-gray-50 cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={visibleColumns[col.column] !== false}
-                        onChange={() => toggleColumnVisibility(col.column)}
-                        className="mr-2"
-                      />
-                      <span className="text-sm text-gray-700">{col.displayValue}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
+          <DropdownIcon
+            className="relative"
+            icon={<HiOutlineViewColumns size={20} />}
+            title="Toggle Columns"
+            options={dropdownOptions}
+            preselectedOptions={preselectedDropdownOptions}
+          />
           
           {/* Zoom Controls */}
-          <button 
+          <ButtonIcon
             className="p-1 hover:bg-gray-200 rounded transition-colors"
             title="Zoom Out"
             onClick={handleZoomOut}
+            icon={<CiZoomOut size={20} className={zoomLevel <= minZoom ? 'text-gray-400' : ''} />}
+            style={zoomLevel <= minZoom ? { pointerEvents: 'none', opacity: 0.6 } : undefined}
             disabled={zoomLevel <= minZoom}
-          >
-            <CiZoomOut size={20} className={zoomLevel <= minZoom ? 'text-gray-400' : ''} />
-          </button>
+          />
           <span className="text-xs text-gray-500 min-w-[40px] text-center">
             {Math.round(zoomLevel * 100)}%
           </span>
-          <button 
+          <ButtonIcon
             className="p-1 hover:bg-gray-200 rounded transition-colors"
             title="Zoom In"
             onClick={handleZoomIn}
+            icon={<CiZoomIn size={20} className={zoomLevel >= maxZoom ? 'text-gray-400' : ''} />}
+            style={zoomLevel >= maxZoom ? { pointerEvents: 'none', opacity: 0.6 } : undefined}
             disabled={zoomLevel >= maxZoom}
-          >
-            <CiZoomIn size={20} className={zoomLevel >= maxZoom ? 'text-gray-400' : ''} />
-          </button>
+          />
         </div>
       </div>
       
@@ -507,7 +403,7 @@ function VirtualizedTable(props: VirtualizedTableProps) {
           }}>
             <tbody>
               {/* Render only current page rows */}
-              {visibleRows.map((row, i) => {
+              {visibleRows.map((row: VirtualizedTableProps["data"][number], i: number) => {
                 const rowIndex = visibleStart + i
                 
                 return (

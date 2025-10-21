@@ -1,4 +1,4 @@
-import VirtualizedTable from "../components/tables/VirtualizedTable"
+import VirtualizedTable from "../components/tables/VirtualizedTable/VirtualizedTable"
 
 // Function to generate 100 items
 function generateData(count: number) {
