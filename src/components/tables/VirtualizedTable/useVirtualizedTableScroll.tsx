@@ -13,7 +13,7 @@ export function useVirtualizedTableScroll({
   headerRef?: React.RefObject<HTMLDivElement | null>;
   scrollbarRef: React.RefObject<HTMLDivElement | null>;
   startRowIndex: number;
-  setStartRowIndex: (idx: number) => void;
+  setStartRowIndex: React.Dispatch<React.SetStateAction<number>>;
   rowsPerPage: number;
   dataLength: number;
 }) {
@@ -40,6 +40,7 @@ export function useVirtualizedTableScroll({
   const [isDraggingScrollbar, setIsDraggingScrollbar] = React.useState(false);
   const [isDraggingTable, setIsDraggingTable] = React.useState(false);
   const lastMousePosition = React.useRef({ x: 0, y: 0 });
+  const dragAccumY = React.useRef(0);
 
   // Custom scrollbar drag logic
   const handleScrollbarDrag = React.useCallback((e: React.MouseEvent | MouseEvent) => {
@@ -80,13 +81,38 @@ export function useVirtualizedTableScroll({
         const deltaX = e.clientX - lastMousePosition.current.x;
         const deltaY = e.clientY - lastMousePosition.current.y;
         bodyRef.current.scrollLeft -= deltaX;
-        bodyRef.current.scrollTop -= deltaY;
+        // Don't use scrollTop for virtual rows, just accumulate drag
+  dragAccumY.current -= deltaY;
         lastMousePosition.current = { x: e.clientX, y: e.clientY };
+
+  const dragThreshold = 20; // px to trigger row change (faster)
+        const maxStartIndex = Math.max(0, dataLength - rowsPerPage);
+        if (dragAccumY.current > dragThreshold) {
+          setStartRowIndex((prev: number) => Math.min(maxStartIndex, prev + 1));
+          dragAccumY.current = 0;
+          bodyRef.current.scrollTop = Math.floor(bodyRef.current.scrollHeight / 2 - bodyRef.current.clientHeight / 2);
+        }
+        if (dragAccumY.current < -dragThreshold) {
+          setStartRowIndex((prev: number) => {
+            const next = Math.max(0, prev - 1);
+            // If at row 0, reset scrollTop to top
+            if (bodyRef.current) {
+              if (next === 0) {
+                bodyRef.current.scrollTop = 0;
+              } else {
+                bodyRef.current.scrollTop = Math.floor(bodyRef.current.scrollHeight / 2 - bodyRef.current.clientHeight / 2);
+              }
+            }
+            return next;
+          });
+          dragAccumY.current = 0;
+        }
       }
     };
     const handleMouseUp = () => {
       setIsDraggingScrollbar(false);
       setIsDraggingTable(false);
+      dragAccumY.current = 0;
     };
     if (isDraggingScrollbar || isDraggingTable) {
       document.addEventListener("mousemove", handleMouseMove);
@@ -96,7 +122,7 @@ export function useVirtualizedTableScroll({
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [isDraggingScrollbar, isDraggingTable, handleScrollbarDrag, bodyRef]);
+  }, [isDraggingScrollbar, isDraggingTable, handleScrollbarDrag, bodyRef, dataLength, rowsPerPage, setStartRowIndex]);
 
   return {
     isDraggingScrollbar,

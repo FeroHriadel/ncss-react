@@ -12,7 +12,7 @@ interface UseVirtualizedTableRowsProps {
 
 export function useVirtualizedTableRows({ data, rowsPerPage = 15 }: UseVirtualizedTableRowsProps) {
   const [startRowIndex, setStartRowIndex] = useState(0);
-  const [isChangingRows, setIsChangingRows] = useState(false);
+  // Removed isChangingRows blocking
   const lastScrollTop = useRef(0);
 
   const getVisibleRows = useCallback(() => {
@@ -22,21 +22,16 @@ export function useVirtualizedTableRows({ data, rowsPerPage = 15 }: UseVirtualiz
   }, [startRowIndex, rowsPerPage, data]);
 
   function handleWheelEvent(e: React.WheelEvent<HTMLDivElement>) {
-  if (isChangingRows) return;
     const scrollingUp = e.deltaY < 0;
     const scrollingDown = e.deltaY > 0;
     if (scrollingUp) {
-      setIsChangingRows(true);
       setStartRowIndex(prev => Math.max(0, prev - 1));
-      setTimeout(() => setIsChangingRows(false), 50);
     }
     if (scrollingDown) {
-      setIsChangingRows(true);
       setStartRowIndex(prev => {
-        const maxIndex = data.length > rowsPerPage ? data.length - rowsPerPage : 0;
+        const maxIndex = Math.max(0, data.length - rowsPerPage);
         return Math.min(maxIndex, prev + 1);
       });
-      setTimeout(() => setIsChangingRows(false), 50);
     }
   }
 
@@ -44,7 +39,6 @@ export function useVirtualizedTableRows({ data, rowsPerPage = 15 }: UseVirtualiz
     if (headerRef && headerRef.current) {
       headerRef.current.scrollLeft = e.currentTarget.scrollLeft;
     }
-    if (isChangingRows) return;
     const scrollTop = e.currentTarget.scrollTop;
     const scrollHeight = e.currentTarget.scrollHeight;
     const clientHeight = e.currentTarget.clientHeight;
@@ -56,23 +50,17 @@ export function useVirtualizedTableRows({ data, rowsPerPage = 15 }: UseVirtualiz
     const atBottom = scrollTop + clientHeight >= scrollHeight - zoomAdjustedThreshold;
     const atTop = scrollTop <= zoomAdjustedThreshold;
     if (scrollingDown && atBottom && startRowIndex < data.length - rowsPerPage) {
-      setIsChangingRows(true);
-      setStartRowIndex(Math.min(data.length - rowsPerPage, startRowIndex + 1));
-      setTimeout(() => setIsChangingRows(false), 50);
+      setStartRowIndex(prev => Math.min(data.length - rowsPerPage, prev + 1));
     }
     if (scrollingUp && atTop && startRowIndex > 0) {
-      setIsChangingRows(true);
-      setStartRowIndex(Math.max(0, startRowIndex - 1));
-      setTimeout(() => setIsChangingRows(false), 50);
+      setStartRowIndex(prev => Math.max(0, prev - 1));
     }
   }
 
   return {
     startRowIndex,
-    setStartRowIndex,
-    rowsPerPage,
-    isChangingRows,
-    setIsChangingRows,
+  setStartRowIndex,
+  rowsPerPage,
     getVisibleRows,
     handleWheelEvent,
     handleBodyScroll,

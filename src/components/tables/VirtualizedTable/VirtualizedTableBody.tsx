@@ -44,7 +44,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
       ref={bodyRef}
       className="overflow-auto border-l border-r border-b border-gray-300 [&::-webkit-scrollbar]:hidden flex-1"
       style={{
-        height: '400px',
+  height: '400px',
         scrollbarWidth: 'none',
         msOverflowStyle: 'none',
       }}
@@ -103,7 +103,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
     <div
       ref={scrollbarRef}
       className="w-2 bg-gray-50 border-r border-b border-gray-300 relative cursor-pointer select-none"
-      style={{ height: '400px' }}
+  style={{ height: '400px' }}
       onMouseDown={handleScrollbarMouseDown}
     >
       <div className="absolute inset-x-0 top-1 bottom-1 bg-gray-200 rounded-full mx-0.5"></div>
