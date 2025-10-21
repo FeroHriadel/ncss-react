@@ -1,5 +1,7 @@
 import React from "react";
 
+
+
 export function useVirtualizedTableDragAndDrop({ columns, columnOrder, setColumnOrder }: {
   columns: { column: string; displayValue: string; width?: string }[];
   columnOrder: string[];
@@ -8,6 +10,13 @@ export function useVirtualizedTableDragAndDrop({ columns, columnOrder, setColumn
   const [draggedColumn, setDraggedColumn] = React.useState<string | null>(null);
   const [dragOverColumn, setDragOverColumn] = React.useState<string | null>(null);
   const [ghostElement, setGhostElement] = React.useState<{ x: number; y: number; text: string } | null>(null);
+
+  // Initialize column order when columns change
+  React.useEffect(() => {
+    if (columns.length > 0 && columnOrder.length === 0) {
+      setColumnOrder(columns.map(col => col.column));
+    }
+  }, [columns, columnOrder.length, setColumnOrder]);
 
   const handleColumnMouseDown = (e: React.MouseEvent, columnKey: string, displayValue: string) => {
     setDraggedColumn(columnKey);
@@ -27,7 +36,7 @@ export function useVirtualizedTableDragAndDrop({ columns, columnOrder, setColumn
         y: e.clientY,
       } : null);
     }
-  }, [draggedColumn, ghostElement]);
+  }, [draggedColumn, ghostElement, setGhostElement]);
 
   const handleColumnMouseUp = React.useCallback((targetColumnKey?: string) => {
     if (draggedColumn && targetColumnKey && draggedColumn !== targetColumnKey) {
@@ -43,7 +52,7 @@ export function useVirtualizedTableDragAndDrop({ columns, columnOrder, setColumn
     setDraggedColumn(null);
     setDragOverColumn(null);
     setGhostElement(null);
-  }, [draggedColumn, columnOrder, columns, setColumnOrder]);
+  }, [draggedColumn, columnOrder, columns, setColumnOrder, setDraggedColumn, setDragOverColumn, setGhostElement]);
 
   const handleColumnMouseEnter = (columnKey: string) => {
     if (draggedColumn && draggedColumn !== columnKey) {

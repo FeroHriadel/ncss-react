@@ -48,7 +48,6 @@ function VirtualizedTable({
     dragOverColumn,
     ghostElement,
     handleColumnMouseDown,
-    handleColumnMouseMove,
     handleColumnMouseUp,
     handleColumnMouseEnter,
     handleColumnMouseLeave,
@@ -119,25 +118,7 @@ function VirtualizedTable({
     handleZoomOut,
   } = useVirtualizedTableZoom(1, 0.5, 1.5, 0.1);
 
-  // Initialize column order when columns change
-  React.useEffect(() => {
-    if (columns.length > 0 && columnOrder.length === 0) {
-      setColumnOrder(columns.map(col => col.column));
-    }
-  }, [columns, columnOrder.length]);
 
-  // Handle global mouse events for column dragging
-  React.useEffect(() => {
-    if (draggedColumn) {
-      document.addEventListener('mousemove', handleColumnMouseMove)
-      document.addEventListener('mouseup', () => handleColumnMouseUp())
-    }
-
-    return () => {
-      document.removeEventListener('mousemove', handleColumnMouseMove)
-      document.removeEventListener('mouseup', () => handleColumnMouseUp())
-    }
-  }, [draggedColumn, handleColumnMouseMove, handleColumnMouseUp])
 
   const handleHeaderScroll = (e: React.UIEvent<HTMLDivElement>) => {
     if (bodyRef.current) {
