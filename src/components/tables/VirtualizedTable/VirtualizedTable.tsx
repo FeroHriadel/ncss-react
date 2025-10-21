@@ -1,4 +1,5 @@
 import React from 'react'
+import VirtualizedTableColumnGhost from "./VirtualizedTableColumnGhost";
 import VirtualizedTableControlBar from "./VirtualizedTableControlBar";
 import VirtualizedTableHeader from "./VirtualizedTableHeader";
 import VirtualizedTableBody from "./VirtualizedTableBody";
@@ -167,16 +168,11 @@ function VirtualizedTable({
         />
 
         {ghostElement && (
-          <div
-            className="fixed pointer-events-none z-50 bg-white border border-gray-300 px-2 py-1 rounded shadow-lg text-sm"
-            style={{
-              left: ghostElement.x + 15,
-              top: ghostElement.y - 5,
-              transform: 'translateY(-50%)'
-            }}
-          >
-            {ghostElement.text}
-          </div>
+            <VirtualizedTableColumnGhost
+              x={ghostElement.x}
+              y={ghostElement.y}
+              text={ghostElement.text}
+            />
         )}
       </section>
     );
