@@ -2,6 +2,7 @@ import React from "react";
 
 export function useVirtualizedTableScroll({
   bodyRef,
+  headerRef,
   scrollbarRef,
   startRowIndex,
   setStartRowIndex,
@@ -9,12 +10,33 @@ export function useVirtualizedTableScroll({
   dataLength
 }: {
   bodyRef: React.RefObject<HTMLDivElement | null>;
+  headerRef?: React.RefObject<HTMLDivElement | null>;
   scrollbarRef: React.RefObject<HTMLDivElement | null>;
   startRowIndex: number;
   setStartRowIndex: (idx: number) => void;
   rowsPerPage: number;
   dataLength: number;
 }) {
+  // Sync header scroll with body scroll
+  React.useEffect(() => {
+    if (!bodyRef || !headerRef) return;
+    const body = bodyRef.current;
+    const header = headerRef.current;
+    if (!body || !header) return;
+    const syncHeaderScroll = () => {
+      header.scrollLeft = body.scrollLeft;
+    };
+    body.addEventListener('scroll', syncHeaderScroll);
+    return () => {
+      body.removeEventListener('scroll', syncHeaderScroll);
+    };
+  }, [bodyRef, headerRef]);
+  // Sync header scroll with body scroll
+  const handleHeaderScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if (bodyRef.current) {
+      bodyRef.current.scrollLeft = e.currentTarget.scrollLeft;
+    }
+  };
   const [isDraggingScrollbar, setIsDraggingScrollbar] = React.useState(false);
   const [isDraggingTable, setIsDraggingTable] = React.useState(false);
   const lastMousePosition = React.useRef({ x: 0, y: 0 });
@@ -87,5 +109,6 @@ export function useVirtualizedTableScroll({
     lastMousePosition,
     handleTableMouseDown,
     handleTableMouseLeave,
+    handleHeaderScroll,
   };
 }

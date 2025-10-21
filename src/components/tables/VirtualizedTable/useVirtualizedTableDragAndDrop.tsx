@@ -2,11 +2,10 @@ import React from "react";
 
 
 
-export function useVirtualizedTableDragAndDrop({ columns, columnOrder, setColumnOrder }: {
+export function useVirtualizedTableDragAndDrop({ columns }: {
   columns: { column: string; displayValue: string; width?: string }[];
-  columnOrder: string[];
-  setColumnOrder: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
+  const [columnOrder, setColumnOrder] = React.useState<string[]>([]);
   const [draggedColumn, setDraggedColumn] = React.useState<string | null>(null);
   const [dragOverColumn, setDragOverColumn] = React.useState<string | null>(null);
   const [ghostElement, setGhostElement] = React.useState<{ x: number; y: number; text: string } | null>(null);
@@ -77,6 +76,8 @@ export function useVirtualizedTableDragAndDrop({ columns, columnOrder, setColumn
   }, [draggedColumn, handleColumnMouseMove, handleColumnMouseUp]);
 
   return {
+    columnOrder,
+    setColumnOrder,
     draggedColumn,
     setDraggedColumn,
     dragOverColumn,

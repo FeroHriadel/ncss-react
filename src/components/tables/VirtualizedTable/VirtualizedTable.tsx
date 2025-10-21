@@ -33,17 +33,17 @@ function VirtualizedTable({
   hover = true
 }: VirtualizedTableProps) {
 
-  // Refs
+  // Elements Refs
   const headerRef = React.useRef<HTMLDivElement>(null);
   const bodyRef = React.useRef<HTMLDivElement | null>(null);
   const scrollbarRef = React.useRef<HTMLDivElement | null>(null);
 
-  // Columns & Columns order
+  // Columns
   const columns = getColumns();
-  const [columnOrder, setColumnOrder] = React.useState<string[]>([]);
 
   // Column Drag and Drop
   const {
+  columnOrder,
     draggedColumn,
     dragOverColumn,
     ghostElement,
@@ -51,9 +51,9 @@ function VirtualizedTable({
     handleColumnMouseUp,
     handleColumnMouseEnter,
     handleColumnMouseLeave,
-  } = useVirtualizedTableDragAndDrop({ columns, columnOrder, setColumnOrder });
+  } = useVirtualizedTableDragAndDrop({ columns });
 
-  // Column Visibility
+  // Column Visibility (which columns are shown)
   const {
     toggleColumnVisibility,
     getVisibleColumns,
@@ -66,7 +66,7 @@ function VirtualizedTable({
     onClick: () => toggleColumnVisibility(col.column)
   }));
 
-  // Rendering Rows
+  // Rows rendering
   const {
     startRowIndex,
     setStartRowIndex,
@@ -83,8 +83,10 @@ function VirtualizedTable({
     handleTableMouseDown,
     handleTableMouseLeave,
     isDraggingScrollbar,
+    handleHeaderScroll,
   } = useVirtualizedTableScroll({
     bodyRef,
+    headerRef,
     scrollbarRef,
     startRowIndex,
     setStartRowIndex,
@@ -118,13 +120,6 @@ function VirtualizedTable({
     handleZoomOut,
   } = useVirtualizedTableZoom(1, 0.5, 1.5, 0.1);
 
-
-
-  const handleHeaderScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    if (bodyRef.current) {
-      bodyRef.current.scrollLeft = e.currentTarget.scrollLeft
-    }
-  }
 
   // Get column headers - use columnsConfig if provided, otherwise use data keys
   function getColumns() {
