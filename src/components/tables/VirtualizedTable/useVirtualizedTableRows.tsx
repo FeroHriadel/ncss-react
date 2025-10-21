@@ -22,18 +22,20 @@ export function useVirtualizedTableRows({ data, rowsPerPage = 15 }: UseVirtualiz
   }, [startRowIndex, rowsPerPage, data]);
 
   function handleWheelEvent(e: React.WheelEvent<HTMLDivElement>) {
-    if (isChangingRows) return;
-    e.preventDefault();
+  if (isChangingRows) return;
     const scrollingUp = e.deltaY < 0;
     const scrollingDown = e.deltaY > 0;
-    if (scrollingUp && startRowIndex > 0) {
+    if (scrollingUp) {
       setIsChangingRows(true);
-      setStartRowIndex(Math.max(0, startRowIndex - 1));
+      setStartRowIndex(prev => Math.max(0, prev - 1));
       setTimeout(() => setIsChangingRows(false), 50);
     }
-    if (scrollingDown && startRowIndex < data.length - rowsPerPage) {
+    if (scrollingDown) {
       setIsChangingRows(true);
-      setStartRowIndex(Math.min(data.length - rowsPerPage, startRowIndex + 1));
+      setStartRowIndex(prev => {
+        const maxIndex = data.length > rowsPerPage ? data.length - rowsPerPage : 0;
+        return Math.min(maxIndex, prev + 1);
+      });
       setTimeout(() => setIsChangingRows(false), 50);
     }
   }

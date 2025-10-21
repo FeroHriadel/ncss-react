@@ -1,5 +1,6 @@
 import React from 'react'
 import VirtualizedTableControlBar from "./VirtualizedTableControlBar";
+import VirtualizedTableHeader from "./VirtualizedTableHeader";
 import { useVirtualizedTableDragAndDrop } from "./useVirtualizedTableDragAndDrop"
 import { useVirtualizedTableScroll } from "./useVirtualizedTableScroll"
 import { useVirtualizedTableColumns } from "./useVirtualizedTableColumns"
@@ -23,11 +24,11 @@ export interface VirtualizedTableProps {
 function VirtualizedTable({
   data,
   columnsConfig,
-  height = "400px",
-  horizontalSeparators = true,
+  // height = "400px",
+  // horizontalSeparators = true,
   verticalSeparators = true,
-  striped = true,
-  hover = true
+  // striped = true,
+  // hover = true
 }: VirtualizedTableProps) {
     // Refs
     const headerRef = React.useRef<HTMLDivElement>(null);
@@ -73,19 +74,15 @@ function VirtualizedTable({
       startRowIndex,
       setStartRowIndex,
       rowsPerPage,
-      getVisibleRows,
       handleWheelEvent,
-      handleBodyScroll,
     } = useVirtualizedTableRows({ data, rowsPerPage: 15 });
-    const { start: visibleStart, rows: visibleRows } = getVisibleRows();
 
     // Scrollbar Dragging
     const {
-      handleScrollbarMouseDown,
+      handleHeaderScroll,
       handleTableMouseDown,
       handleTableMouseLeave,
-      isDraggingScrollbar,
-      handleHeaderScroll,
+      handleScrollbarMouseDown,
     } = useVirtualizedTableScroll({
       bodyRef,
       headerRef,
@@ -97,20 +94,7 @@ function VirtualizedTable({
     });
 
     // Row hover effect
-    const hoverConfig = React.useMemo(() => {
-      if (typeof hover === 'boolean') {
-        return { enabled: hover, color: undefined };
-      }
-      return { enabled: hover.enabled, color: hover.color };
-    }, [hover]);
-
-    // Striped table prop
-    const stripedConfig = React.useMemo(() => {
-      if (typeof striped === 'boolean') {
-        return { enabled: striped, color: undefined };
-      }
-      return { enabled: striped.enabled, color: striped.color };
-    }, [striped]);
+    // ...existing code...
 
     // Zoom functionality
     const {
@@ -144,66 +128,39 @@ function VirtualizedTable({
         {/* Fixed Header */}
         <div className="flex">
           <div className="border border-gray-300 overflow-hidden flex-1">
-            <div 
-              ref={headerRef}
-              style={{ 
-                overflow: 'auto',
-                scrollbarWidth: 'none',
-                msOverflowStyle: 'none',
-              }}
-              className="[&::-webkit-scrollbar]:hidden"
-              onScroll={handleHeaderScroll}
-            >
-              <table className="w-full border-collapse" style={{ 
-                tableLayout: 'fixed',
-                fontSize: `${zoomLevel}rem`,
-                transition: 'font-size 0.2s ease-out'
-              }}>
-                <thead className="bg-gray-50">
-                  <tr>
-                    {getVisibleColumns(columnOrder).map((col, index) => (
-                      <th 
-                        key={col.column} 
-                        className={`text-left break-words cursor-move select-none transition-colors ${
-                          verticalSeparators && index < getVisibleColumns(columnOrder).length - 1 ? 'border-r border-gray-200' : ''
-                        } ${
-                          draggedColumn === col.column ? 'opacity-50' : ''
-                        } ${
-                          dragOverColumn === col.column ? 'bg-blue-100' : ''
-                        }`}
-                        style={{
-                          ...getColumnStyle(col),
-                          padding: `${zoomLevel * 0.5}rem ${zoomLevel * 1}rem`
-                        }}
-                        onMouseDown={(e) => handleColumnMouseDown(e, col.column, col.displayValue)}
-                        onMouseUp={() => handleColumnMouseUp(col.column)}
-                        onMouseEnter={() => handleColumnMouseEnter(col.column)}
-                        onMouseLeave={handleColumnMouseLeave}
-                      >
-                        {col.displayValue}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-              </table>
-            </div>
+            <VirtualizedTableHeader
+              headerRef={headerRef as React.RefObject<HTMLDivElement>}
+              columnOrder={getVisibleColumns(columnOrder)}
+              getVisibleColumns={() => getVisibleColumns(columnOrder)}
+              draggedColumn={draggedColumn}
+              dragOverColumn={dragOverColumn}
+              getColumnStyle={getColumnStyle}
+              zoomLevel={zoomLevel}
+              verticalSeparators={verticalSeparators}
+              handleHeaderScroll={handleHeaderScroll}
+              handleColumnMouseDown={handleColumnMouseDown}
+              handleColumnMouseUp={handleColumnMouseUp}
+              handleColumnMouseEnter={handleColumnMouseEnter}
+              handleColumnMouseLeave={handleColumnMouseLeave}
+            />
           </div>
+          {/* Spacer to account for custom scrollbar */}
           <div className="w-2 border-t border-r border-gray-300 bg-gray-50"></div>
         </div>
+
         {/* Scrollable Body with Custom Scrollbar */}
         <div className="flex">
           <div 
             ref={bodyRef}
             className="overflow-auto border-l border-r border-b border-gray-300 [&::-webkit-scrollbar]:hidden flex-1"
             style={{ 
-              height: height,
+              height: '400px',
               scrollbarWidth: 'none',
               msOverflowStyle: 'none',
             }}
-            onScroll={handleBodyScroll}
-            onWheel={handleWheelEvent}
             onMouseDown={handleTableMouseDown}
             onMouseLeave={handleTableMouseLeave}
+            onWheel={handleWheelEvent}
           >
             <table className="w-full min-h-full border-collapse" style={{ 
               tableLayout: 'fixed',
@@ -211,77 +168,53 @@ function VirtualizedTable({
               transition: 'font-size 0.2s ease-out'
             }}>
               <tbody>
-                {visibleRows.map((row: VirtualizedTableProps["data"][number], i: number) => {
-                  const rowIndex = visibleStart + i;
-                  return (
-                    <tr 
-                      key={rowIndex} 
-                      className={`${horizontalSeparators ? 'border-b border-gray-200' : ''} ${
-                        stripedConfig.enabled && rowIndex % 2 === 1 && !stripedConfig.color ? 'bg-gray-100' : ''
-                      } ${
-                        hoverConfig.enabled && !hoverConfig.color ? 'hover:bg-gray-200' : ''
-                      }`}
-                      style={{
-                        backgroundColor: stripedConfig.enabled && rowIndex % 2 === 1 && stripedConfig.color 
-                          ? stripedConfig.color 
-                          : undefined
-                      }}
-                      onMouseEnter={hoverConfig.enabled && hoverConfig.color ? (e) => {
-                        e.currentTarget.style.backgroundColor = hoverConfig.color!;
-                      } : undefined}
-                      onMouseLeave={hoverConfig.enabled && hoverConfig.color ? (e) => {
-                        const stripedBg = stripedConfig.enabled && rowIndex % 2 === 1 
-                          ? stripedConfig.color || '#f3f4f6' 
-                          : '';
-                        e.currentTarget.style.backgroundColor = stripedBg;
-                      } : undefined}
-                    >
-                      {getVisibleColumns(columnOrder).map((col, index) => {
-                        const cellValue = row[col.column];
-                        let renderedValue;
-                        if (cellValue === null || cellValue === undefined) {
-                          renderedValue = '';
-                        } else if (Array.isArray(cellValue)) {
-                          renderedValue = String(cellValue);
-                        } else if (React.isValidElement(cellValue)) {
-                          renderedValue = cellValue as React.ReactNode;
-                        } else if (typeof cellValue === 'object') {
-                          renderedValue = JSON.stringify(cellValue);
-                        } else {
-                          renderedValue = String(cellValue);
-                        }
-                        return (
-                          <td 
-                            key={col.column} 
-                            className={`break-words ${
-                              verticalSeparators && index < getVisibleColumns(columnOrder).length - 1 ? 'border-r border-gray-200' : ''
-                            }`}
-                            style={{
-                              ...getColumnStyle(col),
-                              padding: `${zoomLevel * 0.5}rem ${zoomLevel * 1}rem`
-                            }}
-                          >
-                            {renderedValue}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  );
-                })}
+                {data.slice(startRowIndex, startRowIndex + rowsPerPage).map((row, i) => (
+                  <tr key={i} className="border-b border-gray-200">
+                    {getVisibleColumns(columnOrder).map((col, index) => {
+                      const cellValue = row[col.column];
+                      let renderedValue;
+                      if (cellValue === null || cellValue === undefined) {
+                        renderedValue = '';
+                      } else if (Array.isArray(cellValue)) {
+                        renderedValue = String(cellValue);
+                      } else if (React.isValidElement(cellValue)) {
+                        renderedValue = cellValue as React.ReactNode;
+                      } else if (typeof cellValue === 'object') {
+                        renderedValue = JSON.stringify(cellValue);
+                      } else {
+                        renderedValue = String(cellValue);
+                      }
+                      return (
+                        <td
+                          key={col.column}
+                          className={`break-words ${
+                            verticalSeparators && index < getVisibleColumns(columnOrder).length - 1 ? 'border-r border-gray-200' : ''
+                          }`}
+                          style={{
+                            ...getColumnStyle(col),
+                            padding: `${zoomLevel * 0.5}rem ${zoomLevel * 1}rem`
+                          }}
+                        >
+                          {renderedValue}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
+          {/* Custom Scrollbar */}
           <div 
             ref={scrollbarRef}
             className="w-2 bg-gray-50 border-r border-b border-gray-300 relative cursor-pointer select-none"
-            style={{ height: height }}
+            style={{ height: '400px' }}
             onMouseDown={handleScrollbarMouseDown}
           >
             <div className="absolute inset-x-0 top-1 bottom-1 bg-gray-200 rounded-full mx-0.5"></div>
+            {/* Scrollbar Thumb (dummy, not interactive) */}
             <div 
-              className={`absolute bg-gray-400 rounded-full transition-all duration-200 ease-out mx-0.5 ${
-                isDraggingScrollbar ? 'bg-gray-600 scale-110' : 'hover:bg-gray-500'
-              }`}
+              className="absolute bg-gray-400 rounded-full transition-all duration-200 ease-out mx-0.5"
               style={{
                 height: `${Math.max(20, (rowsPerPage / data.length) * 80)}%`,
                 top: `${2 + (startRowIndex / Math.max(1, data.length - rowsPerPage)) * (96 - Math.max(20, (rowsPerPage / data.length) * 80))}%`,
@@ -291,6 +224,7 @@ function VirtualizedTable({
             />
           </div>
         </div>
+
         {ghostElement && (
           <div
             className="fixed pointer-events-none z-50 bg-white border border-gray-300 px-2 py-1 rounded shadow-lg text-sm"
@@ -307,4 +241,4 @@ function VirtualizedTable({
     );
   }
 
-  export default VirtualizedTable;
+export default VirtualizedTable;
