@@ -9,6 +9,8 @@ import ButtonIcon from "../../buttons/ButtonIcon"
 import { HiOutlineViewColumns } from "react-icons/hi2"
 import DropdownIcon from "../../dropdowns/DropdownIcon"
 
+
+
 export interface VirtualizedTableProps {
   data: { [key: string]: string | number | boolean | null | undefined | [] | object | React.ReactNode }[];
   columnsConfig?: { column: string; displayValue: string; width?: string }[];
@@ -18,6 +20,9 @@ export interface VirtualizedTableProps {
   striped?: { enabled: boolean; color?: string } | boolean; // Alternate row colors with optional custom color
   hover?: { enabled: boolean; color?: string } | boolean; // Enable hover effects on rows with optional custom color
 }
+
+
+
 function VirtualizedTable({
   data,
   columnsConfig,
@@ -27,14 +32,17 @@ function VirtualizedTable({
   striped = true,
   hover = true
 }: VirtualizedTableProps) {
+
   // Refs
   const headerRef = React.useRef<HTMLDivElement>(null);
   const bodyRef = React.useRef<HTMLDivElement | null>(null);
   const scrollbarRef = React.useRef<HTMLDivElement | null>(null);
 
-  // Columns
+  // Columns & Columns order
   const columns = getColumns();
   const [columnOrder, setColumnOrder] = React.useState<string[]>([]);
+
+  // Column Drag and Drop
   const {
     draggedColumn,
     dragOverColumn,
@@ -45,15 +53,21 @@ function VirtualizedTable({
     handleColumnMouseEnter,
     handleColumnMouseLeave,
   } = useVirtualizedTableDragAndDrop({ columns, columnOrder, setColumnOrder });
+
+  // Column Visibility
   const {
     toggleColumnVisibility,
     getVisibleColumns,
   } = useVirtualizedTableColumns({ columns });
+
+  // Column Visibility Toggle Options
   const dropdownOptions = columns.map(col => ({
     value: col.column,
     displayValue: col.displayValue,
     onClick: () => toggleColumnVisibility(col.column)
   }));
+
+  // Rendering Rows
   const {
     startRowIndex,
     setStartRowIndex,
@@ -63,6 +77,8 @@ function VirtualizedTable({
     handleBodyScroll,
   } = useVirtualizedTableRows({ data, rowsPerPage: 15 });
   const { start: visibleStart, rows: visibleRows } = getVisibleRows();
+
+  // Scrollbar Dragging
   const {
     handleScrollbarMouseDown,
     handleTableMouseDown,
@@ -76,6 +92,7 @@ function VirtualizedTable({
     rowsPerPage,
     dataLength: data.length,
   });
+
   // Row hover effect - handle both boolean and object formats from props
   const hoverConfig = React.useMemo(() => {
     if (typeof hover === 'boolean') {
@@ -83,6 +100,7 @@ function VirtualizedTable({
     }
     return { enabled: hover.enabled, color: hover.color }
   }, [hover]);
+
   // Striped table prop - handle both boolean and object formats from props
   const stripedConfig = React.useMemo(() => {
     if (typeof striped === 'boolean') {
@@ -100,8 +118,6 @@ function VirtualizedTable({
     handleZoomIn,
     handleZoomOut,
   } = useVirtualizedTableZoom(1, 0.5, 1.5, 0.1);
-
-  // ...all hooks and variables are now declared above...
 
   // Initialize column order when columns change
   React.useEffect(() => {
