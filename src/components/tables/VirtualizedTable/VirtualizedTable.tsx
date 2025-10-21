@@ -1,5 +1,9 @@
 import React from 'react'
+import { useVirtualizedTableDragAndDrop } from "./useVirtualizedTableDragAndDrop"
+import { useVirtualizedTableScroll } from "./useVirtualizedTableScroll"
+import { useVirtualizedTableColumns } from "./useVirtualizedTableColumns"
 import { useVirtualizedTableRows } from "./useVirtualizedTableRows"
+import { useVirtualizedTableZoom } from "./useVirtualizedTableZoom"
 import { CiZoomIn, CiZoomOut } from "react-icons/ci"
 import ButtonIcon from "../../buttons/ButtonIcon"
 import { HiOutlineViewColumns } from "react-icons/hi2"
@@ -14,42 +18,42 @@ export interface VirtualizedTableProps {
   striped?: { enabled: boolean; color?: string } | boolean; // Alternate row colors with optional custom color
   hover?: { enabled: boolean; color?: string } | boolean; // Enable hover effects on rows with optional custom color
 }
+function VirtualizedTable({
+  data,
+  columnsConfig,
+  height = "400px",
+  horizontalSeparators = true,
+  verticalSeparators = true,
+  striped = true,
+  hover = true
+}: VirtualizedTableProps) {
+  // Refs
+  const headerRef = React.useRef<HTMLDivElement>(null);
+  const bodyRef = React.useRef<HTMLDivElement | null>(null);
+  const scrollbarRef = React.useRef<HTMLDivElement | null>(null);
 
-
-
-
-
-function VirtualizedTable(props: VirtualizedTableProps) {
-  // ...existing code...
-
-  const { data, columnsConfig, height = "400px", horizontalSeparators = true, verticalSeparators = true, striped = true, hover = true } = props
-
-  // Process hover prop - handle both boolean and object formats
-  const hoverConfig = React.useMemo(() => {
-    if (typeof hover === 'boolean') {
-      return { enabled: hover, color: undefined }
-    }
-    return { enabled: hover.enabled, color: hover.color }
-  }, [hover])
-
-  // Process striped prop - handle both boolean and object formats
-  const stripedConfig = React.useMemo(() => {
-    if (typeof striped === 'boolean') {
-      return { enabled: striped, color: undefined }
-    }
-    return { enabled: striped.enabled, color: striped.color }
-  }, [striped])
-  const headerRef = React.useRef<HTMLDivElement>(null)
-  const bodyRef = React.useRef<HTMLDivElement>(null)
-  const columns = getColumns()
+  // Columns
+  const columns = getColumns();
+  const [columnOrder, setColumnOrder] = React.useState<string[]>([]);
+  const {
+    draggedColumn,
+    dragOverColumn,
+    ghostElement,
+    handleColumnMouseDown,
+    handleColumnMouseMove,
+    handleColumnMouseUp,
+    handleColumnMouseEnter,
+    handleColumnMouseLeave,
+  } = useVirtualizedTableDragAndDrop({ columns, columnOrder, setColumnOrder });
+  const {
+    toggleColumnVisibility,
+    getVisibleColumns,
+  } = useVirtualizedTableColumns({ columns });
   const dropdownOptions = columns.map(col => ({
     value: col.column,
     displayValue: col.displayValue,
     onClick: () => toggleColumnVisibility(col.column)
   }));
-  const preselectedDropdownOptions = columns.map(col => col.column);
-
-  // Row-based rendering state via hook
   const {
     startRowIndex,
     setStartRowIndex,
@@ -57,167 +61,54 @@ function VirtualizedTable(props: VirtualizedTableProps) {
     getVisibleRows,
     handleWheelEvent,
     handleBodyScroll,
-  } = useVirtualizedTableRows({ data, rowsPerPage: 15 })
-  const [isDraggingScrollbar, setIsDraggingScrollbar] = React.useState(false)
-  const scrollbarRef = React.useRef<HTMLDivElement>(null)
-  const [isDraggingTable, setIsDraggingTable] = React.useState(false)
-  const lastMousePosition = React.useRef({ x: 0, y: 0 })
-  const [zoomLevel, setZoomLevel] = React.useState(1) // Zoom state (1 = 100%, 0.8 = 80%, 1.2 = 120%)
-  const [showColumnOptions, setShowColumnOptions] = React.useState(false) // Column visibility dropdown
-  const [visibleColumns, setVisibleColumns] = React.useState<{ [key: string]: boolean }>({}) // Track visible columns
-  const columnOptionsRef = React.useRef<HTMLDivElement>(null) // Ref for dropdown
-  
-  // Zoom controls
-  const minZoom = 0.5 // 50%
-  const maxZoom = 1.5 // 150%
-  const zoomStep = 0.1 // 10% increments
-  
-  // Column drag and drop state
-  const [draggedColumn, setDraggedColumn] = React.useState<string | null>(null)
-  const [dragOverColumn, setDragOverColumn] = React.useState<string | null>(null)
-  const [columnOrder, setColumnOrder] = React.useState<string[]>([])
-  const [ghostElement, setGhostElement] = React.useState<{ x: number; y: number; text: string } | null>(null)
-  
-  const { start: visibleStart, rows: visibleRows } = getVisibleRows()
-
-  // Custom scrollbar logic
-  const handleScrollbarDrag = React.useCallback((e: React.MouseEvent | MouseEvent) => {
-    if (!scrollbarRef.current) return
-    
-    const rect = scrollbarRef.current.getBoundingClientRect()
-    const relativeY = e.clientY - rect.top
-    const percentage = Math.max(0, Math.min(1, relativeY / rect.height))
-    const maxStartIndex = Math.max(0, data.length - rowsPerPage)
-    const targetRowIndex = Math.floor(percentage * maxStartIndex)
-    
-    if (targetRowIndex !== startRowIndex && targetRowIndex >= 0 && targetRowIndex <= maxStartIndex) {
-      setStartRowIndex(targetRowIndex)
+  } = useVirtualizedTableRows({ data, rowsPerPage: 15 });
+  const { start: visibleStart, rows: visibleRows } = getVisibleRows();
+  const {
+    handleScrollbarMouseDown,
+    handleTableMouseDown,
+    handleTableMouseLeave,
+    isDraggingScrollbar,
+  } = useVirtualizedTableScroll({
+    bodyRef,
+    scrollbarRef,
+    startRowIndex,
+    setStartRowIndex,
+    rowsPerPage,
+    dataLength: data.length,
+  });
+  // Row hover effect - handle both boolean and object formats from props
+  const hoverConfig = React.useMemo(() => {
+    if (typeof hover === 'boolean') {
+      return { enabled: hover, color: undefined }
     }
-  }, [data.length, rowsPerPage, startRowIndex])
-
-  const handleScrollbarMouseDown = (e: React.MouseEvent) => {
-    setIsDraggingScrollbar(true)
-    handleScrollbarDrag(e)
-  }
-
-  React.useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (isDraggingScrollbar) {
-        handleScrollbarDrag(e)
-      }
-      if (isDraggingTable && bodyRef.current) {
-        const deltaX = e.clientX - lastMousePosition.current.x
-        const deltaY = e.clientY - lastMousePosition.current.y
-        
-        bodyRef.current.scrollLeft -= deltaX
-        bodyRef.current.scrollTop -= deltaY
-        
-        lastMousePosition.current = { x: e.clientX, y: e.clientY }
-      }
+    return { enabled: hover.enabled, color: hover.color }
+  }, [hover]);
+  // Striped table prop - handle both boolean and object formats from props
+  const stripedConfig = React.useMemo(() => {
+    if (typeof striped === 'boolean') {
+      return { enabled: striped, color: undefined }
     }
+    return { enabled: striped.enabled, color: striped.color }
+  }, [striped]);
+  const preselectedDropdownOptions = columns.map(col => col.column);
 
-    const handleMouseUp = () => {
-      setIsDraggingScrollbar(false)
-      setIsDraggingTable(false)
-    }
+  // Zoom functionality
+  const {
+    zoomLevel,
+    minZoom,
+    maxZoom,
+    handleZoomIn,
+    handleZoomOut,
+  } = useVirtualizedTableZoom(1, 0.5, 1.5, 0.1);
 
-    if (isDraggingScrollbar || isDraggingTable) {
-      document.addEventListener('mousemove', handleMouseMove)
-      document.addEventListener('mouseup', handleMouseUp)
-    }
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseup', handleMouseUp)
-    }
-  }, [isDraggingScrollbar, isDraggingTable, handleScrollbarDrag])
-
-  // Table drag-to-scroll handlers
-  const handleTableMouseDown = (e: React.MouseEvent) => {
-    setIsDraggingTable(true)
-    lastMousePosition.current = { x: e.clientX, y: e.clientY }
-    e.preventDefault() // Prevent text selection
-  }
-
-  const handleTableMouseLeave = () => {
-    setIsDraggingTable(false)
-  }
-
-  // Zoom handler functions
-  const handleZoomIn = () => {
-    setZoomLevel(prev => Math.min(maxZoom, prev + zoomStep))
-  }
-
-  const handleZoomOut = () => {
-    setZoomLevel(prev => Math.max(minZoom, prev - zoomStep))
-  }
-
-  // Column drag and drop handlers
-  const handleColumnMouseDown = (e: React.MouseEvent, columnKey: string, displayValue: string) => {
-    setDraggedColumn(columnKey)
-    setGhostElement({
-      x: e.clientX,
-      y: e.clientY,
-      text: displayValue
-    })
-    e.preventDefault()
-  }
-
-  const handleColumnMouseMove = React.useCallback((e: MouseEvent) => {
-    if (draggedColumn && ghostElement) {
-      setGhostElement(prev => prev ? {
-        ...prev,
-        x: e.clientX,
-        y: e.clientY
-      } : null)
-    }
-  }, [draggedColumn, ghostElement])
-
-  const handleColumnMouseUp = React.useCallback((targetColumnKey?: string) => {
-    if (draggedColumn && targetColumnKey && draggedColumn !== targetColumnKey) {
-      // Reorder columns
-      const newOrder = [...(columnOrder.length > 0 ? columnOrder : columns.map(c => c.column))]
-      const draggedIndex = newOrder.indexOf(draggedColumn)
-      const targetIndex = newOrder.indexOf(targetColumnKey)
-      
-      if (draggedIndex !== -1 && targetIndex !== -1) {
-        // Remove dragged column and insert at target position
-        const [draggedItem] = newOrder.splice(draggedIndex, 1)
-        newOrder.splice(targetIndex, 0, draggedItem)
-        setColumnOrder(newOrder)
-      }
-    }
-    
-    setDraggedColumn(null)
-    setDragOverColumn(null)
-    setGhostElement(null)
-  }, [draggedColumn, columnOrder, columns])
-
-  const handleColumnMouseEnter = (columnKey: string) => {
-    if (draggedColumn && draggedColumn !== columnKey) {
-      setDragOverColumn(columnKey)
-    }
-  }
-
-  const handleColumnMouseLeave = () => {
-    setDragOverColumn(null)
-  }
-
-  // Initialize visible columns when columns change
-  React.useEffect(() => {
-    const initialVisibility: { [key: string]: boolean } = {}
-    columns.forEach(col => {
-      initialVisibility[col.column] = true // All columns visible by default
-    })
-    setVisibleColumns(initialVisibility)
-  }, [columns])
+  // ...all hooks and variables are now declared above...
 
   // Initialize column order when columns change
   React.useEffect(() => {
     if (columns.length > 0 && columnOrder.length === 0) {
-      setColumnOrder(columns.map(col => col.column))
+      setColumnOrder(columns.map(col => col.column));
     }
-  }, [columns, columnOrder.length])
+  }, [columns, columnOrder.length]);
 
   // Handle global mouse events for column dragging
   React.useEffect(() => {
@@ -231,41 +122,6 @@ function VirtualizedTable(props: VirtualizedTableProps) {
       document.removeEventListener('mouseup', () => handleColumnMouseUp())
     }
   }, [draggedColumn, handleColumnMouseMove, handleColumnMouseUp])
-
-  // Column visibility handlers
-  const toggleColumnVisibility = (columnKey: string) => {
-    setVisibleColumns(prev => ({
-      ...prev,
-      [columnKey]: !prev[columnKey]
-    }))
-  }
-
-  // Click outside to close dropdown
-  React.useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (columnOptionsRef.current && !columnOptionsRef.current.contains(event.target as Node)) {
-        setShowColumnOptions(false)
-      }
-    }
-
-    if (showColumnOptions) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [showColumnOptions])
-
-  // Filter visible columns and apply custom order
-  const getVisibleColumns = () => {
-    const orderedColumns = columnOrder.length > 0 ? columnOrder : columns.map(c => c.column)
-    return orderedColumns
-      .map(colKey => columns.find(col => col.column === colKey))
-      .filter(col => col && visibleColumns[col.column] !== false) as { column: string; displayValue: string; width?: string }[]
-  }
-
-  // ...existing code...
 
   const handleHeaderScroll = (e: React.UIEvent<HTMLDivElement>) => {
     if (bodyRef.current) {
@@ -350,11 +206,11 @@ function VirtualizedTable(props: VirtualizedTableProps) {
             }}>
               <thead className="bg-gray-50">
                 <tr>
-                  {getVisibleColumns().map((col, index) => (
+                  {getVisibleColumns(columnOrder).map((col, index) => (
                     <th 
                       key={col.column} 
                       className={`text-left break-words cursor-move select-none transition-colors ${
-                        verticalSeparators && index < getVisibleColumns().length - 1 ? 'border-r border-gray-200' : ''
+                        verticalSeparators && index < getVisibleColumns(columnOrder).length - 1 ? 'border-r border-gray-200' : ''
                       } ${
                         draggedColumn === col.column ? 'opacity-50' : ''
                       } ${
@@ -429,7 +285,7 @@ function VirtualizedTable(props: VirtualizedTableProps) {
                       e.currentTarget.style.backgroundColor = stripedBg
                     } : undefined}
                   >
-                    {getVisibleColumns().map((col, index) => {
+                    {getVisibleColumns(columnOrder).map((col, index) => {
                       const cellValue = row[col.column]
                       
                       // Handle different data types
@@ -454,7 +310,7 @@ function VirtualizedTable(props: VirtualizedTableProps) {
                         <td 
                           key={col.column} 
                           className={`break-words ${
-                            verticalSeparators && index < getVisibleColumns().length - 1 ? 'border-r border-gray-200' : ''
+                            verticalSeparators && index < getVisibleColumns(columnOrder).length - 1 ? 'border-r border-gray-200' : ''
                           }`}
                           style={{
                             ...getColumnStyle(col),
