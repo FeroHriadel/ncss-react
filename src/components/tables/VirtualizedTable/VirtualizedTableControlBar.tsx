@@ -23,7 +23,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
   handleZoomIn,
   handleZoomOut,
 }) => (
-  <div className="w-full flex justify-between items-center p-2 border border-gray-300 bg-gray-50">
+  <div className="w-full flex justify-between items-center p-2 border border-gray-300 border-b-0 bg-gray-50">
     <div className="flex items-center">
       <span className="text-sm text-gray-600">Controls</span>
     </div>
