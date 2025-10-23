@@ -19,6 +19,7 @@ export function useVirtualizedTableRendering({
   // ===== State from useVirtualizedTableRows =====
   const [startRowIndex, setStartRowIndex] = useState(0);
   const lastScrollTop = useRef(0);
+  const isResettingScroll = useRef(false);
 
   // ===== State from useVirtualizedTableScroll =====
   const [isDraggingScrollbar, setIsDraggingScrollbar] = useState(false);
@@ -87,6 +88,19 @@ export function useVirtualizedTableRendering({
     };
   }, [bodyRef, headerRef]);
 
+  // Reset vertical scroll position when startRowIndex changes
+  // This keeps the browser scroll in the middle so virtual scrolling can continue
+  useEffect(() => {
+    if (!bodyRef.current) return;
+    isResettingScroll.current = true;
+    // Reset to top to allow consistent scrolling behavior
+    bodyRef.current.scrollTop = 0;
+    // Allow scroll events after a brief moment
+    setTimeout(() => {
+      isResettingScroll.current = false;
+    }, 50);
+  }, [startRowIndex, bodyRef]);
+
   // Sync header scroll with body scroll (handler)
   const handleHeaderScroll = (e: React.UIEvent<HTMLDivElement>) => {
     if (bodyRef.current) {
@@ -98,10 +112,12 @@ export function useVirtualizedTableRendering({
   const handleScrollbarDrag = useCallback((e: React.MouseEvent | MouseEvent) => {
     if (!scrollbarRef.current) return;
     const rect = scrollbarRef.current.getBoundingClientRect();
-    const relativeY = e.clientY - rect.top;
-    const percentage = Math.max(0, Math.min(1, relativeY / rect.height));
+    const padding = 4; // Account for top-1 and bottom-1 padding (4px each)
+    const trackHeight = rect.height - (padding * 2);
+    const relativeY = Math.max(padding, Math.min(rect.height - padding, e.clientY - rect.top)) - padding;
+    const percentage = Math.max(0, Math.min(1, relativeY / trackHeight));
     const maxStartIndex = Math.max(0, data.length - rowsPerPage);
-    const targetRowIndex = Math.floor(percentage * maxStartIndex);
+    const targetRowIndex = Math.round(percentage * maxStartIndex);
     if (targetRowIndex !== startRowIndex && targetRowIndex >= 0 && targetRowIndex <= maxStartIndex) {
       setStartRowIndex(targetRowIndex);
     }

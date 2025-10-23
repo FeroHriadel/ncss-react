@@ -74,7 +74,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
       onKeyDown={handleKeyDown}
     >
       <table
-        className="w-full min-h-full border-collapse"
+        className="w-full border-collapse"
         style={{
           tableLayout: 'fixed',
           fontSize: `${zoomLevel}rem`,
@@ -82,7 +82,14 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
         }}
       >
         <tbody>
-          {data.slice(startRowIndex, startRowIndex + rowsPerPage).map((row, i) => {
+          {(() => {
+            // Render extra rows to fill container and ensure last row is fully visible
+            const isAtEnd = startRowIndex >= data.length - rowsPerPage;
+            const endIndex = isAtEnd 
+              ? data.length  // Show all remaining rows when at end
+              : Math.min(startRowIndex + rowsPerPage + 2, data.length); // Render +2 extra to fill gaps
+            return data.slice(startRowIndex, endIndex);
+          })().map((row, i) => {
             // Striped logic
             let stripedClass = '';
             if (striped && (typeof striped === 'boolean' ? striped : striped.enabled)) {
@@ -122,7 +129,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
                     }`}
                     style={{
                       ...getColumnStyle(col),
-                      padding: `${zoomLevel * 0.5}rem ${zoomLevel * 1}rem`,
+                      padding: '0.375rem 0.75rem', // Fixed conservative padding (6px 12px)
                     }}
                   >
                     {renderedValue}
@@ -144,15 +151,28 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
     >
       <div className="absolute inset-x-0 top-1 bottom-1 bg-gray-200 rounded-full mx-0.5"></div>
       {/* Scrollbar Thumb (dummy, not interactive) */}
-      <div
-        className="absolute bg-gray-400 rounded-full transition-all duration-200 ease-out mx-0.5"
-        style={{
-          height: `${Math.max(20, (rowsPerPage / data.length) * 80)}%`,
-          top: `${2 + (startRowIndex / Math.max(1, data.length - rowsPerPage)) * (96 - Math.max(20, (rowsPerPage / data.length) * 80))}%`,
-          left: '1px',
-          right: '1px',
-        }}
-      />
+      {(() => {
+        // Calculate thumb size as percentage of visible rows vs total rows
+        const thumbHeightPercent = Math.max(20, (rowsPerPage / data.length) * 100);
+        // Calculate scroll progress (0 to 1)
+        const scrollProgress = startRowIndex / Math.max(1, data.length - rowsPerPage);
+        // Available space for thumb movement (track height - thumb height)
+        const availableSpace = 100 - thumbHeightPercent;
+        // Position thumb within the track, accounting for 4px (1rem = ~4px) padding
+        const topPosition = 1 + (scrollProgress * availableSpace * 0.96); // 96% to account for padding
+        
+        return (
+          <div
+            className="absolute bg-gray-400 rounded-full transition-all duration-200 ease-out mx-0.5"
+            style={{
+              height: `${thumbHeightPercent}%`,
+              top: `${topPosition}%`,
+              left: '1px',
+              right: '1px',
+            }}
+          />
+        );
+      })()}
     </div>
   </div>
   );

@@ -70,6 +70,50 @@ function VirtualizedTable({
     }));
     const preselectedDropdownOptions = columns.map(col => col.column);
 
+    // Zoom functionality
+    const {
+      zoomLevel,
+      minZoom,
+      maxZoom,
+      handleZoomIn,
+      handleZoomOut,
+    } = useVirtualizedTableZoom(1, 0.5, 1.5, 0.1);
+
+    // Calculate rows per page based on height
+    // Start with a reasonable estimate based on typical row height at current zoom
+    const estimatedRowHeight = zoomLevel * 32; // Rough estimate: font size + padding + border
+    const heightInPx = parseInt(height) || 500;
+    const initialEstimate = Math.min(
+      Math.max(3, Math.floor(heightInPx / estimatedRowHeight)),
+      data.length
+    );
+    const [calculatedRowsPerPage, setCalculatedRowsPerPage] = React.useState(initialEstimate);
+    
+    // Measure actual row height after first render
+    React.useEffect(() => {
+      if (bodyRef.current && data.length > 0) {
+        // Measure multiple rows to get accurate average height including borders
+        const allRows = bodyRef.current.querySelectorAll('tbody tr');
+        if (allRows.length > 0) {
+          // Measure the total height of all currently rendered rows
+          const firstRow = allRows[0];
+          const lastRow = allRows[allRows.length - 1];
+          const firstRect = firstRow.getBoundingClientRect();
+          const lastRect = lastRow.getBoundingClientRect();
+          const totalHeight = lastRect.bottom - firstRect.top;
+          const avgRowHeight = totalHeight / allRows.length;
+          
+          const heightInPx = parseInt(height) || 500;
+          // Subtract 1 from calculated rows to ensure we can always scroll to see the last row fully
+          // We render +2 extra rows in the body to fill gaps
+          const calculatedRows = Math.max(1, Math.floor(heightInPx / avgRowHeight) - 1);
+          // Never render more rows than we have data
+          const cappedRows = Math.min(calculatedRows, data.length);
+          setCalculatedRowsPerPage(cappedRows);
+        }
+      }
+    }, [bodyRef, data.length, height, zoomLevel]);
+
     // Rendering (Rows + Scrolling + Dragging)
     const {
       startRowIndex,
@@ -82,7 +126,7 @@ function VirtualizedTable({
       handleKeyDown,
     } = useVirtualizedTableRendering({
       data,
-      rowsPerPage: 15,
+      rowsPerPage: calculatedRowsPerPage,
       bodyRef,
       headerRef,
       scrollbarRef,
@@ -90,15 +134,6 @@ function VirtualizedTable({
 
     // Row hover effect
     // ...existing code...
-
-    // Zoom functionality
-    const {
-      zoomLevel,
-      minZoom,
-      maxZoom,
-      handleZoomIn,
-      handleZoomOut,
-    } = useVirtualizedTableZoom(1, 0.5, 1.5, 0.1);
 
     // Get column width style
     function getColumnStyle(columnObj: { column: string; displayValue: string; width?: string }) {
