@@ -22,6 +22,7 @@ interface VirtualizedTableBodyProps {
   handleTableMouseLeave: (e: React.MouseEvent<HTMLDivElement>) => void;
   handleWheelEvent: (e: React.WheelEvent<HTMLDivElement>) => void;
   handleScrollbarMouseDown: (e: React.MouseEvent<HTMLDivElement>) => void;
+  handleKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => void;
   height: string;
   striped: boolean | { enabled: boolean; color?: string };
   hover: boolean | { enabled: boolean; color?: string };
@@ -43,22 +44,34 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
   handleTableMouseLeave,
   handleWheelEvent,
   handleScrollbarMouseDown,
+  handleKeyDown,
   height,
   striped,
   hover,
-}) => (
+}) => {
+  const handleMouseDownWithFocus = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Ensure the container gets focus when clicked
+    if (bodyRef.current) {
+      bodyRef.current.focus();
+    }
+    handleTableMouseDown(e);
+  };
+
+  return (
   <div className="flex">
     <div
       ref={bodyRef}
-      className="overflow-auto border-l border-r border-b border-gray-300 [&::-webkit-scrollbar]:hidden flex-1"
+      tabIndex={0}
+      className="overflow-x-auto overflow-y-hidden border-l border-r border-b border-gray-300 [&::-webkit-scrollbar]:hidden flex-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
       style={{
         height,
         scrollbarWidth: 'none',
         msOverflowStyle: 'none',
       }}
-      onMouseDown={handleTableMouseDown}
+      onMouseDown={handleMouseDownWithFocus}
       onMouseLeave={handleTableMouseLeave}
       onWheel={handleWheelEvent}
+      onKeyDown={handleKeyDown}
     >
       <table
         className="w-full min-h-full border-collapse"
@@ -142,6 +155,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
       />
     </div>
   </div>
-);
+  );
+};
 
 export default VirtualizedTableBody;

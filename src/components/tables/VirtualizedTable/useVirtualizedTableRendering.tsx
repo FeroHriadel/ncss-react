@@ -176,6 +176,42 @@ export function useVirtualizedTableRendering({
     };
   }, [isDraggingScrollbar, isDraggingTable, handleScrollbarDrag, bodyRef, data.length, rowsPerPage, setStartRowIndex]);
 
+  // ===== Keyboard navigation =====
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      e.stopPropagation();
+      setStartRowIndex(prev => {
+        const maxIndex = Math.max(0, data.length - rowsPerPage);
+        return Math.min(maxIndex, prev + 1);
+      });
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      e.stopPropagation();
+      setStartRowIndex(prev => Math.max(0, prev - 1));
+    } else if (e.key === 'PageDown') {
+      e.preventDefault();
+      e.stopPropagation();
+      setStartRowIndex(prev => {
+        const maxIndex = Math.max(0, data.length - rowsPerPage);
+        return Math.min(maxIndex, prev + Math.floor(rowsPerPage / 2));
+      });
+    } else if (e.key === 'PageUp') {
+      e.preventDefault();
+      e.stopPropagation();
+      setStartRowIndex(prev => Math.max(0, prev - Math.floor(rowsPerPage / 2)));
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      e.stopPropagation();
+      setStartRowIndex(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      e.stopPropagation();
+      const maxIndex = Math.max(0, data.length - rowsPerPage);
+      setStartRowIndex(maxIndex);
+    }
+  }, [data.length, rowsPerPage]);
+
   // ===== Return all functionality from both hooks =====
   return {
     // From useVirtualizedTableRows
@@ -185,6 +221,7 @@ export function useVirtualizedTableRendering({
     getVisibleRows,
     handleWheelEvent,
     handleBodyScroll,
+    handleKeyDown, // Keyboard navigation
     // From useVirtualizedTableScroll
     isDraggingScrollbar,
     setIsDraggingScrollbar,

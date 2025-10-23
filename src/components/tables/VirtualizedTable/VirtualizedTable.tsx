@@ -79,6 +79,7 @@ function VirtualizedTable({
       handleTableMouseDown,
       handleTableMouseLeave,
       handleScrollbarMouseDown,
+      handleKeyDown,
     } = useVirtualizedTableRendering({
       data,
       rowsPerPage: 15,
@@ -157,6 +158,7 @@ function VirtualizedTable({
           handleTableMouseLeave={handleTableMouseLeave}
           handleWheelEvent={handleWheelEvent}
           handleScrollbarMouseDown={handleScrollbarMouseDown}
+          handleKeyDown={handleKeyDown}
           height={height}
           horizontalSeparators={horizontalSeparators}
           striped={striped}
