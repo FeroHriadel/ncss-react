@@ -25,11 +25,11 @@ export interface VirtualizedTableProps {
 function VirtualizedTable({
   data,
   columnsConfig,
-  // height = "400px",
-  // horizontalSeparators = true,
+  height = "400px",
+  horizontalSeparators = true,
   verticalSeparators = true,
-  // striped = true,
-  // hover = true
+  striped = true,
+  hover = true
 }: VirtualizedTableProps) {
     // Refs
     const headerRef = React.useRef<HTMLDivElement>(null);
@@ -157,6 +157,10 @@ function VirtualizedTable({
           handleTableMouseLeave={handleTableMouseLeave}
           handleWheelEvent={handleWheelEvent}
           handleScrollbarMouseDown={handleScrollbarMouseDown}
+          height={height}
+          horizontalSeparators={horizontalSeparators}
+          striped={striped}
+          hover={hover}
         />
 
         {ghostElement && (

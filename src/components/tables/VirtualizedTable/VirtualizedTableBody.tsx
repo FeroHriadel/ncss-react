@@ -13,6 +13,7 @@ interface VirtualizedTableBodyProps {
   columnOrder: Column[];
   getVisibleColumns: (order: Column[]) => Column[];
   verticalSeparators: boolean;
+  horizontalSeparators: boolean;
   zoomLevel: number;
   rowsPerPage: number;
   startRowIndex: number;
@@ -21,6 +22,9 @@ interface VirtualizedTableBodyProps {
   handleTableMouseLeave: (e: React.MouseEvent<HTMLDivElement>) => void;
   handleWheelEvent: (e: React.WheelEvent<HTMLDivElement>) => void;
   handleScrollbarMouseDown: (e: React.MouseEvent<HTMLDivElement>) => void;
+  height: string;
+  striped: boolean | { enabled: boolean; color?: string };
+  hover: boolean | { enabled: boolean; color?: string };
 }
 
 const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
@@ -30,6 +34,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
   columnOrder,
   getVisibleColumns,
   verticalSeparators,
+  horizontalSeparators,
   zoomLevel,
   rowsPerPage,
   startRowIndex,
@@ -38,13 +43,16 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
   handleTableMouseLeave,
   handleWheelEvent,
   handleScrollbarMouseDown,
+  height,
+  striped,
+  hover,
 }) => (
   <div className="flex">
     <div
       ref={bodyRef}
       className="overflow-auto border-l border-r border-b border-gray-300 [&::-webkit-scrollbar]:hidden flex-1"
       style={{
-  height: '400px',
+        height,
         scrollbarWidth: 'none',
         msOverflowStyle: 'none',
       }}
@@ -61,8 +69,22 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
         }}
       >
         <tbody>
-          {data.slice(startRowIndex, startRowIndex + rowsPerPage).map((row, i) => (
-            <tr key={i} className="border-b border-gray-200">
+          {data.slice(startRowIndex, startRowIndex + rowsPerPage).map((row, i) => {
+            // Striped logic
+            let stripedClass = '';
+            if (striped && (typeof striped === 'boolean' ? striped : striped.enabled)) {
+              stripedClass = i % 2 === 1 ? (typeof striped === 'object' && striped.color ? striped.color : 'bg-gray-100') : '';
+            }
+            // Hover logic
+            let hoverClass = '';
+            if (hover && (typeof hover === 'boolean' ? hover : hover.enabled)) {
+              hoverClass = typeof hover === 'object' && hover.color ? `hover:${hover.color}` : 'hover:bg-gray-100';
+            }
+            // Horizontal separators
+            const horizontalSepClass = horizontalSeparators ? 'border-b border-gray-200' : '';
+
+            return (
+              <tr key={i} className={`${horizontalSepClass} ${stripedClass} ${hoverClass}`.trim()}>
               {getVisibleColumns(columnOrder).map((col, index) => {
                 const cellValue = row[col.column];
                 let renderedValue;
@@ -95,7 +117,8 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
                 );
               })}
             </tr>
-          ))}
+            );
+          })}
         </tbody>
       </table>
     </div>
@@ -103,7 +126,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
     <div
       ref={scrollbarRef}
       className="w-2 bg-gray-50 border-r border-b border-gray-300 relative cursor-pointer select-none"
-  style={{ height: '400px' }}
+      style={{ height }}
       onMouseDown={handleScrollbarMouseDown}
     >
       <div className="absolute inset-x-0 top-1 bottom-1 bg-gray-200 rounded-full mx-0.5"></div>
