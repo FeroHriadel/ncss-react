@@ -1,3 +1,25 @@
+/**
+ * VirtualizedTable
+ * 
+ * MAIN ORCHESTRATION COMPONENT
+ * Combines all table features into a single virtualized, high-performance table.
+ * 
+ * FEATURES:
+ * - ✅ Virtualization: Only renders visible rows (TanStack Virtual approach)
+ * - ✅ Dynamic row heights: Rows expand with content (text wrapping supported)
+ * - ✅ Native scrolling: Uses browser scrollTop (not custom simulation)
+ * - ✅ All navigation: Mousewheel, keyboard, scrollbar drag, table drag
+ * - ✅ Column reordering: Drag columns to reorder
+ * - ✅ Column visibility: Toggle columns on/off
+ * - ✅ Zoom: 50% to 150% with automatic remeasurement
+ * - ✅ Visual styling: Borders, striped rows, hover effects
+ * 
+ * ARCHITECTURE:
+ * - This component: Orchestrates all hooks and sub-components
+ * - useVirtualizedTableRendering: Handles virtualization + scrolling
+ * - VirtualizedTableBody: Renders visible rows + visual elements
+ * - VirtualizedTableHeader: Renders fixed header with column controls
+ */
 import React from 'react'
 import VirtualizedTableColumnGhost from "./VirtualizedTableColumnGhost";
 import VirtualizedTableControlBar from "./VirtualizedTableControlBar";
@@ -8,20 +30,22 @@ import { useVirtualizedTableRendering } from "./useVirtualizedTableRendering"
 import { useVirtualizedTableColumns } from "./useVirtualizedTableColumns"
 import { useVirtualizedTableZoom } from "./useVirtualizedTableZoom"
 
-
-
+// ========================================
+// TYPES
+// ========================================
 export interface VirtualizedTableProps {
   data: { [key: string]: string | number | boolean | null | undefined | [] | object | React.ReactNode }[];
   columnsConfig?: { column: string; displayValue: string; width?: string }[];
-  height?: string; // Optional height prop (e.g., "400px", "22rem", "50vh")
-  horizontalSeparators?: boolean; // Show horizontal borders between rows (default: true)
-  verticalSeparators?: boolean; // Show vertical borders between columns (default: true)
-  striped?: { enabled: boolean; color?: string } | boolean; // Alternate row colors with optional custom color
-  hover?: { enabled: boolean; color?: string } | boolean; // Enable hover effects on rows with optional custom color
+  height?: string;
+  horizontalSeparators?: boolean;
+  verticalSeparators?: boolean;
+  striped?: { enabled: boolean; color?: string } | boolean;
+  hover?: { enabled: boolean; color?: string } | boolean;
 }
 
-
-
+// ========================================
+// COMPONENT
+// ========================================
 function VirtualizedTable({
   data,
   columnsConfig,
@@ -31,20 +55,38 @@ function VirtualizedTable({
   striped = true,
   hover = true
 }: VirtualizedTableProps) {
-    // Refs
+    // ========================================
+    // REFS
+    // ========================================
     const headerRef = React.useRef<HTMLDivElement>(null);
     const bodyRef = React.useRef<HTMLDivElement | null>(null);
     const scrollbarRef = React.useRef<HTMLDivElement | null>(null);
 
-    // Columns
+    // ========================================
+    // COLUMNS CONFIGURATION
+    // ========================================
+    
+    // Determine columns from config or infer from data
     function getColumns() {
       if (columnsConfig && columnsConfig.length > 0) return columnsConfig;
       if (data.length > 0) return Object.keys(data[0]).map(key => ({ column: key, displayValue: key }));
       return [];
     }
     const columns = getColumns();
+    
+    // Get column width style
+    function getColumnStyle(columnObj: { column: string; displayValue: string; width?: string }) {
+      if (columnObj.width) {
+        return { width: columnObj.width };
+      }
+      return {};
+    }
 
-    // Column Drag and Drop
+    // ========================================
+    // HOOKS - COLUMN FEATURES
+    // ========================================
+    
+    // Column drag and drop reordering
     const {
       columnOrder,
       draggedColumn,
@@ -56,21 +98,17 @@ function VirtualizedTable({
       handleColumnMouseLeave,
     } = useVirtualizedTableDragAndDrop({ columns });
 
-    // Column Visibility
+    // Column visibility toggle
     const {
       toggleColumnVisibility,
       getVisibleColumns,
     } = useVirtualizedTableColumns({ columns });
 
-    // Column Visibility Toggle Options
-    const dropdownOptions = columns.map(col => ({
-      value: col.column,
-      displayValue: col.displayValue,
-      onClick: () => toggleColumnVisibility(col.column)
-    }));
-    const preselectedDropdownOptions = columns.map(col => col.column);
-
-    // Zoom functionality
+    // ========================================
+    // HOOKS - ZOOM
+    // ========================================
+    
+    // Zoom in/out functionality
     const {
       zoomLevel,
       minZoom,
@@ -79,20 +117,12 @@ function VirtualizedTable({
       handleZoomOut,
     } = useVirtualizedTableZoom(1, 0.5, 1.5, 0.1);
 
-    // Calculate rows per page based on height
-    // Use a very small value for navigation to maximize scroll range
-    const [calculatedRowsPerPage, setCalculatedRowsPerPage] = React.useState(5);
+    // ========================================
+    // HOOKS - VIRTUALIZATION & SCROLLING
+    // ========================================
     
-    // Tiny value = maximum scroll range (maxIndex = data.length - 5)
-    React.useEffect(() => {
-      const rowsToRender = Math.min(5, data.length);
-      setCalculatedRowsPerPage(rowsToRender);
-    }, [data.length]);
-
-    // Rendering (Rows + Scrolling + Dragging)
+    // Main virtualization and scroll logic
     const {
-      startRowIndex,
-      rowsPerPage,
       handleWheelEvent,
       handleHeaderScroll,
       handleTableMouseDown,
@@ -105,25 +135,27 @@ function VirtualizedTable({
       handleNativeScroll,
     } = useVirtualizedTableRendering({
       data,
-      rowsPerPage: calculatedRowsPerPage,
       bodyRef,
       headerRef,
       scrollbarRef,
       zoomLevel,
     });
 
-    // Row hover effect
-    // ...existing code...
+    // ========================================
+    // DERIVED DATA
+    // ========================================
+    
+    // Dropdown options for column visibility toggle
+    const dropdownOptions = columns.map(col => ({
+      value: col.column,
+      displayValue: col.displayValue,
+      onClick: () => toggleColumnVisibility(col.column)
+    }));
+    const preselectedDropdownOptions = columns.map(col => col.column);
 
-    // Get column width style
-    function getColumnStyle(columnObj: { column: string; displayValue: string; width?: string }) {
-      if (columnObj.width) {
-        return { width: columnObj.width };
-      }
-      return {};
-    }
-
-    // Render
+    // ========================================
+    // RENDER
+    // ========================================
     return (
       <section className='virtualized-table-wrap'>
         <VirtualizedTableControlBar
@@ -166,8 +198,6 @@ function VirtualizedTable({
           getVisibleColumns={order => getVisibleColumns(order.map(col => col.column))}
           verticalSeparators={verticalSeparators}
           zoomLevel={zoomLevel}
-          rowsPerPage={rowsPerPage}
-          startRowIndex={startRowIndex}
           getColumnStyle={getColumnStyle}
           handleTableMouseDown={handleTableMouseDown}
           handleTableMouseLeave={handleTableMouseLeave}

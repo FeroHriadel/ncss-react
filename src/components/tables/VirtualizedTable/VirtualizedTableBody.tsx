@@ -1,5 +1,31 @@
+/**
+ * VirtualizedTableBody
+ * 
+ * RENDERING COMPONENT
+ * Renders only the visible rows using virtualization, plus visual elements.
+ * 
+ * ARCHITECTURE:
+ * - Container with total virtual height (e.g., 4100px for 100 rows)
+ * - Table with absolutely positioned rows via transform: translateY()
+ * - Absolute positioned background divs (for striped colors)
+ * - Absolute positioned separator lines (horizontal and vertical)
+ * - Custom scrollbar with draggable thumb
+ * 
+ * PERFORMANCE:
+ * - Measures column widths once on mount/zoom
+ * - Measures row heights as they render (dynamic heights for text wrapping)
+ * - Only updates state when measurements actually change (prevents re-render loops)
+ * 
+ * SCROLLING:
+ * - Native browser scroll (not custom simulation)
+ * - Updates table scroll width for horizontal backgrounds/lines
+ * - Updates scrollbar thumb position to reflect current scroll
+ */
 import React from "react";
 
+// ========================================
+// TYPES
+// ========================================
 interface Column {
   column: string;
   displayValue: string;
@@ -15,8 +41,6 @@ interface VirtualizedTableBodyProps {
   verticalSeparators: boolean;
   horizontalSeparators: boolean;
   zoomLevel: number;
-  rowsPerPage: number;
-  startRowIndex: number;
   getColumnStyle: (col: Column) => React.CSSProperties;
   handleTableMouseDown: (e: React.MouseEvent<HTMLDivElement>) => void;
   handleTableMouseLeave: (e: React.MouseEvent<HTMLDivElement>) => void;
@@ -32,6 +56,9 @@ interface VirtualizedTableBodyProps {
   measureElement: (node: HTMLTableRowElement | null, index: number) => void;
 }
 
+// ========================================
+// COMPONENT
+// ========================================
 const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
   bodyRef,
   scrollbarRef,
@@ -41,8 +68,6 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
   verticalSeparators,
   horizontalSeparators,
   zoomLevel,
-  rowsPerPage,
-  startRowIndex,
   getColumnStyle,
   handleTableMouseDown,
   handleTableMouseLeave,
@@ -57,73 +82,146 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
   getVirtualItems,
   measureElement,
 }) => {
-  const handleMouseDownWithFocus = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Ensure the container gets focus when clicked
+  // ========================================
+  // STATE & REFS
+  // ========================================
+  const tableRef = React.useRef<HTMLTableElement>(null);
+  const prevPositionsRef = React.useRef<string>('');
+  
+  const [tableScrollWidth, setTableScrollWidth] = React.useState<number>(0);
+  const [columnPositions, setColumnPositions] = React.useState<number[]>([]);
+  
+  // Get data needed for rendering
+  const virtualItems = getVirtualItems();
+  const totalSize = getTotalSize();
+  const visibleColumnsCount = getVisibleColumns(columnOrder).length;
+  
+  // ========================================
+  // HELPER FUNCTIONS
+  // ========================================
+  
+  // Get background color for a row (striped or white)
+  function getRowBackgroundColor(rowIndex: number): string {
+    if (!striped) return 'white';
+    
+    const stripedEnabled = typeof striped === 'boolean' ? striped : striped.enabled;
+    if (!stripedEnabled) return 'white';
+    
+    return rowIndex % 2 === 1 ? 'rgb(243 244 246)' : 'white';
+  }
+  
+  // Get hover CSS class for rows
+  function getHoverClass(): string {
+    if (!hover) return '';
+    
+    const hoverEnabled = typeof hover === 'boolean' ? hover : hover.enabled;
+    if (!hoverEnabled) return '';
+    
+    const customColor = typeof hover === 'object' ? hover.color : undefined;
+    return customColor ? `hover:${customColor}` : 'hover:bg-gray-100';
+  }
+  
+  // Render cell content (handles different data types)
+  function renderCellValue(cellValue: unknown): React.ReactNode {
+    if (cellValue === null || cellValue === undefined) {
+      return '';
+    }
+    if (Array.isArray(cellValue)) {
+      return String(cellValue);
+    }
+    if (React.isValidElement(cellValue)) {
+      return cellValue;
+    }
+    if (typeof cellValue === 'object') {
+      return JSON.stringify(cellValue);
+    }
+    return String(cellValue);
+  }
+  
+  // ========================================
+  // EVENT HANDLERS
+  // ========================================
+  
+  // Focus body container when clicked (for keyboard navigation)
+  function handleMouseDownWithFocus(e: React.MouseEvent<HTMLDivElement>) {
     if (bodyRef.current) {
       bodyRef.current.focus();
     }
     handleTableMouseDown(e);
-  };
-
-  const virtualItems = getVirtualItems();
-  const totalSize = getTotalSize();
+  }
   
-  // Ref to measure column widths AND track scroll width
-  const tableRef = React.useRef<HTMLTableElement>(null);
-  const [tableScrollWidth, setTableScrollWidth] = React.useState<number>(0);
-  const [scrollPosition, setScrollPosition] = React.useState<number>(0);
-  const [columnPositions, setColumnPositions] = React.useState<number[]>([]);
-  const prevPositionsRef = React.useRef<string>('');
-  
-  // Get visible columns count for stable dependency
-  const visibleColumnsCount = getVisibleColumns(columnOrder).length;
-  
-  // Measure column positions
-  React.useEffect(() => {
-    if (tableRef.current) {
-      // Update scroll width for backgrounds/lines
-      setTableScrollWidth(tableRef.current.scrollWidth);
-      
-      const firstRow = tableRef.current.querySelector('tbody tr');
-      if (firstRow) {
-        const cells = firstRow.querySelectorAll('td');
-        const positions: number[] = [];
-        let cumulativeWidth = 0;
-        
-        cells.forEach((cell, index) => {
-          if (index < cells.length - 1) { // Don't add line after last column
-            cumulativeWidth += cell.offsetWidth;
-            positions.push(cumulativeWidth);
-          }
-        });
-        
-        // Only update if positions actually changed
-        const positionsStr = JSON.stringify(positions);
-        if (positionsStr !== prevPositionsRef.current) {
-          prevPositionsRef.current = positionsStr;
-          setColumnPositions(positions);
-        }
-      }
-    }
-  }, [zoomLevel, visibleColumnsCount]); // Stable dependencies only
-
-  // Wrap native scroll to also update table width
-  const handleScrollWithUpdate = (e: React.UIEvent<HTMLDivElement>) => {
+  // Update scroll width on scroll
+  function handleScrollWithUpdate(e: React.UIEvent<HTMLDivElement>) {
     handleNativeScroll(e);
+    
     if (tableRef.current) {
       const newWidth = tableRef.current.scrollWidth;
       if (newWidth !== tableScrollWidth) {
         setTableScrollWidth(newWidth);
       }
     }
-    // Update scroll position for scrollbar thumb
-    if (bodyRef.current) {
-      setScrollPosition(bodyRef.current.scrollTop);
+  }
+  
+  // ========================================
+  // EFFECTS
+  // ========================================
+  
+  // Measure column positions and table scroll width
+  React.useEffect(() => {
+    if (!tableRef.current) return;
+    
+    function measureColumns() {
+      if (!tableRef.current) return;
+      
+      // Update table scroll width for horizontal backgrounds/lines
+      setTableScrollWidth(tableRef.current.scrollWidth);
+      
+      // Measure column widths for vertical separator lines
+      const firstRow = tableRef.current.querySelector('tbody tr');
+      if (!firstRow) return;
+      
+      const cells = firstRow.querySelectorAll('td');
+      const positions: number[] = [];
+      let cumulativeWidth = 0;
+      
+      cells.forEach((cell, index) => {
+        if (index < cells.length - 1) {
+          cumulativeWidth += cell.offsetWidth;
+          positions.push(cumulativeWidth);
+        }
+      });
+      
+      // Only update state if positions changed (avoid unnecessary re-renders)
+      const positionsStr = JSON.stringify(positions);
+      if (positionsStr !== prevPositionsRef.current) {
+        prevPositionsRef.current = positionsStr;
+        setColumnPositions(positions);
+      }
     }
-  };
-
+    
+    // Measure initially
+    measureColumns();
+    
+    // Remeasure on window resize (e.g., DevTools open/close)
+    const handleResize = () => {
+      measureColumns();
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [zoomLevel, visibleColumnsCount]);
+  
+  // ========================================
+  // RENDER
+  // ========================================
+  const hoverClass = getHoverClass();
+  
   return (
   <div className="flex">
+    {/* Main scrollable container */}
     <div
       ref={bodyRef}
       tabIndex={0}
@@ -139,7 +237,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
       onKeyDown={handleKeyDown}
       onScroll={handleScrollWithUpdate}
     >
-      {/* Container with total size */}
+      {/* Container with total virtual height */}
       <div
         style={{
           height: `${totalSize}px`,
@@ -147,6 +245,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
           position: 'relative',
         }}
       >
+        {/* Table with absolutely positioned rows */}
         <table
           ref={tableRef}
           className="w-full border-collapse"
@@ -166,12 +265,6 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
             {virtualItems.map((virtualRow) => {
               const row = data[virtualRow.index];
               const rowIndex = virtualRow.index;
-              
-              // Hover logic - for hover effect
-              let hoverClass = '';
-              if (hover && (typeof hover === 'boolean' ? hover : hover.enabled)) {
-                hoverClass = typeof hover === 'object' && hover.color ? `hover:${hover.color}` : 'hover:bg-gray-100';
-              }
 
               return (
                 <tr 
@@ -190,20 +283,9 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
                 >
               {getVisibleColumns(columnOrder).map((col, index) => {
                 const cellValue = row[col.column];
-                let renderedValue;
-                if (cellValue === null || cellValue === undefined) {
-                  renderedValue = '';
-                } else if (Array.isArray(cellValue)) {
-                  renderedValue = String(cellValue);
-                } else if (React.isValidElement(cellValue)) {
-                  renderedValue = cellValue as React.ReactNode;
-                } else if (typeof cellValue === 'object') {
-                  renderedValue = JSON.stringify(cellValue);
-                } else {
-                  renderedValue = String(cellValue);
-                }
+                const renderedValue = renderCellValue(cellValue);
                 
-                // Build cell classes: vertical separator only (no bg, no horizontal border)
+                // Apply vertical separator to all columns except last
                 const verticalSepClass = verticalSeparators && index < getVisibleColumns(columnOrder).length - 1
                   ? 'border-r border-gray-200'
                   : '';
@@ -230,20 +312,14 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
         </tbody>
       </table>
       
-      {/* Absolute positioned backgrounds and separator lines */}
+      {/* Absolute positioned backgrounds for striped rows */}
       {virtualItems.map((virtualRow) => {
         const rowIndex = virtualRow.index;
-        const linePosition = virtualRow.start + virtualRow.size;
-        
-        // Striped background for the area
-        let bgColor = 'white';
-        if (striped && (typeof striped === 'boolean' ? striped : striped.enabled)) {
-          bgColor = rowIndex % 2 === 1 ? 'rgb(243 244 246)' : 'white';
-        }
+        const bgColor = getRowBackgroundColor(rowIndex);
         
         return (
-          <React.Fragment key={`sep-${virtualRow.key}`}>
-            {/* Background fill for this row */}
+          <React.Fragment key={`bg-${virtualRow.key}`}>
+            {/* Background fill */}
             <div
               style={{
                 position: 'absolute',
@@ -261,7 +337,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
               <div
                 style={{
                   position: 'absolute',
-                  top: `${linePosition}px`,
+                  top: `${virtualRow.start + virtualRow.size}px`,
                   left: 0,
                   width: tableScrollWidth > 0 ? `${tableScrollWidth}px` : '100%',
                   height: '1px',
@@ -293,6 +369,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
       ))}
       </div>
     </div>
+    
     {/* Custom Scrollbar */}
     <div
       ref={scrollbarRef}
@@ -300,8 +377,10 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
       style={{ height }}
       onMouseDown={handleScrollbarMouseDown}
     >
+      {/* Scrollbar track */}
       <div className="absolute inset-x-0 top-1 bottom-1 bg-gray-200 rounded-full mx-0.5"></div>
-      {/* Scrollbar Thumb - reflects actual scroll position */}
+      
+      {/* Scrollbar thumb - reflects actual scroll position */}
       {(() => {
         if (!bodyRef.current) return null;
         
