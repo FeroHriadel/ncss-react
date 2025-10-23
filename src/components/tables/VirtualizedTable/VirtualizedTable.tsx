@@ -155,7 +155,7 @@ function VirtualizedTable({
             />
           </div>
           {/* Spacer to account for custom scrollbar */}
-          <div className="w-2 border-t border-r border-gray-300 bg-gray-50"></div>
+          <div className="w-3 border-t border-r border-gray-300 bg-gray-50"></div>
         </div>
 
         <VirtualizedTableBody

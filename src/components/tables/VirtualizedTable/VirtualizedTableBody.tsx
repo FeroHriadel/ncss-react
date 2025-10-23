@@ -71,6 +71,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
   // Ref to measure column widths AND track scroll width
   const tableRef = React.useRef<HTMLTableElement>(null);
   const [tableScrollWidth, setTableScrollWidth] = React.useState<number>(0);
+  const [scrollPosition, setScrollPosition] = React.useState<number>(0);
   const [columnPositions, setColumnPositions] = React.useState<number[]>([]);
   const prevPositionsRef = React.useRef<string>('');
   
@@ -114,6 +115,10 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
       if (newWidth !== tableScrollWidth) {
         setTableScrollWidth(newWidth);
       }
+    }
+    // Update scroll position for scrollbar thumb
+    if (bodyRef.current) {
+      setScrollPosition(bodyRef.current.scrollTop);
     }
   };
 
@@ -291,25 +296,34 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
     {/* Custom Scrollbar */}
     <div
       ref={scrollbarRef}
-      className="w-2 bg-gray-50 border-r border-b border-gray-300 relative cursor-pointer select-none"
+      className="w-3 bg-gray-50 border-r border-b border-gray-300 relative cursor-pointer select-none"
       style={{ height }}
       onMouseDown={handleScrollbarMouseDown}
     >
       <div className="absolute inset-x-0 top-1 bottom-1 bg-gray-200 rounded-full mx-0.5"></div>
-      {/* Scrollbar Thumb (dummy, not interactive) */}
+      {/* Scrollbar Thumb - reflects actual scroll position */}
       {(() => {
-        // Calculate thumb size as percentage of visible rows vs total rows
-        const thumbHeightPercent = Math.max(20, (rowsPerPage / data.length) * 100);
+        if (!bodyRef.current) return null;
+        
+        const containerHeight = bodyRef.current.clientHeight || 500;
+        const scrollTop = bodyRef.current.scrollTop || 0;
+        
+        // Calculate thumb size based on viewport vs total content
+        const thumbHeightPercent = Math.max(10, (containerHeight / totalSize) * 100);
+        
         // Calculate scroll progress (0 to 1)
-        const scrollProgress = startRowIndex / Math.max(1, data.length - rowsPerPage);
-        // Available space for thumb movement (track height - thumb height)
+        const maxScroll = totalSize - containerHeight;
+        const scrollProgress = maxScroll > 0 ? scrollTop / maxScroll : 0;
+        
+        // Available space for thumb movement
         const availableSpace = 100 - thumbHeightPercent;
-        // Position thumb within the track, accounting for 4px (1rem = ~4px) padding
-        const topPosition = 1 + (scrollProgress * availableSpace * 0.96); // 96% to account for padding
+        
+        // Position thumb within available space
+        const topPosition = scrollProgress * availableSpace;
         
         return (
           <div
-            className="absolute bg-gray-400 rounded-full transition-all duration-200 ease-out mx-0.5"
+            className="absolute bg-gray-400 rounded-full transition-all duration-100 ease-out mx-0.5"
             style={{
               height: `${thumbHeightPercent}%`,
               top: `${topPosition}%`,
