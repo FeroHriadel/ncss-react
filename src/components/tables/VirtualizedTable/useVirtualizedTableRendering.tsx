@@ -203,20 +203,25 @@ export function useVirtualizedTableRendering({
     }
   };
 
-  // Custom scrollbar drag logic
+  // Custom scrollbar drag logic - uses native scroll like mousewheel
   const handleScrollbarDrag = useCallback((e: React.MouseEvent | MouseEvent) => {
-    if (!scrollbarRef.current) return;
+    if (!scrollbarRef.current || !bodyRef.current) return;
+    
     const rect = scrollbarRef.current.getBoundingClientRect();
     const padding = 4; // Account for top-1 and bottom-1 padding (4px each)
     const trackHeight = rect.height - (padding * 2);
     const relativeY = Math.max(padding, Math.min(rect.height - padding, e.clientY - rect.top)) - padding;
     const percentage = Math.max(0, Math.min(1, relativeY / trackHeight));
-    const maxStartIndex = Math.max(0, data.length - rowsPerPage);
-    const targetRowIndex = Math.round(percentage * maxStartIndex);
-    if (targetRowIndex !== startRowIndex && targetRowIndex >= 0 && targetRowIndex <= maxStartIndex) {
-      setStartRowIndex(targetRowIndex);
-    }
-  }, [data.length, rowsPerPage, startRowIndex, setStartRowIndex, scrollbarRef]);
+    
+    // Calculate total scrollable height
+    const totalSize = getTotalSize();
+    const containerHeight = bodyRef.current.clientHeight;
+    const maxScroll = Math.max(0, totalSize - containerHeight);
+    
+    // Set scroll position directly (same as mousewheel)
+    const targetScrollTop = percentage * maxScroll;
+    bodyRef.current.scrollTop = targetScrollTop;
+  }, [scrollbarRef, bodyRef, getTotalSize]);
 
   const handleScrollbarMouseDown = (e: React.MouseEvent) => {
     setIsDraggingScrollbar(true);
