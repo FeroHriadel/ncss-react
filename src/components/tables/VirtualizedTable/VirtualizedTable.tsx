@@ -4,9 +4,8 @@ import VirtualizedTableControlBar from "./VirtualizedTableControlBar";
 import VirtualizedTableHeader from "./VirtualizedTableHeader";
 import VirtualizedTableBody from "./VirtualizedTableBody";
 import { useVirtualizedTableDragAndDrop } from "./useVirtualizedTableDragAndDrop"
-import { useVirtualizedTableScroll } from "./useVirtualizedTableScroll"
+import { useVirtualizedTableRendering } from "./useVirtualizedTableRendering"
 import { useVirtualizedTableColumns } from "./useVirtualizedTableColumns"
-import { useVirtualizedTableRows } from "./useVirtualizedTableRows"
 import { useVirtualizedTableZoom } from "./useVirtualizedTableZoom"
 
 
@@ -71,28 +70,21 @@ function VirtualizedTable({
     }));
     const preselectedDropdownOptions = columns.map(col => col.column);
 
-    // Rows
+    // Rendering (Rows + Scrolling + Dragging)
     const {
       startRowIndex,
-      setStartRowIndex,
       rowsPerPage,
       handleWheelEvent,
-    } = useVirtualizedTableRows({ data, rowsPerPage: 15 });
-
-    // Scrollbar Dragging
-    const {
       handleHeaderScroll,
       handleTableMouseDown,
       handleTableMouseLeave,
       handleScrollbarMouseDown,
-    } = useVirtualizedTableScroll({
+    } = useVirtualizedTableRendering({
+      data,
+      rowsPerPage: 15,
       bodyRef,
       headerRef,
       scrollbarRef,
-      startRowIndex,
-      setStartRowIndex,
-      rowsPerPage,
-      dataLength: data.length,
     });
 
     // Row hover effect
