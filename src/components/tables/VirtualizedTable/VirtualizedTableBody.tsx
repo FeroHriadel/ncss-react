@@ -23,9 +23,13 @@ interface VirtualizedTableBodyProps {
   handleWheelEvent: (e: React.WheelEvent<HTMLDivElement>) => void;
   handleScrollbarMouseDown: (e: React.MouseEvent<HTMLDivElement>) => void;
   handleKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => void;
+  handleNativeScroll: (e: React.UIEvent<HTMLDivElement>) => void;
   height: string;
   striped: boolean | { enabled: boolean; color?: string };
   hover: boolean | { enabled: boolean; color?: string };
+  getTotalSize: () => number;
+  getVirtualItems: () => Array<{ index: number; start: number; size: number; key: number }>;
+  measureElement: (node: HTMLTableRowElement | null, index: number) => void;
 }
 
 const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
@@ -45,9 +49,13 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
   handleWheelEvent,
   handleScrollbarMouseDown,
   handleKeyDown,
+  handleNativeScroll,
   height,
   striped,
   hover,
+  getTotalSize,
+  getVirtualItems,
+  measureElement,
 }) => {
   const handleMouseDownWithFocus = (e: React.MouseEvent<HTMLDivElement>) => {
     // Ensure the container gets focus when clicked
@@ -57,12 +65,50 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
     handleTableMouseDown(e);
   };
 
+  const virtualItems = getVirtualItems();
+  const totalSize = getTotalSize();
+  
+  // Ref to measure column widths
+  const tableRef = React.useRef<HTMLTableElement>(null);
+  const [columnPositions, setColumnPositions] = React.useState<number[]>([]);
+  const prevPositionsRef = React.useRef<string>('');
+  
+  // Get visible columns count for stable dependency
+  const visibleColumnsCount = getVisibleColumns(columnOrder).length;
+  
+  // Measure column positions
+  React.useEffect(() => {
+    if (tableRef.current) {
+      const firstRow = tableRef.current.querySelector('tbody tr');
+      if (firstRow) {
+        const cells = firstRow.querySelectorAll('td');
+        const positions: number[] = [];
+        let cumulativeWidth = 0;
+        
+        cells.forEach((cell, index) => {
+          if (index < cells.length - 1) { // Don't add line after last column
+            cumulativeWidth += cell.offsetWidth;
+            positions.push(cumulativeWidth);
+          }
+        });
+        
+        // Only update if positions actually changed
+        const positionsStr = JSON.stringify(positions);
+        if (positionsStr !== prevPositionsRef.current) {
+          prevPositionsRef.current = positionsStr;
+          setColumnPositions(positions);
+        }
+      }
+    }
+  }, [zoomLevel, visibleColumnsCount]); // Stable dependencies only
+
+
   return (
   <div className="flex">
     <div
       ref={bodyRef}
       tabIndex={0}
-      className="overflow-x-auto overflow-y-hidden border-l border-r border-b border-gray-300 [&::-webkit-scrollbar]:hidden flex-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      className="overflow-auto border-l border-r border-b border-gray-300 [&::-webkit-scrollbar]:hidden flex-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
       style={{
         height,
         scrollbarWidth: 'none',
@@ -72,39 +118,57 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
       onMouseLeave={handleTableMouseLeave}
       onWheel={handleWheelEvent}
       onKeyDown={handleKeyDown}
+      onScroll={handleNativeScroll}
     >
-      <table
-        className="w-full border-collapse"
+      {/* Container with total size */}
+      <div
         style={{
-          tableLayout: 'fixed',
-          fontSize: `${zoomLevel}rem`,
-          transition: 'font-size 0.2s ease-out',
+          height: `${totalSize}px`,
+          width: '100%',
+          position: 'relative',
         }}
       >
-        <tbody>
-          {(() => {
-            // Render extra rows to fill container and ensure last row is fully visible
-            const isAtEnd = startRowIndex >= data.length - rowsPerPage;
-            const endIndex = isAtEnd 
-              ? data.length  // Show all remaining rows when at end
-              : Math.min(startRowIndex + rowsPerPage + 2, data.length); // Render +2 extra to fill gaps
-            return data.slice(startRowIndex, endIndex);
-          })().map((row, i) => {
-            // Striped logic
-            let stripedClass = '';
-            if (striped && (typeof striped === 'boolean' ? striped : striped.enabled)) {
-              stripedClass = i % 2 === 1 ? (typeof striped === 'object' && striped.color ? striped.color : 'bg-gray-100') : '';
-            }
-            // Hover logic
-            let hoverClass = '';
-            if (hover && (typeof hover === 'boolean' ? hover : hover.enabled)) {
-              hoverClass = typeof hover === 'object' && hover.color ? `hover:${hover.color}` : 'hover:bg-gray-100';
-            }
-            // Horizontal separators
-            const horizontalSepClass = horizontalSeparators ? 'border-b border-gray-200' : '';
+        <table
+          ref={tableRef}
+          className="w-full border-collapse"
+          style={{
+            tableLayout: 'fixed',
+            fontSize: `${zoomLevel}rem`,
+            transition: 'font-size 0.2s ease-out',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            zIndex: 10,
+            backgroundColor: 'transparent',
+          }}
+        >
+          <tbody>
+            {virtualItems.map((virtualRow) => {
+              const row = data[virtualRow.index];
+              const rowIndex = virtualRow.index;
+              
+              // Hover logic - for hover effect
+              let hoverClass = '';
+              if (hover && (typeof hover === 'boolean' ? hover : hover.enabled)) {
+                hoverClass = typeof hover === 'object' && hover.color ? `hover:${hover.color}` : 'hover:bg-gray-100';
+              }
 
-            return (
-              <tr key={i} className={`${horizontalSepClass} ${stripedClass} ${hoverClass}`.trim()}>
+              return (
+                <tr 
+                  key={virtualRow.key}
+                  ref={(node) => measureElement(node, rowIndex)}
+                  className="group"
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    transform: `translateY(${virtualRow.start}px)`,
+                    display: 'table',
+                    tableLayout: 'fixed',
+                  }}
+                >
               {getVisibleColumns(columnOrder).map((col, index) => {
                 const cellValue = row[col.column];
                 let renderedValue;
@@ -119,17 +183,22 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
                 } else {
                   renderedValue = String(cellValue);
                 }
+                
+                // Build cell classes: vertical separator only (no bg, no horizontal border)
+                const verticalSepClass = verticalSeparators && index < getVisibleColumns(columnOrder).length - 1
+                  ? 'border-r border-gray-200'
+                  : '';
+                
                 return (
                   <td
                     key={col.column}
-                    className={`break-words ${
-                      verticalSeparators && index < getVisibleColumns(columnOrder).length - 1
-                        ? 'border-r border-gray-200'
-                        : ''
-                    }`}
+                    className={`${verticalSepClass} ${hoverClass}`.trim()}
                     style={{
                       ...getColumnStyle(col),
-                      padding: '0.375rem 0.75rem', // Fixed conservative padding (6px 12px)
+                      padding: '0.375rem 0.75rem',
+                      backgroundColor: 'transparent',
+                      wordWrap: 'break-word',
+                      overflowWrap: 'break-word',
                     }}
                   >
                     {renderedValue}
@@ -137,10 +206,73 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
                 );
               })}
             </tr>
-            );
-          })}
+          );
+        })}
         </tbody>
       </table>
+      
+      {/* Absolute positioned backgrounds and separator lines */}
+      {virtualItems.map((virtualRow) => {
+        const rowIndex = virtualRow.index;
+        const linePosition = virtualRow.start + virtualRow.size;
+        
+        // Striped background for the area
+        let bgColor = 'white';
+        if (striped && (typeof striped === 'boolean' ? striped : striped.enabled)) {
+          bgColor = rowIndex % 2 === 1 ? 'rgb(243 244 246)' : 'white';
+        }
+        
+        return (
+          <React.Fragment key={`sep-${virtualRow.key}`}>
+            {/* Background fill for this row */}
+            <div
+              style={{
+                position: 'absolute',
+                top: `${virtualRow.start}px`,
+                left: 0,
+                right: 0,
+                height: `${virtualRow.size}px`,
+                backgroundColor: bgColor,
+                pointerEvents: 'none',
+                zIndex: 5,
+              }}
+            />
+            {/* Horizontal separator line */}
+            {horizontalSeparators && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: `${linePosition}px`,
+                  left: 0,
+                  right: 0,
+                  height: '1px',
+                  backgroundColor: 'rgb(229 231 235)',
+                  pointerEvents: 'none',
+                  zIndex: 100,
+                }}
+              />
+            )}
+          </React.Fragment>
+        );
+      })}
+      
+      {/* Vertical separator lines spanning full height */}
+      {verticalSeparators && columnPositions.map((position, index) => (
+        <div
+          key={`vcol-${index}`}
+          style={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: `${position}px`,
+            width: '1px',
+            backgroundColor: 'rgb(229 231 235)',
+            pointerEvents: 'none',
+            zIndex: 100,
+          }}
+        />
+      ))}
+      </div>
     </div>
     {/* Custom Scrollbar */}
     <div

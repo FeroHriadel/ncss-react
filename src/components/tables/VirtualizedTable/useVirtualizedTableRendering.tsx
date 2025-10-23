@@ -7,6 +7,7 @@ interface UseVirtualizedTableRenderingProps {
   bodyRef: React.RefObject<HTMLDivElement | null>;
   headerRef?: React.RefObject<HTMLDivElement | null>;
   scrollbarRef: React.RefObject<HTMLDivElement | null>;
+  zoomLevel?: number;
 }
 
 export function useVirtualizedTableRendering({
@@ -15,63 +16,157 @@ export function useVirtualizedTableRendering({
   bodyRef,
   headerRef,
   scrollbarRef,
+  zoomLevel = 1,
 }: UseVirtualizedTableRenderingProps) {
-  // ===== State from useVirtualizedTableRows =====
+  // ===== TanStack-inspired virtualization =====
+  const [scrollOffset, setScrollOffset] = useState(0);
+  const [forceUpdateCounter, setForceUpdateCounter] = useState(0);
+  const rowHeights = useRef<number[]>([]);
+  const measurementCache = useRef<Map<number, number>>(new Map());
+  const estimatedRowHeight = 41;
+  
+  // Initialize row heights if not already set
+  if (rowHeights.current.length !== data.length) {
+    rowHeights.current = new Array(data.length).fill(estimatedRowHeight);
+  }
+  
+  // Clear measurements when zoom changes to force remeasurement
+  useEffect(() => {
+    // Use a larger estimated height when zooming in to prevent overflow during remeasurement
+    const adjustedEstimate = Math.ceil(estimatedRowHeight * zoomLevel * 1.5);
+    rowHeights.current = new Array(data.length).fill(adjustedEstimate);
+    measurementCache.current.clear();
+    
+    // Small delay to let font-size transition complete, then force re-render
+    const timer = setTimeout(() => {
+      setForceUpdateCounter(prev => prev + 1);
+    }, 250); // Wait for font-size transition (0.2s) + small buffer
+    
+    return () => clearTimeout(timer);
+  }, [zoomLevel, data.length]);
+
+  // Calculate total size and offsets (similar to TanStack's getTotalSize)
+  const getTotalSize = useCallback(() => {
+    return rowHeights.current.reduce((sum, height) => sum + height, 0);
+  }, []);
+
+  // Get start position for each row
+  const getRowOffset = useCallback((index: number) => {
+    return rowHeights.current.slice(0, index).reduce((sum, height) => sum + height, 0);
+  }, []);
+
+  // Calculate which rows should be visible based on scroll offset
+  const getVirtualItems = useCallback(() => {
+    const containerHeight = bodyRef.current?.clientHeight || 500;
+    
+    // Find the first visible row
+    let startIndex = 0;
+    let accumulatedHeight = 0;
+    
+    for (let i = 0; i < data.length; i++) {
+      if (accumulatedHeight + rowHeights.current[i] > scrollOffset) {
+        startIndex = i;
+        break;
+      }
+      accumulatedHeight += rowHeights.current[i];
+    }
+    
+    // Find the last visible row (with overscan)
+    const overscan = 5;
+    let endIndex = startIndex;
+    let visibleHeight = 0;
+    
+    for (let i = startIndex; i < data.length; i++) {
+      visibleHeight += rowHeights.current[i];
+      endIndex = i;
+      if (visibleHeight >= containerHeight + (overscan * estimatedRowHeight)) {
+        break;
+      }
+    }
+    
+    // Add overscan to start
+    startIndex = Math.max(0, startIndex - overscan);
+    endIndex = Math.min(data.length - 1, endIndex + overscan);
+    
+    // Generate virtual items with their positions
+    const virtualItems = [];
+    for (let i = startIndex; i <= endIndex; i++) {
+      virtualItems.push({
+        index: i,
+        start: getRowOffset(i),
+        size: rowHeights.current[i],
+        key: i,
+      });
+    }
+    
+    return virtualItems;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scrollOffset, data.length, bodyRef, getRowOffset, forceUpdateCounter]);
+
+  // Measure element callback (like TanStack's measureElement)
+  const measureElement = useCallback((node: HTMLTableRowElement | null, index: number) => {
+    if (!node) return;
+    
+    const measuredHeight = node.getBoundingClientRect().height;
+    
+    // Only update if the height has changed
+    if (measuredHeight > 0 && rowHeights.current[index] !== measuredHeight) {
+      rowHeights.current[index] = measuredHeight;
+      measurementCache.current.set(index, measuredHeight);
+      // Force a re-render to update positions
+      setForceUpdateCounter(prev => prev + 1);
+    }
+  }, []);
+
+  // ===== Legacy state for compatibility =====
   const [startRowIndex, setStartRowIndex] = useState(0);
-  const lastScrollTop = useRef(0);
   const isResettingScroll = useRef(false);
 
-  // ===== State from useVirtualizedTableScroll =====
+  // ===== Drag state =====
   const [isDraggingScrollbar, setIsDraggingScrollbar] = useState(false);
   const [isDraggingTable, setIsDraggingTable] = useState(false);
   const lastMousePosition = useRef({ x: 0, y: 0 });
   const dragAccumY = useRef(0);
 
-  // ===== Functions from useVirtualizedTableRows =====
+  // ===== Scroll handling (TanStack-inspired) =====
+  
+  // Handle native scroll - update our scroll offset
+  const handleNativeScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    const scrollTop = e.currentTarget.scrollTop;
+    setScrollOffset(scrollTop);
+    
+    // Sync header horizontal scroll
+    if (headerRef?.current) {
+      headerRef.current.scrollLeft = e.currentTarget.scrollLeft;
+    }
+  }, [headerRef]);
+
+  // Wheel event - smooth scrolling
+  function handleWheelEvent(e: React.WheelEvent<HTMLDivElement>) {
+    if (!bodyRef.current) return;
+    
+    const delta = e.deltaY;
+    const currentScroll = bodyRef.current.scrollTop;
+    const maxScroll = getTotalSize() - (bodyRef.current.clientHeight || 500);
+    const newScroll = Math.max(0, Math.min(maxScroll, currentScroll + delta));
+    
+    bodyRef.current.scrollTop = newScroll;
+    setScrollOffset(newScroll);
+  }
+
+  // Legacy compatibility
   const getVisibleRows = useCallback(() => {
     const start = startRowIndex;
     const end = Math.min(start + rowsPerPage, data.length);
     return { start, end, rows: data.slice(start, end) };
   }, [startRowIndex, rowsPerPage, data]);
 
-  function handleWheelEvent(e: React.WheelEvent<HTMLDivElement>) {
-    const scrollingUp = e.deltaY < 0;
-    const scrollingDown = e.deltaY > 0;
-    if (scrollingUp) {
-      setStartRowIndex(prev => Math.max(0, prev - 1));
-    }
-    if (scrollingDown) {
-      setStartRowIndex(prev => {
-        const maxIndex = Math.max(0, data.length - rowsPerPage);
-        return Math.min(maxIndex, prev + 1);
-      });
-    }
-  }
-
   function handleBodyScroll(e: React.UIEvent<HTMLDivElement>, headerRefParam?: React.RefObject<HTMLDivElement>) {
     const refToUse = headerRefParam || headerRef;
     if (refToUse && refToUse.current) {
       refToUse.current.scrollLeft = e.currentTarget.scrollLeft;
     }
-    const scrollTop = e.currentTarget.scrollTop;
-    const scrollHeight = e.currentTarget.scrollHeight;
-    const clientHeight = e.currentTarget.clientHeight;
-    const baseThreshold = 5;
-    const zoomAdjustedThreshold = baseThreshold;
-    const scrollingDown = scrollTop > lastScrollTop.current;
-    const scrollingUp = scrollTop < lastScrollTop.current;
-    lastScrollTop.current = scrollTop;
-    const atBottom = scrollTop + clientHeight >= scrollHeight - zoomAdjustedThreshold;
-    const atTop = scrollTop <= zoomAdjustedThreshold;
-    if (scrollingDown && atBottom && startRowIndex < data.length - rowsPerPage) {
-      setStartRowIndex(prev => Math.min(data.length - rowsPerPage, prev + 1));
-    }
-    if (scrollingUp && atTop && startRowIndex > 0) {
-      setStartRowIndex(prev => Math.max(0, prev - 1));
-    }
   }
-
-  // ===== Functions from useVirtualizedTableScroll =====
   
   // Sync header scroll with body scroll (useEffect)
   useEffect(() => {
@@ -148,33 +243,12 @@ export function useVirtualizedTableRendering({
       if (isDraggingTable && bodyRef.current) {
         const deltaX = e.clientX - lastMousePosition.current.x;
         const deltaY = e.clientY - lastMousePosition.current.y;
+        
+        // Directly scroll the container (same as mousewheel)
         bodyRef.current.scrollLeft -= deltaX;
-        // Don't use scrollTop for virtual rows, just accumulate drag
-        dragAccumY.current -= deltaY;
+        bodyRef.current.scrollTop -= deltaY;
+        
         lastMousePosition.current = { x: e.clientX, y: e.clientY };
-
-        const dragThreshold = 20; // px to trigger row change (faster)
-        const maxStartIndex = Math.max(0, data.length - rowsPerPage);
-        if (dragAccumY.current > dragThreshold) {
-          setStartRowIndex((prev: number) => Math.min(maxStartIndex, prev + 1));
-          dragAccumY.current = 0;
-          bodyRef.current.scrollTop = Math.floor(bodyRef.current.scrollHeight / 2 - bodyRef.current.clientHeight / 2);
-        }
-        if (dragAccumY.current < -dragThreshold) {
-          setStartRowIndex((prev: number) => {
-            const next = Math.max(0, prev - 1);
-            // If at row 0, reset scrollTop to top
-            if (bodyRef.current) {
-              if (next === 0) {
-                bodyRef.current.scrollTop = 0;
-              } else {
-                bodyRef.current.scrollTop = Math.floor(bodyRef.current.scrollHeight / 2 - bodyRef.current.clientHeight / 2);
-              }
-            }
-            return next;
-          });
-          dragAccumY.current = 0;
-        }
       }
     };
     const handleMouseUp = () => {
@@ -190,55 +264,67 @@ export function useVirtualizedTableRendering({
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [isDraggingScrollbar, isDraggingTable, handleScrollbarDrag, bodyRef, data.length, rowsPerPage, setStartRowIndex]);
+  }, [isDraggingScrollbar, isDraggingTable, handleScrollbarDrag, bodyRef]);
 
   // ===== Keyboard navigation =====
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!bodyRef.current) return;
+    
+    const container = bodyRef.current;
+    const containerHeight = container.clientHeight;
+    const scrollTop = container.scrollTop;
+    const scrollHeight = container.scrollHeight;
+    
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       e.stopPropagation();
-      setStartRowIndex(prev => {
-        const maxIndex = Math.max(0, data.length - rowsPerPage);
-        return Math.min(maxIndex, prev + 1);
-      });
+      // Scroll down by one row height (use estimated)
+      container.scrollTop = scrollTop + estimatedRowHeight;
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       e.stopPropagation();
-      setStartRowIndex(prev => Math.max(0, prev - 1));
+      // Scroll up by one row height
+      container.scrollTop = Math.max(0, scrollTop - estimatedRowHeight);
     } else if (e.key === 'PageDown') {
       e.preventDefault();
       e.stopPropagation();
-      setStartRowIndex(prev => {
-        const maxIndex = Math.max(0, data.length - rowsPerPage);
-        return Math.min(maxIndex, prev + Math.floor(rowsPerPage / 2));
-      });
+      // Scroll down by container height
+      container.scrollTop = Math.min(scrollHeight - containerHeight, scrollTop + containerHeight);
     } else if (e.key === 'PageUp') {
       e.preventDefault();
       e.stopPropagation();
-      setStartRowIndex(prev => Math.max(0, prev - Math.floor(rowsPerPage / 2)));
+      // Scroll up by container height
+      container.scrollTop = Math.max(0, scrollTop - containerHeight);
     } else if (e.key === 'Home') {
       e.preventDefault();
       e.stopPropagation();
-      setStartRowIndex(0);
+      // Scroll to top
+      container.scrollTop = 0;
     } else if (e.key === 'End') {
       e.preventDefault();
       e.stopPropagation();
-      const maxIndex = Math.max(0, data.length - rowsPerPage);
-      setStartRowIndex(maxIndex);
+      // Scroll to bottom
+      container.scrollTop = scrollHeight - containerHeight;
     }
-  }, [data.length, rowsPerPage]);
+  }, [bodyRef]);
 
-  // ===== Return all functionality from both hooks =====
+  // ===== Return all functionality =====
   return {
-    // From useVirtualizedTableRows
+    // TanStack-inspired virtualization
+    scrollOffset,
+    getTotalSize,
+    getVirtualItems,
+    measureElement,
+    handleNativeScroll,
+    // Legacy compatibility
     startRowIndex,
     setStartRowIndex,
     rowsPerPage,
     getVisibleRows,
     handleWheelEvent,
     handleBodyScroll,
-    handleKeyDown, // Keyboard navigation
-    // From useVirtualizedTableScroll
+    handleKeyDown,
+    // Drag & scroll
     isDraggingScrollbar,
     setIsDraggingScrollbar,
     scrollbarRef,

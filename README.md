@@ -2,6 +2,33 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
+## VirtualizedTable Component
+
+This project includes a custom VirtualizedTable component inspired by TanStack Virtual. It efficiently renders large datasets by only displaying visible rows.
+
+### Known Limitations
+
+**Zoom-Related Visual Gaps**: When using browser zoom (< 100%), you may notice small visual gaps above rows where borders and striped backgrounds don't extend all the way to the previous row. This is an **accepted tradeoff** of the virtualization approach:
+
+- **Why it happens**: Row heights are measured once at initial render (typically 100% zoom). When you zoom out (e.g., 50% zoom), the actual content shrinks but the measured heights remain fixed, creating gaps above each row.
+
+- **Why we accept it**: The alternative solutions (dynamic remeasurement, fixed heights, CSS tricks) all introduce worse problems:
+  - Remeasuring on zoom causes visual chaos and performance issues
+  - Fixed heights create excessive padding and break dynamic content
+  - CSS tricks (box-shadow, filler divs) obscure content or fail at different zoom levels
+
+- **Recommendation**: Use the table at 100% zoom for best visual fidelity. The gaps are purely cosmetic and don't affect functionality.
+
+### Features That Work Perfectly ✅
+- Native scrolling to any row (tested: row 100) at **all zoom levels** (50%-150%)
+- All navigation methods: mousewheel, keyboard arrows, Page Up/Down, Home/End
+- Drag-to-scroll with momentum
+- Column reordering and visibility toggle
+- Proper padding that scales with zoom
+- Striped rows, borders, and hover effects (with minor gaps at zoom-out)
+
+---
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
