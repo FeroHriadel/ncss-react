@@ -68,8 +68,9 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
   const virtualItems = getVirtualItems();
   const totalSize = getTotalSize();
   
-  // Ref to measure column widths
+  // Ref to measure column widths AND track scroll width
   const tableRef = React.useRef<HTMLTableElement>(null);
+  const [tableScrollWidth, setTableScrollWidth] = React.useState<number>(0);
   const [columnPositions, setColumnPositions] = React.useState<number[]>([]);
   const prevPositionsRef = React.useRef<string>('');
   
@@ -79,6 +80,9 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
   // Measure column positions
   React.useEffect(() => {
     if (tableRef.current) {
+      // Update scroll width for backgrounds/lines
+      setTableScrollWidth(tableRef.current.scrollWidth);
+      
       const firstRow = tableRef.current.querySelector('tbody tr');
       if (firstRow) {
         const cells = firstRow.querySelectorAll('td');
@@ -102,6 +106,16 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
     }
   }, [zoomLevel, visibleColumnsCount]); // Stable dependencies only
 
+  // Wrap native scroll to also update table width
+  const handleScrollWithUpdate = (e: React.UIEvent<HTMLDivElement>) => {
+    handleNativeScroll(e);
+    if (tableRef.current) {
+      const newWidth = tableRef.current.scrollWidth;
+      if (newWidth !== tableScrollWidth) {
+        setTableScrollWidth(newWidth);
+      }
+    }
+  };
 
   return (
   <div className="flex">
@@ -118,7 +132,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
       onMouseLeave={handleTableMouseLeave}
       onWheel={handleWheelEvent}
       onKeyDown={handleKeyDown}
-      onScroll={handleNativeScroll}
+      onScroll={handleScrollWithUpdate}
     >
       {/* Container with total size */}
       <div
@@ -230,7 +244,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
                 position: 'absolute',
                 top: `${virtualRow.start}px`,
                 left: 0,
-                right: 0,
+                width: tableScrollWidth > 0 ? `${tableScrollWidth}px` : '100%',
                 height: `${virtualRow.size}px`,
                 backgroundColor: bgColor,
                 pointerEvents: 'none',
@@ -244,7 +258,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
                   position: 'absolute',
                   top: `${linePosition}px`,
                   left: 0,
-                  right: 0,
+                  width: tableScrollWidth > 0 ? `${tableScrollWidth}px` : '100%',
                   height: '1px',
                   backgroundColor: 'rgb(229 231 235)',
                   pointerEvents: 'none',
