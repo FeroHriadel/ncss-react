@@ -54,6 +54,10 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
   const dropdownRef = React.useRef<HTMLDivElement>(null);
   const [selectedOptions, setSelectedOptions] = React.useState<string[]>([...preselectedOptions]);
 
+  // Trigger width: ensure dropdown is at least as wide as the trigger (or 200px)
+  const triggerRef = React.useRef<HTMLButtonElement | null>(null);
+  const [triggerWidth, setTriggerWidth] = React.useState<number>(0);
+
   // Measurer for actual menu width (may exceed the CSS min-width)
   const measurerRef = React.useRef<HTMLDivElement | null>(null);
   const [measuredMenuWidth, setMeasuredMenuWidth] = React.useState<number | null>(null);
@@ -69,8 +73,19 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
 
   // Measure on mount, when options / preselectedOptions change, and on resize
   React.useEffect(() => {
-    measureMenuWidth();
-    const handleResize = () => window.requestAnimationFrame(measureMenuWidth);
+    // measure both trigger and menu content
+    function measureAll() {
+      // measure trigger
+      const btn = triggerRef.current;
+      if (btn) {
+        const tw = Math.round(btn.getBoundingClientRect().width) || 0;
+        setTriggerWidth(tw);
+      }
+      measureMenuWidth();
+    }
+
+    measureAll();
+    const handleResize = () => window.requestAnimationFrame(measureAll);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [options, preselectedOptions]);
@@ -95,7 +110,9 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
     if (openX === "left") return false;
     if (!dropdownRef.current) return false;
     const { right: dropdownRight } = dropdownRef.current.getBoundingClientRect();
-    const menuWidth = measuredMenuWidth ?? 200;
+    const menuWidth = (measuredMenuWidth && measuredMenuWidth > triggerWidth)
+      ? measuredMenuWidth
+      : Math.max(triggerWidth || 0, 200);
     const margin = 8; // small gap from viewport edge
     return dropdownRight + menuWidth + margin <= window.innerWidth;
   }
@@ -132,6 +149,12 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
     close: () => setOpen(false),
   }), [selectedOptions, onChange]);
 
+  // Determine effective min width for visible dropdown: prefer measuredMenuWidth when
+  // it exceeds the trigger width; otherwise fall back to max(triggerWidth, 200)
+  const effectiveMinWidth = (measuredMenuWidth && measuredMenuWidth > triggerWidth)
+    ? measuredMenuWidth
+    : Math.max(triggerWidth || 0, 200);
+
 
   // Render
   return (
@@ -140,6 +163,7 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
       {/* Trigger Icon Button */}
       <button
         type="button"
+        ref={triggerRef}
         onClick={toggleDropdownOpen}
         disabled={disabled}
         title={title}
@@ -151,8 +175,8 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
       {/* Dropdown Body */}
       {open && (
         <div
-          className={`absolute ${hasSpaceBelow() ? 'top-full' : 'bottom-full'} ${hasSpaceOnRight() ? 'left-0' : 'right-0'} mt-1 bg-white border border-gray-300 rounded shadow-lg z-[9999] min-w-[200px]`}
-          style={{ zIndex: 9999 }}
+          className={`absolute ${hasSpaceBelow() ? 'top-full' : 'bottom-full'} ${hasSpaceOnRight() ? 'left-0' : 'right-0'} mt-1 bg-white border border-gray-300 rounded shadow-lg z-[9999]`}
+          style={{ zIndex: 9999, minWidth: `${effectiveMinWidth}px` }}
         >
 
           {/* Dropdown Header */}
