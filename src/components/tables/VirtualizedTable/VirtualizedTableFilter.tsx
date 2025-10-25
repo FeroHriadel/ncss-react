@@ -31,8 +31,9 @@ export default function VirtualizedTableFilter() {
 
       {/* Filter Presets */}
       <section className="flex flex-wrap mb-12">
-        <Button width="200px" className="m-1 mt-0 ml-0">Add Condition</Button>
-        <Select width="200px" title="Filter Presets" options={[{ value: 'preset1', displayValue: 'Preset 1' }, { value: 'preset2', displayValue: 'Preset 2' }]} />
+        <Button width="160px" className="m-1 mt-0 ml-0">Add Condition</Button>
+        <Button width="160px" className="m-1 mt-0 ml-0">Clear Filters</Button>
+        <Select width="160px" title="Filter Presets" options={[{ value: 'preset1', displayValue: 'Preset 1' }, { value: 'preset2', displayValue: 'Preset 2' }]} />
       </section>
 
       <h3 className="text-lg font-semibold">Filters to Apply</h3>
