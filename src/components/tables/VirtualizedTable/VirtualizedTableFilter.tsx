@@ -25,27 +25,31 @@ export default function VirtualizedTableFilter() {
 
   return (
     <div className="w-full h-full">
+      <h2 className="text-2xl font-bold mb-6">DATA FILTER</h2>
+      <h3 className="text-lg font-semibold">Filter Options</h3>
+      <p className="text-sm text-gray-700 mb-4">Add filter conditions to refine your data.</p>
 
       {/* Filter Presets */}
       <section className="flex flex-wrap mb-12">
         <Button width="200px" className="m-1 mt-0 ml-0">Add Condition</Button>
-        <Select width="200px" title="Choose a preset" options={[{ value: 'preset1', displayValue: 'Preset 1' }, { value: 'preset2', displayValue: 'Preset 2' }]} />
+        <Select width="200px" title="Filter Presets" options={[{ value: 'preset1', displayValue: 'Preset 1' }, { value: 'preset2', displayValue: 'Preset 2' }]} />
       </section>
 
+      <h3 className="text-lg font-semibold">Filters to Apply</h3>
+      <p className="text-sm text-gray-700 mb-4">Review and adjust your active filters. Click 'Apply Filters' to save changes.</p>
       {/* Filters */}
       <section>
-        <h3>Selected Filters</h3>
-        <div className="w-full flex items-center flex-wrap mb-12">
-          <Select options={columnsSelectOptions} title="Select a column" width="200px" className="m-1 mt-0 ml-0" />
-          <Select options={conditionSelectOptions} title="Select a condition" width="200px" className="m-1 mt-0 ml-0" />
-          <Input width="200px" className="m-1 mt-0 ml-0 border border-black border-solid" placeholder="Enter condition value" />
-          <Select options={operatorSelectOptions} title="Select an operator" width="200px" className="m-1 mt-0 ml-0" />
+        <div className="w-full flex gap-1 items-center flex-wrap mb-16">
+          <Select options={columnsSelectOptions} title="Column" width="160px" className="" />
+          <Select options={conditionSelectOptions} title="Condition" width="160px" className="" />
+          <Input width="160px" className="border border-gray-300" placeholder="Condition value" />
+          <Select options={operatorSelectOptions} title="Operator" width="160px" className="" />
         </div>
       </section>
 
-      <section className="w-full flex justify-end">
-        <Button className="m-1">Cancel</Button>
-        <Button className="m-1">Apply Filters</Button>
+      <section className="w-full flex gap-1 justify-end">
+        <Button className=" bg-red-950 hover:bg-red-900 focus:bg-red-900 active:bg-red-900 text-white" variant="transparent">Cancel</Button>
+        <Button>Apply Filters</Button>
       </section>
     </div>
   )

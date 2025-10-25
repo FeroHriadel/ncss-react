@@ -154,7 +154,7 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 							onClick={toggleDropdownOpen}
 							disabled={disabled}
 							title={title}
-							variant="md"
+              variant="transparent"
 							className="flex justify-center"
               style={{ width: '100%' }}
 						>

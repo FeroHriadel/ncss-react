@@ -9,8 +9,9 @@ export interface ButtonProps {
   children?: React.ReactNode;
   disabled?: boolean;
   title?: string;
-  variant?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg';
   width?: string;
+  variant?: 'dark' | 'transparent';
 }
 
 
@@ -22,12 +23,13 @@ const Button: React.FC<ButtonProps> = ({
   children,
   disabled,
   title,
-  variant='md',
-  width
+  size = 'md',
+  width,
+  variant = 'dark',
 }) => {
 
   function getButtonHeight() {
-    switch (variant) {
+    switch (size) {
       case 'sm':
         return 'h-6';
       case 'md':
@@ -40,7 +42,7 @@ const Button: React.FC<ButtonProps> = ({
   }
 
   function getTextSize() {
-    switch (variant) {
+    switch (size) {
       case 'sm':
         return 'text-sm';
       case 'md':
@@ -52,16 +54,29 @@ const Button: React.FC<ButtonProps> = ({
     }
   }
 
+  function getVariantClass() {
+    if (variant === 'transparent') return 'bg-transparent text-gray-700 border border-gray-500 hover:bg-gray-100 active:bg-gray-200 focus:bg-gray-100';
+    if (variant === 'dark') return 'bg-gray-900 text-white border border-black hover:bg-gray-950 active:bg-gray-950 focus:bg-gray-950';
+    return ''
+  }
+
+
   return (
     <button
-      className={'appearance-none rounded bg-transparent border border-gray-500 p-0 px-4 m-0 shadow-none outline-none min-h-8 flex justify-center items-center hover:bg-gray-100 active:bg-gray-200 focus:bg-gray-100 font-medium ' + getButtonHeight() + ' ' + getTextSize() + ' ' + className}
+      className={
+        'appearance-none rounded p-0 px-4 m-0 shadow-none outline-none min-h-8 flex justify-center items-center font-medium ' +
+        getButtonHeight() + ' ' +
+        getTextSize() + ' ' +
+        getVariantClass() + ' ' +
+        (className || '')
+      }
       id={id}
       style={{ width, ...style }}
       onClick={onClick}
       disabled={disabled}
       title={title}
     >
-      <span className="leading-none p-0 m-0 flex justify-center items-center text-gray-700 -translate-y-[1px]">
+      <span className="leading-none p-0 m-0 flex justify-center items-center -translate-y-[1px]">
         {children}
       </span>
     </button>
