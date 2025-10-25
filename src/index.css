@@ -2,9 +2,3 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --ncss-red-dark: #7e0808;
-  --ncss-red: #990000;
-  --ncss-red-light: #fecaca;
-}
-

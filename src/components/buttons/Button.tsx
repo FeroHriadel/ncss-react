@@ -55,20 +55,46 @@ const Button: React.FC<ButtonProps> = ({
   }
 
   function getVariantClass() {
-    if (variant === 'transparent') return 'bg-transparent text-gray-700 border border-gray-500 hover:bg-gray-100 active:bg-gray-200 focus:bg-gray-100';
-    if (variant === 'dark') return 'bg-gray-900 text-white border border-black hover:bg-gray-950 active:bg-gray-950 focus:bg-gray-950';
-    return ''
+    switch (variant) {
+      case 'dark': 
+        return 'bg-gray-800 text-white border border-black hover:bg-gray-950 active:bg-gray-950 focus:bg-gray-950';
+      case 'transparent': 
+        return 'bg-transparent text-gray-700 border border-gray-500 hover:bg-gray-100 active:bg-gray-200 focus:bg-gray-100';
+      default: 
+        return '';
+    }
+  }
+
+  // If className contains bg-*, text-*, or border-*, remove the default bg/text/border classes
+  function filterVariantClass(variantClass: string, className?: string) {
+    if (!className) return variantClass;
+    let filtered = variantClass;
+    if (/\bbg-\S+/.test(className)) {
+      filtered = filtered.replace(/bg-\S+/g, '');
+      filtered = filtered.replace(/hover:bg-\S+/g, '');
+      filtered = filtered.replace(/active:bg-\S+/g, '');
+      filtered = filtered.replace(/focus:bg-\S+/g, '');
+    }
+    if (/\btext-\S+/.test(className)) {
+      filtered = filtered.replace(/text-\S+/g, '');
+    }
+    if (/\bborder-\S+/.test(className)) {
+      filtered = filtered.replace(/border-\S+/g, '');
+    }
+    return filtered;
   }
 
 
   return (
     <button
       className={
-        'appearance-none rounded p-0 px-4 m-0 shadow-none outline-none min-h-8 flex justify-center items-center font-medium ' +
-        getButtonHeight() + ' ' +
-        getTextSize() + ' ' +
-        getVariantClass() + ' ' +
-        (className || '')
+        [
+          'appearance-none rounded p-0 px-4 m-0 shadow-none outline-none min-h-8 flex justify-center items-center font-medium active:scale-[0.99] transition-all',
+          getButtonHeight(),
+          getTextSize(),
+          filterVariantClass(getVariantClass(), className),
+          className
+        ].filter(Boolean).join(' ')
       }
       id={id}
       style={{ width, ...style }}

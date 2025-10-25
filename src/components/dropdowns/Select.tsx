@@ -155,7 +155,7 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 							disabled={disabled}
 							title={title}
               variant="transparent"
-							className="flex justify-center"
+							className="flex justify-center active:scale-[1]"
               style={{ width: '100%' }}
 						>
 							<span className="truncate flex-1 text-left">

@@ -48,7 +48,7 @@ export default function VirtualizedTableFilter() {
       </section>
 
       <section className="w-full flex gap-1 justify-end">
-        <Button className=" bg-red-950 hover:bg-red-900 focus:bg-red-900 active:bg-red-900 text-white" variant="transparent">Cancel</Button>
+        <Button className=" bg-red-950 hover:bg-red-900 focus:bg-red-900 active:bg-red-900 text-white" >Cancel</Button>
         <Button>Apply Filters</Button>
       </section>
     </div>
