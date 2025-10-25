@@ -1,14 +1,10 @@
 import React from "react";
 import ButtonIcon from "../../buttons/ButtonIcon";
-import Multiselect, { type MultiSelectHandle } from "../../dropdowns/MultiSelect";
-import { HiOutlineViewColumns } from "react-icons/hi2";
 import { CiZoomIn, CiZoomOut } from "react-icons/ci";
 
 
 
 interface ControlBarProps {
-  dropdownOptions: Array<{ value: string; displayValue: string; onClick: () => void }>;
-  preselectedDropdownOptions: string[];
   zoomLevel: number;
   minZoom: number;
   maxZoom: number;
@@ -19,24 +15,12 @@ interface ControlBarProps {
 
 
 const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
-  dropdownOptions,
-  preselectedDropdownOptions,
   zoomLevel,
   minZoom,
   maxZoom,
   handleZoomIn,
   handleZoomOut,
 }) => {
-
-  // MultiSelect Ref
-  const multiSelectRef = React.useRef<MultiSelectHandle>(null);
-
-
-  // Handlers
-  function testRef() {
-    console.log(multiSelectRef.current?.getSelectedOptions());
-  }
-
 
   // Render
   return (
@@ -45,22 +29,11 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
       {/*Left Side */}
       <div className="flex items-center">
         <span className="text-sm text-gray-600">Controls</span>
-        <button onClick={testRef}>Test Ref</button>
       </div>
 
 
       {/** Right Side */}
       <div className="flex items-center gap-2 relative">
-
-        {/* Column Visibility Toggle */}
-        <Multiselect
-          ref={multiSelectRef}
-          className="relative"
-          trigger={<HiOutlineViewColumns size={20} />}
-          title="Toggle Columns"
-          options={dropdownOptions}
-          preselectedOptions={preselectedDropdownOptions}
-        />
 
         {/* Zoom Controls */}
         <ButtonIcon

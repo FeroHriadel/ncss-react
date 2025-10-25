@@ -36,8 +36,7 @@ interface VirtualizedTableBodyProps {
   bodyRef: React.RefObject<HTMLDivElement>;
   scrollbarRef: React.RefObject<HTMLDivElement>;
   data: import("./VirtualizedTable").VirtualizedTableProps["data"];
-  columnOrder: Column[];
-  getVisibleColumns: (order: Column[]) => Column[];
+  columns: Column[];
   verticalSeparators: boolean;
   horizontalSeparators: boolean;
   zoomLevel: number;
@@ -63,8 +62,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
   bodyRef,
   scrollbarRef,
   data,
-  columnOrder,
-  getVisibleColumns,
+  columns,
   verticalSeparators,
   horizontalSeparators,
   zoomLevel,
@@ -94,7 +92,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
   // Get data needed for rendering
   const virtualItems = getVirtualItems();
   const totalSize = getTotalSize();
-  const visibleColumnsCount = getVisibleColumns(columnOrder).length;
+  const visibleColumnsCount = columns.length;
   
   // ========================================
   // HELPER FUNCTIONS
@@ -281,12 +279,12 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
                     tableLayout: 'fixed',
                   }}
                 >
-              {getVisibleColumns(columnOrder).map((col, index) => {
+              {columns.map((col, index) => {
                 const cellValue = row[col.column];
                 const renderedValue = renderCellValue(cellValue);
                 
                 // Apply vertical separator to all columns except last
-                const verticalSepClass = verticalSeparators && index < getVisibleColumns(columnOrder).length - 1
+                const verticalSepClass = verticalSeparators && index < columns.length - 1
                   ? 'border-r border-gray-200'
                   : '';
                 

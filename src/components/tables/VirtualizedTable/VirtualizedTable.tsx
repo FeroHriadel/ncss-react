@@ -3,7 +3,6 @@ import VirtualizedTableControlBar from "./VirtualizedTableControlBar";
 import VirtualizedTableHeader from "./VirtualizedTableHeader";
 import VirtualizedTableBody from "./VirtualizedTableBody";
 import { useVirtualizedTableRendering } from "./useVirtualizedTableRendering"
-import { useVirtualizedTableColumns } from "./useVirtualizedTableColumns"
 import { useVirtualizedTableZoom } from "./useVirtualizedTableZoom"
 
 
@@ -50,19 +49,6 @@ function VirtualizedTable({
       return {};
     }
   
-    // Column visibility toggle
-    const {
-      toggleColumnVisibility,
-      getVisibleColumns,
-    } = useVirtualizedTableColumns({ columns });      // Dropdown options for column visibility toggle
-      const dropdownOptions = columns.map(col => ({
-        value: col.column,
-        displayValue: col.displayValue,
-        onClick: () => toggleColumnVisibility(col.column)
-      }));
-      const preselectedDropdownOptions = columns.map(col => col.column);
-
-
     // ZOOM
       // Zoom in/out functionality
       const {
@@ -100,8 +86,6 @@ function VirtualizedTable({
     return (
       <section className='virtualized-table-wrap'>
         <VirtualizedTableControlBar
-          dropdownOptions={dropdownOptions}
-          preselectedDropdownOptions={preselectedDropdownOptions}
           zoomLevel={zoomLevel}
           minZoom={minZoom}
           maxZoom={maxZoom}
@@ -113,7 +97,7 @@ function VirtualizedTable({
           <div className="border border-gray-300 overflow-hidden flex-1">
             <VirtualizedTableHeader
               headerRef={headerRef as React.RefObject<HTMLDivElement>}
-              visibleColumns={getVisibleColumns(columns.map(c => c.column))}
+              visibleColumns={columns}
               getColumnStyle={getColumnStyle}
               zoomLevel={zoomLevel}
               verticalSeparators={verticalSeparators}
@@ -128,8 +112,7 @@ function VirtualizedTable({
           bodyRef={bodyRef as React.RefObject<HTMLDivElement>}
           scrollbarRef={scrollbarRef as React.RefObject<HTMLDivElement>}
           data={data}
-          columnOrder={getVisibleColumns(columns.map(c => c.column))}
-          getVisibleColumns={order => getVisibleColumns(order.map(col => col.column))}
+          columns={columns}
           verticalSeparators={verticalSeparators}
           zoomLevel={zoomLevel}
           getColumnStyle={getColumnStyle}
