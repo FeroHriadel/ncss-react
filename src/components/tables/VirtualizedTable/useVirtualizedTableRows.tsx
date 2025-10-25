@@ -12,7 +12,6 @@ interface UseVirtualizedTableRowsProps {
 
 export function useVirtualizedTableRows({ data, rowsPerPage = 15 }: UseVirtualizedTableRowsProps) {
   const [startRowIndex, setStartRowIndex] = useState(0);
-  // Removed isChangingRows blocking
   const lastScrollTop = useRef(0);
 
   const getVisibleRows = useCallback(() => {
@@ -59,8 +58,8 @@ export function useVirtualizedTableRows({ data, rowsPerPage = 15 }: UseVirtualiz
 
   return {
     startRowIndex,
-  setStartRowIndex,
-  rowsPerPage,
+    setStartRowIndex,
+    rowsPerPage,
     getVisibleRows,
     handleWheelEvent,
     handleBodyScroll,

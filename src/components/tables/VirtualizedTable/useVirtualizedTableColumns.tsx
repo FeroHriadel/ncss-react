@@ -1,18 +1,21 @@
 import React from "react";
 
+
+
 export interface UseVirtualizedTableColumnsOptions {
   columns: { column: string; displayValue: string; width?: string }[];
 }
 
-export function useVirtualizedTableColumns({ columns }: UseVirtualizedTableColumnsOptions) {
-  // State for column visibility
-  const [visibleColumns, setVisibleColumns] = React.useState<{ [key: string]: boolean }>({});
-  // State for dropdown visibility
-  const [showColumnOptions, setShowColumnOptions] = React.useState(false);
-  // Ref for dropdown
-  const columnOptionsRef = React.useRef<HTMLDivElement>(null);
 
-  // Initialize visible columns when columns change
+
+export function useVirtualizedTableColumns({ columns }: UseVirtualizedTableColumnsOptions) {
+
+  // State and refs
+  const [visibleColumns, setVisibleColumns] = React.useState<{ [key: string]: boolean }>({}); //column visibility
+  const [showColumnOptions, setShowColumnOptions] = React.useState(false); //dropdown visibility
+  const columnOptionsRef = React.useRef<HTMLDivElement>(null); //dropdown container
+
+  // Initialize visible columns
   React.useEffect(() => {
     const initialVisibility: { [key: string]: boolean } = {};
     columns.forEach(col => {

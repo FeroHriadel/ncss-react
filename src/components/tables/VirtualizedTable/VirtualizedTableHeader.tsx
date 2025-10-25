@@ -8,34 +8,20 @@ interface Column {
 
 interface VirtualizedTableHeaderProps {
   headerRef: React.RefObject<HTMLDivElement>;
-  columnOrder: Column[];
-  getVisibleColumns: (order: Column[]) => Column[];
-  draggedColumn: string | null;
-  dragOverColumn: string | null;
+  visibleColumns: Column[];
   getColumnStyle: (col: Column) => React.CSSProperties;
   zoomLevel: number;
   verticalSeparators: boolean;
   handleHeaderScroll: (e: React.UIEvent<HTMLDivElement>) => void;
-  handleColumnMouseDown: (e: React.MouseEvent, column: string, displayValue: string) => void;
-  handleColumnMouseUp: (column: string) => void;
-  handleColumnMouseEnter: (column: string) => void;
-  handleColumnMouseLeave: () => void;
 }
 
 const VirtualizedTableHeader: React.FC<VirtualizedTableHeaderProps> = ({
   headerRef,
-  columnOrder,
-  getVisibleColumns,
-  draggedColumn,
-  dragOverColumn,
+  visibleColumns,
   getColumnStyle,
   zoomLevel,
   verticalSeparators,
   handleHeaderScroll,
-  handleColumnMouseDown,
-  handleColumnMouseUp,
-  handleColumnMouseEnter,
-  handleColumnMouseLeave,
 }) => (
   <div
     ref={headerRef}
@@ -57,27 +43,19 @@ const VirtualizedTableHeader: React.FC<VirtualizedTableHeaderProps> = ({
     >
       <thead className="bg-gray-50">
         <tr>
-          {getVisibleColumns(columnOrder).map((col, index) => (
+          {visibleColumns.map((col, index) => (
             <th
               key={col.column}
-              className={`text-left break-words cursor-move select-none transition-colors ${
+              className={`text-left break-words ${
                 verticalSeparators &&
-                index < getVisibleColumns(columnOrder).length - 1
+                index < visibleColumns.length - 1
                   ? "border-r border-gray-200"
                   : ""
-              } ${draggedColumn === col.column ? "opacity-50" : ""} ${
-                dragOverColumn === col.column ? "bg-blue-100" : ""
               }`}
               style={{
                 ...getColumnStyle(col),
                 padding: `${zoomLevel * 0.5}rem ${zoomLevel * 1}rem`,
               }}
-              onMouseDown={(e) =>
-                handleColumnMouseDown(e, col.column, col.displayValue)
-              }
-              onMouseUp={() => handleColumnMouseUp(col.column)}
-              onMouseEnter={() => handleColumnMouseEnter(col.column)}
-              onMouseLeave={handleColumnMouseLeave}
             >
               {col.displayValue}
             </th>

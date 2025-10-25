@@ -1,9 +1,7 @@
 import React from 'react'
-import VirtualizedTableColumnGhost from "./VirtualizedTableColumnGhost";
 import VirtualizedTableControlBar from "./VirtualizedTableControlBar";
 import VirtualizedTableHeader from "./VirtualizedTableHeader";
 import VirtualizedTableBody from "./VirtualizedTableBody";
-import { useVirtualizedTableDragAndDrop } from "./useVirtualizedTableDragAndDrop"
 import { useVirtualizedTableRendering } from "./useVirtualizedTableRendering"
 import { useVirtualizedTableColumns } from "./useVirtualizedTableColumns"
 import { useVirtualizedTableZoom } from "./useVirtualizedTableZoom"
@@ -49,28 +47,14 @@ function VirtualizedTable({
         if (columnObj.width) {
           return { width: columnObj.width };
         }
-        return {};
-      }
-    
-      // Column drag and drop reordering
-      const {
-        columnOrder,
-        draggedColumn,
-        dragOverColumn,
-        ghostElement,
-        handleColumnMouseDown,
-        handleColumnMouseUp,
-        handleColumnMouseEnter,
-        handleColumnMouseLeave,
-      } = useVirtualizedTableDragAndDrop({ columns });
-
-      // Column visibility toggle
-      const {
-        toggleColumnVisibility,
-        getVisibleColumns,
-      } = useVirtualizedTableColumns({ columns });
-
-      // Dropdown options for column visibility toggle
+      return {};
+    }
+  
+    // Column visibility toggle
+    const {
+      toggleColumnVisibility,
+      getVisibleColumns,
+    } = useVirtualizedTableColumns({ columns });      // Dropdown options for column visibility toggle
       const dropdownOptions = columns.map(col => ({
         value: col.column,
         displayValue: col.displayValue,
@@ -129,18 +113,11 @@ function VirtualizedTable({
           <div className="border border-gray-300 overflow-hidden flex-1">
             <VirtualizedTableHeader
               headerRef={headerRef as React.RefObject<HTMLDivElement>}
-              columnOrder={getVisibleColumns(columnOrder)}
-              getVisibleColumns={() => getVisibleColumns(columnOrder)}
-              draggedColumn={draggedColumn}
-              dragOverColumn={dragOverColumn}
+              visibleColumns={getVisibleColumns(columns.map(c => c.column))}
               getColumnStyle={getColumnStyle}
               zoomLevel={zoomLevel}
               verticalSeparators={verticalSeparators}
               handleHeaderScroll={handleHeaderScroll}
-              handleColumnMouseDown={handleColumnMouseDown}
-              handleColumnMouseUp={handleColumnMouseUp}
-              handleColumnMouseEnter={handleColumnMouseEnter}
-              handleColumnMouseLeave={handleColumnMouseLeave}
             />
           </div>
           {/* Spacer to account for custom scrollbar */}
@@ -151,7 +128,7 @@ function VirtualizedTable({
           bodyRef={bodyRef as React.RefObject<HTMLDivElement>}
           scrollbarRef={scrollbarRef as React.RefObject<HTMLDivElement>}
           data={data}
-          columnOrder={getVisibleColumns(columnOrder)}
+          columnOrder={getVisibleColumns(columns.map(c => c.column))}
           getVisibleColumns={order => getVisibleColumns(order.map(col => col.column))}
           verticalSeparators={verticalSeparators}
           zoomLevel={zoomLevel}
@@ -170,14 +147,6 @@ function VirtualizedTable({
           getVirtualItems={getVirtualItems}
           measureElement={measureElement}
         />
-
-        {ghostElement && (
-            <VirtualizedTableColumnGhost
-              x={ghostElement.x}
-              y={ghostElement.y}
-              text={ghostElement.text}
-            />
-        )}
       </section>
     );
   }
