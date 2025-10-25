@@ -1,7 +1,8 @@
 import React from "react";
 
 
-interface ButtonIconProps {
+
+export interface IconButtonProps {
   className?: string;
   id?: string;
   style?: React.CSSProperties;
@@ -12,7 +13,8 @@ interface ButtonIconProps {
 }
 
 
-const ButtonIcon: React.FC<ButtonIconProps> = ({
+
+const IconButton: React.FC<IconButtonProps> = ({
   className,
   id,
   style,
@@ -34,4 +36,4 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
   </button>
 );
 
-export default ButtonIcon;
+export default IconButton;

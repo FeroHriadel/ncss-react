@@ -28,6 +28,8 @@ function VirtualizedTable({
   striped = true,
   hover = true
 }: VirtualizedTableProps) {
+
+    // REFS
     const headerRef = React.useRef<HTMLDivElement>(null);
     const bodyRef = React.useRef<HTMLDivElement | null>(null);
     const scrollbarRef = React.useRef<HTMLDivElement | null>(null);
@@ -85,13 +87,16 @@ function VirtualizedTable({
     // RENDER
     return (
       <section className='virtualized-table-wrap'>
+        {/* Control Bar */}
         <VirtualizedTableControlBar
           zoomLevel={zoomLevel}
           minZoom={minZoom}
           maxZoom={maxZoom}
           handleZoomIn={handleZoomIn}
           handleZoomOut={handleZoomOut}
+          columns={getColumns()}
         />
+
         {/* Fixed Header */}
         <div className="flex">
           <div className="border border-gray-300 overflow-hidden flex-1">
@@ -108,6 +113,7 @@ function VirtualizedTable({
           <div className="w-3 border-t border-r border-gray-300 bg-gray-50"></div>
         </div>
 
+        {/* Table Body */}
         <VirtualizedTableBody
           bodyRef={bodyRef as React.RefObject<HTMLDivElement>}
           scrollbarRef={scrollbarRef as React.RefObject<HTMLDivElement>}
