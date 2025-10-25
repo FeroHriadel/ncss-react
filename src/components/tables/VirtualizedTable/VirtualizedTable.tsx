@@ -104,7 +104,7 @@ function VirtualizedTable({
 
     // RENDER
     return (
-      <section className='virtualized-table-wrap'>
+      <section className='virtualized-table-wrap rounded'>
         {/* Control Bar */}
         <VirtualizedTableControlBar
           zoomLevel={zoomLevel}
