@@ -146,7 +146,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
       const handleResize = () => measureColumns(); //remeasure on window resize (e.g., DevTools open/close)
       window.addEventListener('resize', handleResize);
       return () => window.removeEventListener('resize', handleResize);
-    }, [zoomLevel, visibleColumnsCount]);
+    }, [zoomLevel, visibleColumnsCount, columns]);
   
   
   // RENDER
