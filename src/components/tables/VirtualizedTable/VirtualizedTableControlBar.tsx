@@ -1,7 +1,9 @@
 import React from "react";
 import IconButton from "../../buttons/IconButton";
 import MultiSelect, { type MultiSelectHandle } from "../../dropdowns/MultiSelect";
-import { CiZoomIn, CiZoomOut, CiViewColumn } from "react-icons/ci";
+import { CiZoomIn, CiZoomOut, CiViewColumn, CiFilter } from "react-icons/ci";
+import Modal from "../../dialogs/Modal";
+import VirtualizedTableFilter from "./VirtualizedTableFilter";
 
 
 
@@ -51,6 +53,16 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
 
       {/** Right Side */}
       <div className="flex items-center gap-2 relative">
+
+        {/* Filter Modal */}
+        <Modal
+          trigger={<IconButton className="p-1 hover:bg-gray-200 rounded transition-colors" title="Filter" icon={<CiFilter size={20} />} />}
+          className="w-[95%] sm:w-[75%]"
+        >
+          <VirtualizedTableFilter />
+        </Modal>
+          
+
         {/* Hide/show columns dropdown */}
         <MultiSelect
           className="p-1 hover:bg-gray-200 rounded transition-colors"
