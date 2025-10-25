@@ -1,41 +1,20 @@
-/**
- * VirtualizedTableBody
- * 
- * RENDERING COMPONENT
- * Renders only the visible rows using virtualization, plus visual elements.
- * 
- * ARCHITECTURE:
- * - Container with total virtual height (e.g., 4100px for 100 rows)
- * - Table with absolutely positioned rows via transform: translateY()
- * - Absolute positioned background divs (for striped colors)
- * - Absolute positioned separator lines (horizontal and vertical)
- * - Custom scrollbar with draggable thumb
- * 
- * PERFORMANCE:
- * - Measures column widths once on mount/zoom
- * - Measures row heights as they render (dynamic heights for text wrapping)
- * - Only updates state when measurements actually change (prevents re-render loops)
- * 
- * SCROLLING:
- * - Native browser scroll (not custom simulation)
- * - Updates table scroll width for horizontal backgrounds/lines
- * - Updates scrollbar thumb position to reflect current scroll
- */
 import React from "react";
+import type { VirtualizedTableProps } from "./VirtualizedTable";
 
-// ========================================
-// TYPES
-// ========================================
-interface Column {
+
+
+export interface Column {
   column: string;
   displayValue: string;
   width?: string;
 }
 
+
+
 interface VirtualizedTableBodyProps {
   bodyRef: React.RefObject<HTMLDivElement>;
   scrollbarRef: React.RefObject<HTMLDivElement>;
-  data: import("./VirtualizedTable").VirtualizedTableProps["data"];
+  data: VirtualizedTableProps["data"];
   columns: Column[];
   verticalSeparators: boolean;
   horizontalSeparators: boolean;
@@ -55,9 +34,8 @@ interface VirtualizedTableBodyProps {
   measureElement: (node: HTMLTableRowElement | null, index: number) => void;
 }
 
-// ========================================
-// COMPONENT
-// ========================================
+
+
 const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
   bodyRef,
   scrollbarRef,
@@ -80,143 +58,100 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
   getVirtualItems,
   measureElement,
 }) => {
-  // ========================================
-  // STATE & REFS
-  // ========================================
-  const tableRef = React.useRef<HTMLTableElement>(null);
-  const prevPositionsRef = React.useRef<string>('');
+
+  // VALUES
+    // State and Refs
+    const tableRef = React.useRef<HTMLTableElement>(null);
+    const prevPositionsRef = React.useRef<string>('');
+    const [tableScrollWidth, setTableScrollWidth] = React.useState<number>(0);
+    const [columnPositions, setColumnPositions] = React.useState<number[]>([]);
+    const virtualItems = getVirtualItems();
+    const totalSize = getTotalSize();
+    const visibleColumnsCount = columns.length;
+    const hoverClass = getHoverClass();
   
-  const [tableScrollWidth, setTableScrollWidth] = React.useState<number>(0);
-  const [columnPositions, setColumnPositions] = React.useState<number[]>([]);
-  
-  // Get data needed for rendering
-  const virtualItems = getVirtualItems();
-  const totalSize = getTotalSize();
-  const visibleColumnsCount = columns.length;
-  
-  // ========================================
+
   // HELPER FUNCTIONS
-  // ========================================
-  
-  // Get background color for a row (striped or white)
-  function getRowBackgroundColor(rowIndex: number): string {
-    if (!striped) return 'white';
-    
-    const stripedEnabled = typeof striped === 'boolean' ? striped : striped.enabled;
-    if (!stripedEnabled) return 'white';
-    
-    return rowIndex % 2 === 1 ? 'rgb(243 244 246)' : 'white';
-  }
-  
-  // Get hover CSS class for rows
-  function getHoverClass(): string {
-    if (!hover) return '';
-    
-    const hoverEnabled = typeof hover === 'boolean' ? hover : hover.enabled;
-    if (!hoverEnabled) return '';
-    
-    const customColor = typeof hover === 'object' ? hover.color : undefined;
-    return customColor ? `hover:${customColor}` : 'hover:bg-gray-100';
-  }
-  
-  // Render cell content (handles different data types)
-  function renderCellValue(cellValue: unknown): React.ReactNode {
-    if (cellValue === null || cellValue === undefined) {
-      return '';
+    // Get background color for a row (striped or white)
+    function getRowBackgroundColor(rowIndex: number): string {
+      if (!striped) return 'white';
+      const stripedEnabled = typeof striped === 'boolean' ? striped : striped.enabled;
+      if (!stripedEnabled) return 'white';
+      return rowIndex % 2 === 1 ? 'rgb(243 244 246)' : 'white';
     }
-    if (Array.isArray(cellValue)) {
+    
+    // Get hover CSS class for rows
+    function getHoverClass(): string {
+      if (!hover) return '';
+      const hoverEnabled = typeof hover === 'boolean' ? hover : hover.enabled;
+      if (!hoverEnabled) return '';
+      const customColor = typeof hover === 'object' ? hover.color : undefined;
+      return customColor ? `hover:${customColor}` : 'hover:bg-gray-100';
+    }
+    
+    // Render cell content (handles different data types)
+    function renderCellValue(cellValue: unknown): React.ReactNode {
+      if (cellValue === null || cellValue === undefined) return '';
+      if (Array.isArray(cellValue)) return String(cellValue);
+      if (React.isValidElement(cellValue)) return cellValue;
+      if (typeof cellValue === 'object') return JSON.stringify(cellValue);
       return String(cellValue);
     }
-    if (React.isValidElement(cellValue)) {
-      return cellValue;
-    }
-    if (typeof cellValue === 'object') {
-      return JSON.stringify(cellValue);
-    }
-    return String(cellValue);
-  }
   
-  // ========================================
+  
   // EVENT HANDLERS
-  // ========================================
-  
-  // Focus body container when clicked (for keyboard navigation)
-  function handleMouseDownWithFocus(e: React.MouseEvent<HTMLDivElement>) {
-    if (bodyRef.current) {
-      bodyRef.current.focus();
+    // Focus body container when clicked (for keyboard navigation)
+    function handleMouseDownWithFocus(e: React.MouseEvent<HTMLDivElement>) {
+      if (bodyRef.current) bodyRef.current.focus();
+      handleTableMouseDown(e);
     }
-    handleTableMouseDown(e);
-  }
-  
-  // Update scroll width on scroll
-  function handleScrollWithUpdate(e: React.UIEvent<HTMLDivElement>) {
-    handleNativeScroll(e);
     
-    if (tableRef.current) {
-      const newWidth = tableRef.current.scrollWidth;
-      if (newWidth !== tableScrollWidth) {
-        setTableScrollWidth(newWidth);
+    // Update scroll width on scroll
+    function handleScrollWithUpdate(e: React.UIEvent<HTMLDivElement>) {
+      handleNativeScroll(e);
+      
+      if (tableRef.current) {
+        const newWidth = tableRef.current.scrollWidth;
+        if (newWidth !== tableScrollWidth) setTableScrollWidth(newWidth);
       }
     }
-  }
   
-  // ========================================
+
   // EFFECTS
-  // ========================================
-  
-  // Measure column positions and table scroll width
-  React.useEffect(() => {
-    if (!tableRef.current) return;
-    
-    function measureColumns() {
+    // Measure column positions and table scroll width
+    React.useEffect(() => {
       if (!tableRef.current) return;
-      
-      // Update table scroll width for horizontal backgrounds/lines
-      setTableScrollWidth(tableRef.current.scrollWidth);
-      
-      // Measure column widths for vertical separator lines
-      const firstRow = tableRef.current.querySelector('tbody tr');
-      if (!firstRow) return;
-      
-      const cells = firstRow.querySelectorAll('td');
-      const positions: number[] = [];
-      let cumulativeWidth = 0;
-      
-      cells.forEach((cell, index) => {
-        if (index < cells.length - 1) {
-          cumulativeWidth += cell.offsetWidth;
-          positions.push(cumulativeWidth);
+        //helper function to measure column positions
+        function measureColumns() {
+          if (!tableRef.current) return;
+          setTableScrollWidth(tableRef.current.scrollWidth); //update table scroll width for horizontal backgrounds/lines
+          //measure column widths for vertical separator lines
+          const firstRow = tableRef.current.querySelector('tbody tr');
+          if (!firstRow) return;
+          const cells = firstRow.querySelectorAll('td');
+          const positions: number[] = [];
+          let cumulativeWidth = 0;
+          cells.forEach((cell, index) => {
+            if (index < cells.length - 1) {
+              cumulativeWidth += cell.offsetWidth;
+              positions.push(cumulativeWidth);
+            }
+          });
+          //only update state if positions changed (avoid unnecessary re-renders)
+          const positionsStr = JSON.stringify(positions);
+          if (positionsStr !== prevPositionsRef.current) {
+            prevPositionsRef.current = positionsStr;
+            setColumnPositions(positions);
+          }
         }
-      });
-      
-      // Only update state if positions changed (avoid unnecessary re-renders)
-      const positionsStr = JSON.stringify(positions);
-      if (positionsStr !== prevPositionsRef.current) {
-        prevPositionsRef.current = positionsStr;
-        setColumnPositions(positions);
-      }
-    }
-    
-    // Measure initially
-    measureColumns();
-    
-    // Remeasure on window resize (e.g., DevTools open/close)
-    const handleResize = () => {
-      measureColumns();
-    };
-    
-    window.addEventListener('resize', handleResize);
-    
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [zoomLevel, visibleColumnsCount]);
+      measureColumns(); //measure initially
+      const handleResize = () => measureColumns(); //remeasure on window resize (e.g., DevTools open/close)
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }, [zoomLevel, visibleColumnsCount]);
   
-  // ========================================
+  
   // RENDER
-  // ========================================
-  const hoverClass = getHoverClass();
-  
   return (
   <div className="flex">
     {/* Main scrollable container */}
