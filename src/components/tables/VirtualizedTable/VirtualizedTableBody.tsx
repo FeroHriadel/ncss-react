@@ -91,10 +91,8 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
     
     // Render cell content (handles different data types)
     function renderCellValue(cellValue: unknown): React.ReactNode {
-      if (cellValue === null || cellValue === undefined) return '';
-      if (Array.isArray(cellValue)) return String(cellValue);
       if (React.isValidElement(cellValue)) return cellValue;
-      if (typeof cellValue === 'object') return JSON.stringify(cellValue);
+      if (typeof cellValue !== 'string') return JSON.stringify(cellValue);
       return String(cellValue);
     }
   

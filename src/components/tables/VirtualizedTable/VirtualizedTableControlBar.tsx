@@ -12,6 +12,7 @@ interface ControlBarProps {
   handleZoomIn: () => void;
   handleZoomOut: () => void;
   columns: { column: string; displayValue: string }[];
+  setColumnsFilter: (selectedColumns: string[]) => void;
 }
 
 
@@ -22,13 +23,20 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
   maxZoom,
   handleZoomIn,
   handleZoomOut,
-  columns
+  columns,
+  setColumnsFilter,
 }) => {
 
   // Refs & values
   const multiselectRef = React.useRef<MultiSelectHandle>(null);
   const columnOptions = columns.map(col => ({ value: col.column, displayValue: col.displayValue }));  
   const preselectedOptions = columns.map(col => col.column);
+
+
+  // Handlers
+  function handleColumnsChange(selectedColumns: string[]) {
+    setColumnsFilter(selectedColumns);
+  }
 
   
   // Render
@@ -51,6 +59,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
           title="Show/Hide Columns"
           preselectedOptions={preselectedOptions}
           ref={multiselectRef}
+          onChange={handleColumnsChange}
         />
 
         {/* Zoom Controls */}

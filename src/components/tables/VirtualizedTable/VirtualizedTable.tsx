@@ -4,6 +4,7 @@ import VirtualizedTableHeader from "./VirtualizedTableHeader";
 import VirtualizedTableBody from "./VirtualizedTableBody";
 import { useVirtualizedTableRendering } from "./useVirtualizedTableRendering"
 import { useVirtualizedTableZoom } from "./useVirtualizedTableZoom"
+import { useVirtualizedTableFilter } from "./useVirtualizedTableFilter"
 
 
 
@@ -51,6 +52,23 @@ function VirtualizedTable({
       return {};
     }
   
+    // FILTERING
+      // Filter data based on search criteria
+      const { filteredData, filteredColumns, setColumnsFilter } = useVirtualizedTableFilter({ data, columns });
+
+      // Reset scroll position when filters change
+      React.useEffect(() => {
+        if (headerRef.current) {
+          headerRef.current.scrollLeft = 0;
+        }
+        if (bodyRef.current) {
+          bodyRef.current.scrollLeft = 0;
+          bodyRef.current.scrollTop = 0;
+        }
+      }, [filteredColumns, filteredData]);
+
+
+
     // ZOOM
       // Zoom in/out functionality
       const {
@@ -76,7 +94,7 @@ function VirtualizedTable({
         measureElement,
         handleNativeScroll,
       } = useVirtualizedTableRendering({
-        data,
+        data: filteredData,
         bodyRef,
         headerRef,
         scrollbarRef,
@@ -95,6 +113,7 @@ function VirtualizedTable({
           handleZoomIn={handleZoomIn}
           handleZoomOut={handleZoomOut}
           columns={getColumns()}
+          setColumnsFilter={setColumnsFilter}
         />
 
         {/* Fixed Header */}
@@ -102,7 +121,7 @@ function VirtualizedTable({
           <div className="border border-gray-300 overflow-hidden flex-1">
             <VirtualizedTableHeader
               headerRef={headerRef as React.RefObject<HTMLDivElement>}
-              visibleColumns={columns}
+              visibleColumns={filteredColumns}
               getColumnStyle={getColumnStyle}
               zoomLevel={zoomLevel}
               verticalSeparators={verticalSeparators}
@@ -117,8 +136,8 @@ function VirtualizedTable({
         <VirtualizedTableBody
           bodyRef={bodyRef as React.RefObject<HTMLDivElement>}
           scrollbarRef={scrollbarRef as React.RefObject<HTMLDivElement>}
-          data={data}
-          columns={columns}
+          data={filteredData}
+          columns={filteredColumns}
           verticalSeparators={verticalSeparators}
           zoomLevel={zoomLevel}
           getColumnStyle={getColumnStyle}
