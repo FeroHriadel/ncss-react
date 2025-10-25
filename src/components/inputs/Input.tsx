@@ -15,24 +15,25 @@ export interface InputProps {
   disabled?: boolean;
   title?: string;
   label?: string;
+  width?: string;
 }
 
 
 
-export default function Input({ type, name, className, id, style, value, onChange = () => {}, placeholder, disabled, title, label }: InputProps) {
+export default function Input({ type, name, className, id, style, value, onChange = () => {}, placeholder, disabled, title, label, width }: InputProps) {
 
   if (!id) id=`ncss-input-${Math.random().toString(10)}`;
 
   return (
-    <div className={`flex flex-col items-center w-full`}>
+    <div className={`flex flex-col items-center w-full`} style={width ? { width } : {}}>
       {label && <label htmlFor={id} className="mb-2 text-sm text-gray-600">{label}</label>}
       <input
         type={type || 'text'}
         name={name}
-        className={`border-0 outline-none rounded-md text-md bg-gray-200 text-gray-700 hover:bg-gray-300 focus:bg-gray-300 placeholder:text-gray-600 placeholder:font-light w-full
+        className={`border-0 outline-none rounded-md text-md bg-gray-100 text-gray-700 hover:bg-gray-200 focus:bg-gray-200 placeholder:text-gray-600 placeholder:font-light w-full h-10 indent-3 italic
            ${className}`}
         id={id}
-        style={style}
+        style={width ? { width, ...style } : { ...style }}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
