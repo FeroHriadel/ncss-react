@@ -65,10 +65,10 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
     const prevPositionsRef = React.useRef<string>('');
     const [tableScrollWidth, setTableScrollWidth] = React.useState<number>(0);
     const [columnPositions, setColumnPositions] = React.useState<number[]>([]);
+    const [hoveredRowIndex, setHoveredRowIndex] = React.useState<number | null>(null);
     const virtualItems = getVirtualItems();
     const totalSize = getTotalSize();
     const visibleColumnsCount = columns.length;
-    const hoverClass = getHoverClass();
   
 
   // HELPER FUNCTIONS
@@ -81,12 +81,12 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
     }
     
     // Get hover CSS class for rows
-    function getHoverClass(): string {
-      if (!hover) return '';
+    function getHoverBackgroundColor(): string | undefined {
+      if (!hover) return undefined;
       const hoverEnabled = typeof hover === 'boolean' ? hover : hover.enabled;
-      if (!hoverEnabled) return '';
+      if (!hoverEnabled) return undefined;
       const customColor = typeof hover === 'object' ? hover.color : undefined;
-      return customColor ? `hover:${customColor}` : 'hover:bg-gray-100';
+      return customColor || 'rgb(243 244 246)'; // default to gray-100
     }
     
     // Render cell content (handles different data types)
@@ -213,6 +213,8 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
                     display: 'table',
                     tableLayout: 'fixed',
                   }}
+                  onMouseEnter={() => setHoveredRowIndex(rowIndex)}
+                  onMouseLeave={() => setHoveredRowIndex(null)}
                 >
               {columns.map((col, index) => {
                 const cellValue = row[col.column];
@@ -226,7 +228,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
                 return (
                   <td
                     key={col.column}
-                    className={`${verticalSepClass} ${hoverClass}`.trim()}
+                    className={verticalSepClass}
                     style={{
                       ...getColumnStyle(col),
                       padding: '0.375rem 0.75rem',
@@ -249,6 +251,8 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
       {virtualItems.map((virtualRow) => {
         const rowIndex = virtualRow.index;
         const bgColor = getRowBackgroundColor(rowIndex);
+        const hoverEnabled = getHoverBackgroundColor() !== undefined;
+        const isHovered = hoveredRowIndex === rowIndex;
         
         return (
           <React.Fragment key={`bg-${virtualRow.key}`}>
@@ -265,6 +269,23 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
                 zIndex: 5,
               }}
             />
+            {/* Hover overlay - uses backdrop-filter for brightness effect */}
+            {hoverEnabled && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: `${virtualRow.start}px`,
+                  left: 0,
+                  width: tableScrollWidth > 0 ? `${tableScrollWidth}px` : '100%',
+                  height: `${virtualRow.size}px`,
+                  backgroundColor: 'rgba(0, 0, 0, 0.05)', // subtle dark overlay
+                  pointerEvents: 'none',
+                  zIndex: 6,
+                  opacity: isHovered ? 1 : 0,
+                  transition: 'opacity 0.15s ease-in-out',
+                }}
+              />
+            )}
             {/* Horizontal separator line */}
             {horizontalSeparators && (
               <div
