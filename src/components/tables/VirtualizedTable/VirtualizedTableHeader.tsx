@@ -1,5 +1,7 @@
 import React, { useState, useCallback } from "react";
 
+
+
 interface Column {
   column: string;
   displayValue: string;
@@ -22,14 +24,17 @@ interface GhostElement {
   text: string;
 }
 
+
+
+
 const VirtualizedTableHeader: React.FC<VirtualizedTableHeaderProps> = ({
   headerRef,
   visibleColumns,
   getColumnStyle,
   zoomLevel,
-  verticalSeparators,
   handleHeaderScroll,
   setColumnOrder,
+  verticalSeparators
 }) => {
   // Drag state
   const [draggedColumn, setDraggedColumn] = useState<string | null>(null);
@@ -122,19 +127,16 @@ const VirtualizedTableHeader: React.FC<VirtualizedTableHeaderProps> = ({
             tableLayout: "fixed",
           }}
         >
-          <thead className="bg-gray-50">
+          <thead className="bg-gray-200">
             <tr>
-              {visibleColumns.map((col, index) => (
+              {visibleColumns.map((col) => (
                 <th
                   key={col.column}
-                  className={`text-left break-words cursor-move select-none transition-colors ${
-                    verticalSeparators &&
-                    index < visibleColumns.length - 1
-                      ? "border-r border-gray-200"
-                      : ""
-                  } ${draggedColumn === col.column ? "opacity-50" : ""} ${
-                    dragOverColumn === col.column ? "bg-blue-100" : ""
-                  }`}
+                  className={`
+                    text-left text-gray-600 text-sm break-words cursor-move select-none transition-colors ${draggedColumn === col.column ? "opacity-50" : ""} 
+                    ${dragOverColumn === col.column ? "bg-blue-100" : ""} 
+                    ${verticalSeparators && col.column !== visibleColumns[visibleColumns.length - 1].column ? "border-r border-gray-300" : ""}    
+                  `}
                   style={{
                     ...getColumnStyle(col),
                     padding: `${zoomLevel * 0.5}rem ${zoomLevel * 1}rem`,

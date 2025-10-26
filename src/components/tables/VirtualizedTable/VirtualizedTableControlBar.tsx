@@ -27,6 +27,7 @@ interface ControlBarProps {
   setFilterConditions: (conditions: FilterRow[]) => void;
   data: Record<string, unknown>[]; // For type inference in filter
   resetFilters: () => void; // Reset all filters to initial state
+  resultCount: number; // Number of filtered results
 }
 
 
@@ -43,6 +44,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
   setFilterConditions,
   data,
   resetFilters,
+  resultCount,
 }) => {
 
   // Refs & values
@@ -106,11 +108,13 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
   return (
     <>
       {/* Row number (left side) and controls (right side) Container */}
-      <div className="w-full flex justify-between items-center p-2 border border-gray-300 border-b-0 bg-gray-50 rounded">
+      <div className="w-full flex justify-between items-center p-2 border border-gray-300 border-b-0 bg-gray-100 rounded">
 
         {/*Left Side */}
         <div className="flex items-center">
-          <span className="text-sm text-gray-600">Controls</span>
+          <span className="text-sm text-gray-600">
+            {resultCount} {resultCount === 1 ? 'result' : 'results'}
+          </span>
         </div>
 
 

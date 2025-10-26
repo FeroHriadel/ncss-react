@@ -1,6 +1,8 @@
+import Break from "../components/spacers/Break";
 import VirtualizedTable from "../components/tables/VirtualizedTable/VirtualizedTable";
 import Container from "../components/wrappers/Container";
-import Card from "../components/cards/Card";
+
+
 
 // Function to generate 100 items
 function generateData(count: number) {
@@ -56,24 +58,24 @@ export default function TablePage() {
   return (
     <Container className="px-2">
       <h1 className="mb-10">Virtualized Table</h1>
-      <Card className="mb-16">
-        <VirtualizedTable 
+        <VirtualizedTable
           data={data} 
           height="500px"
           horizontalSeparators={true}
           verticalSeparators={true}
           columnsConfig={[
             { column: 'id', displayValue: 'ID', width: '80px' },
-            { column: 'name', displayValue: 'Full Name', width: '200px' },
-            { column: 'age', displayValue: 'Age', width: '80px' },
-            { column: 'isActive', displayValue: 'Status', width: '120px' },
-            { column: 'description', displayValue: 'Description', width: '300px' },
-            { column: 'tags', displayValue: 'Skills (Array)', width: '250px' },
-            { column: 'metadata', displayValue: 'Info (Object)', width: '300px' },
+            { column: 'name', displayValue: 'FULL NAME', width: '200px' },
+            { column: 'age', displayValue: 'AGE', width: '80px' },
+            { column: 'isActive', displayValue: 'STATUS', width: '120px' },
+            { column: 'description', displayValue: 'DESCRIPTION', width: '300px' },
+            { column: 'tags', displayValue: 'SKILLS (ARRAY)', width: '250px' },
+            { column: 'metadata', displayValue: 'INFO (OBJECT)', width: '300px' },
             { column: 'actions', displayValue: 'Actions', width: '100px' },
           ]}
         />
-      </Card>
+
+        <Break amount={2} />
     </Container>
   )
 }

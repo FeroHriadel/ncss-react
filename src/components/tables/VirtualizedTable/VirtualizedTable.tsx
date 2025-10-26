@@ -16,6 +16,8 @@ export interface VirtualizedTableProps {
   verticalSeparators?: boolean;
   striped?: { enabled: boolean; color?: string } | boolean;
   hover?: { enabled: boolean; color?: string } | boolean;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 
@@ -27,7 +29,9 @@ function VirtualizedTable({
   horizontalSeparators = true,
   verticalSeparators = true,
   striped = true,
-  hover = true
+  hover = true,
+  style, 
+  className,
 }: VirtualizedTableProps) {
 
     // REFS
@@ -140,13 +144,14 @@ function VirtualizedTable({
       <section 
         ref={sectionRef}
         tabIndex={0}
-        className='virtualized-table-wrap rounded focus:outline-none focus:ring-2 focus:ring-gray-300'
+        className={'virtualized-table-wrap rounded focus:outline-none focus:ring-2 focus:ring-gray-300 ' + (className || '')}
         style={{
           contain: 'layout style',
           willChange: 'contents',
           height: lockedHeight || 'auto',
           minHeight: lockedHeight || 'auto',
           maxHeight: lockedHeight || 'auto',
+          ...style
         }}
         onKeyDown={handleKeyDown}
       >
@@ -163,6 +168,7 @@ function VirtualizedTable({
           setFilterConditions={setFilterConditions}
           data={data}
           resetFilters={resetFilters}
+          resultCount={filteredData.length}
         />
 
         {/* Fixed Header */}
