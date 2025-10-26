@@ -59,7 +59,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
           trigger={<IconButton title="Filter" icon={<CiFilter size={20} />} />}
           className="w-[95%] sm:w-[75%]"
         >
-          <VirtualizedTableFilter />
+          <VirtualizedTableFilter columns={columns} />
         </Modal>
           
 

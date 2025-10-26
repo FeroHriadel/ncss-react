@@ -3,10 +3,15 @@ import type { DropdownOption } from "../../dropdowns/MultiSelect";
 import Select from "../../dropdowns/Select";
 import Input from "../../inputs/Input";
 
+interface VirtualizedTableFilterProps {
+  columns: { column: string; displayValue: string }[];
+}
 
-
-export default function VirtualizedTableFilter() {
-  const columnsSelectOptions: DropdownOption[]= [];
+export default function VirtualizedTableFilter({ columns }: VirtualizedTableFilterProps) {
+  const columnsSelectOptions: DropdownOption[] = columns.map(col => ({
+    value: col.column,
+    displayValue: col.displayValue
+  }));
   const conditionSelectOptions: DropdownOption []= [
     {value: 'equals', displayValue: 'Equals'}, 
     {value: 'not_equals', displayValue: 'Does not equal'},
