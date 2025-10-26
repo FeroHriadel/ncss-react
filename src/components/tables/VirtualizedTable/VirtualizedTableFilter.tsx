@@ -1,4 +1,5 @@
 import { useState } from "react";
+import * as React from 'react';
 import Button from "../../buttons/Button";
 import type { DropdownOption } from "../../dropdowns/MultiSelect";
 import Select from "../../dropdowns/Select";
@@ -13,6 +14,7 @@ export interface VirtualizedTableFilterProps {
   closeModal: () => void;
   filterConditions: FilterRow[];
   setFilterConditions: (conditions: FilterRow[]) => void;
+  data?: Record<string, unknown>[]; // Sample data to infer column types
 }
 
 export interface FilterRow {
@@ -23,9 +25,138 @@ export interface FilterRow {
   operator: string | null;
 }
 
+type ColumnType = 'number' | 'string' | 'boolean' | 'array' | 'object' | 'html' | 'unknown';
 
 
-export default function VirtualizedTableFilter({ columns, closeModal, filterConditions, setFilterConditions }: VirtualizedTableFilterProps) {
+
+
+export default function VirtualizedTableFilter({ columns, closeModal, filterConditions, setFilterConditions, data }: VirtualizedTableFilterProps) {
+  // HELPER FUNCTIONS
+  // Infer column type from sample data
+  const inferColumnType = (columnName: string): ColumnType => {
+    if (!data || data.length === 0) return 'unknown';
+    
+    // Sample first non-null value
+    const sampleValue = data.find(row => row[columnName] != null)?.[columnName];
+    if (sampleValue === undefined || sampleValue === null) return 'unknown';
+    
+    if (React.isValidElement(sampleValue)) return 'html';
+    if (typeof sampleValue === 'number') return 'number';
+    if (typeof sampleValue === 'boolean') return 'boolean';
+    if (Array.isArray(sampleValue)) return 'array';
+    if (typeof sampleValue === 'object') return 'object';
+    if (typeof sampleValue === 'string') return 'string';
+    
+    return 'unknown';
+  };
+
+  // Get available conditions based on column type
+  const getConditionsForColumn = (columnName: string | null): DropdownOption[] => {
+    if (!columnName) return conditionSelectOptions;
+    
+    const columnType = inferColumnType(columnName);
+    
+    switch (columnType) {
+      case 'number':
+        return conditionSelectOptions.filter(opt => 
+          ['equals', 'not_equals', 'greater_than', 'less_than', 'is_between'].includes(opt.value)
+        );
+      
+      case 'string':
+        return conditionSelectOptions.filter(opt => 
+          ['equals', 'not_equals', 'contains', 'not_contains', 'starts_with', 'ends_with'].includes(opt.value)
+        );
+      
+      case 'boolean':
+        return conditionSelectOptions.filter(opt => 
+          ['equals', 'not_equals'].includes(opt.value)
+        );
+      
+      case 'html':
+        return conditionSelectOptions.filter(opt => 
+          ['contains', 'not_contains', 'starts_with', 'ends_with'].includes(opt.value)
+        );
+      
+      case 'array':
+      case 'object':
+        return conditionSelectOptions.filter(opt => 
+          ['contains', 'not_contains'].includes(opt.value)
+        );
+      
+      default:
+        return conditionSelectOptions; // Show all if type unknown
+    }
+  };
+
+  // Get placeholder text based on condition
+  const getPlaceholderForCondition = (columnName: string | null, condition: string | null): string => {
+    if (!columnName || !condition) return 'Enter value';
+    
+    const columnType = inferColumnType(columnName);
+    
+    if (condition === 'is_between') {
+      return columnType === 'number' 
+        ? 'Enter comma separated numbers: e.g., 20, 55'
+        : 'Enter comma separated values: e.g., value1, value2';
+    }
+    
+    switch (columnType) {
+      case 'number':
+        return 'Enter a number';
+      case 'boolean':
+        return 'Enter true or false';
+      case 'array':
+        return 'Enter text to search in array';
+      case 'object':
+        return 'Enter text to search in object';
+      case 'html':
+        return 'Enter text to search in content';
+      default:
+        return 'Enter value';
+    }
+  };
+
+  // Validate filter value based on column type and condition
+  const validateFilterValue = (columnName: string | null, condition: string | null, value: string): boolean => {
+    if (!columnName || !condition || !value.trim()) return true; // Skip validation for empty
+    
+    const columnType = inferColumnType(columnName);
+    
+    // Arrays, objects, and HTML can accept any text
+    if (['array', 'object', 'html'].includes(columnType)) return true;
+    
+    // Number validation
+    if (columnType === 'number') {
+      if (condition === 'is_between') {
+        const parts = value.split(',').map(v => v.trim());
+        if (parts.length !== 2) {
+          console.warn(`Column '${columnName}' is a number. For 'is between', please enter exactly two comma-separated numbers (e.g., "20, 55").`);
+          return false;
+        }
+        if (parts.some(p => isNaN(parseFloat(p)))) {
+          console.warn(`Column '${columnName}' is a number but '${value}' contains non-numeric values. Please enter valid numbers.`);
+          return false;
+        }
+      } else {
+        if (isNaN(parseFloat(value))) {
+          console.warn(`Column '${columnName}' is a number but '${value}' is not a valid number. Please enter a number.`);
+          return false;
+        }
+      }
+    }
+    
+    // Boolean validation
+    if (columnType === 'boolean') {
+      const lowerValue = value.toLowerCase();
+      if (!['true', 'false', '1', '0'].includes(lowerValue)) {
+        console.warn(`Column '${columnName}' is a boolean but '${value}' is not a valid boolean. Please enter 'true' or 'false'.`);
+        return false;
+      }
+    }
+    
+    return true;
+  };
+
   // STATE & DROPDOWNS OPTIONS
   const columnsSelectOptions: DropdownOption[] = columns.map(col => ({
     value: col.column,
@@ -86,7 +217,25 @@ export default function VirtualizedTableFilter({ columns, closeModal, filterCond
 
   const updateRow = (id: number, field: keyof FilterRow, value: string | null) => {
     setFilterRows(rows => {
-      const updatedRows = rows.map(row => row.id === id ? { ...row, [field]: value } : row);
+      const updatedRows = rows.map(row => {
+        if (row.id !== id) return row;
+        
+        // When column changes, reset condition if it's not valid for new column type
+        if (field === 'column' && value !== null) {
+          const availableConditions = getConditionsForColumn(value);
+          const currentConditionValid = row.condition && availableConditions.some(opt => opt.value === row.condition);
+          
+          return {
+            ...row,
+            column: value,
+            condition: currentConditionValid ? row.condition : null,
+            value: currentConditionValid ? row.value : ''
+          };
+        }
+        
+        return { ...row, [field]: value };
+      });
+      
       //if we just set an operator and the row is now fully valid, add a new row
       if (field === 'operator' && value !== null) {
         const updatedRow = updatedRows.find(r => r.id === id);
@@ -110,6 +259,17 @@ export default function VirtualizedTableFilter({ columns, closeModal, filterCond
     const validRows = filterRows.filter(row => 
       row.column !== null && row.condition !== null && row.value.trim() !== ''
     );
+    
+    // Validate each row's value against column type
+    const allValid = validRows.every(row => 
+      validateFilterValue(row.column, row.condition, row.value)
+    );
+    
+    if (!allValid) {
+      console.warn('Some filter values are invalid. Please check the warnings above.');
+      return; // Don't apply filters if validation fails
+    }
+    
     setFilterConditions(validRows);
     closeModal();
   };
@@ -147,19 +307,21 @@ export default function VirtualizedTableFilter({ columns, closeModal, filterCond
                 className="" 
                 preselectedOption={row.column || undefined}
                 onChange={(value) => updateRow(row.id, 'column', value)}
+                openY="up"
               />
               <Select 
-                options={conditionSelectOptions} 
+                options={getConditionsForColumn(row.column)} 
                 title="Condition" 
                 width="160px" 
                 className="" 
                 preselectedOption={row.condition || undefined}
                 onChange={(value) => updateRow(row.id, 'condition', value)}
+                openY="up"
               />
               <Input 
                 width="160px" 
                 className="border border-gray-300" 
-                placeholder="Condition value" 
+                placeholder={getPlaceholderForCondition(row.column, row.condition)} 
                 value={row.value}
                 onChange={(e) => updateRow(row.id, 'value', e.target.value)}
               />
@@ -171,6 +333,7 @@ export default function VirtualizedTableFilter({ columns, closeModal, filterCond
                   className="" 
                   preselectedOption={row.operator || undefined}
                   onChange={(value) => updateRow(row.id, 'operator', value)}
+                  openY="up"
                 />
               )}
               <CloseButton className="min-w-[40px] h-[40px]" title="Remove condition" onClick={() => removeRow(row.id)} />

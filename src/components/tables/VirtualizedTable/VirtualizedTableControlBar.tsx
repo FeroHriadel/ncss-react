@@ -23,6 +23,7 @@ interface ControlBarProps {
   setColumnsFilter: (selectedColumns: string[]) => void;
   filterState: FilterState;
   setFilterConditions: (conditions: FilterRow[]) => void;
+  data: Record<string, unknown>[]; // For type inference in filter
 }
 
 
@@ -37,6 +38,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
   setColumnsFilter,
   filterState,
   setFilterConditions,
+  data,
 }) => {
 
   // Refs & values
@@ -85,6 +87,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
             closeModal={closeModal}
             filterConditions={filterState.conditions}
             setFilterConditions={setFilterConditions}
+            data={data}
           />
         </Modal>
           

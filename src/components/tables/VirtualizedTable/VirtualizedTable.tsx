@@ -161,6 +161,7 @@ function VirtualizedTable({
           setColumnsFilter={setColumnsFilter}
           filterState={filterState}
           setFilterConditions={setFilterConditions}
+          data={data}
         />
 
         {/* Fixed Header */}
