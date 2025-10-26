@@ -54,7 +54,7 @@ function VirtualizedTable({
   
     // FILTERING
       // Filter data based on search criteria
-      const { filteredData, filteredColumns, setColumnsFilter, setColumnOrder, filterState, setFilterConditions } = useVirtualizedTableFilter({ data, columns });
+      const { filteredData, filteredColumns, setColumnsFilter, setColumnOrder, filterState, setFilterConditions, resetFilters } = useVirtualizedTableFilter({ data, columns });
 
       // Reset scroll position when filters change
       React.useEffect(() => {
@@ -162,6 +162,7 @@ function VirtualizedTable({
           filterState={filterState}
           setFilterConditions={setFilterConditions}
           data={data}
+          resetFilters={resetFilters}
         />
 
         {/* Fixed Header */}

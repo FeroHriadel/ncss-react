@@ -191,7 +191,16 @@ export function useVirtualizedTableFilter({ data, columns }: UseVirtualizedTable
   }, [columns, filterState.columnsFilter, filterState.columnOrder]);
 
 
-  // Expose state and setters
+  // Reset all filters to initial state
+  const resetFilters = () => {
+    setFilterState({
+      columnsFilter: columns.map(col => col.column),
+      columnOrder: columns.map(col => col.column),
+      conditions: [],
+    });
+  };
+
+
   // Expose state and setters
   return {
     filteredData,
@@ -200,5 +209,6 @@ export function useVirtualizedTableFilter({ data, columns }: UseVirtualizedTable
     setColumnsFilter,
     setColumnOrder,
     setFilterConditions,
+    resetFilters,
   };
 }

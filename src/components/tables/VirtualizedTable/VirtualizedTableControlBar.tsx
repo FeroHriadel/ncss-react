@@ -4,6 +4,7 @@ import MultiSelect, { type MultiSelectHandle } from "../../dropdowns/MultiSelect
 import { CiZoomIn, CiZoomOut, CiViewColumn, CiFilter } from "react-icons/ci";
 import Modal from "../../dialogs/Modal";
 import VirtualizedTableFilter, { type FilterRow } from "./VirtualizedTableFilter";
+import { IoRefresh } from "react-icons/io5";
 
 
 
@@ -24,6 +25,7 @@ interface ControlBarProps {
   filterState: FilterState;
   setFilterConditions: (conditions: FilterRow[]) => void;
   data: Record<string, unknown>[]; // For type inference in filter
+  resetFilters: () => void; // Reset all filters to initial state
 }
 
 
@@ -39,6 +41,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
   filterState,
   setFilterConditions,
   data,
+  resetFilters,
 }) => {
 
   // Refs & values
@@ -121,6 +124,13 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
           icon={<CiZoomIn size={20} />}
           style={zoomLevel >= maxZoom ? { pointerEvents: 'none', opacity: 0.6 } : undefined}
           disabled={zoomLevel >= maxZoom}
+        />
+
+        {/* Refresh */}
+        <IconButton
+          title="Refresh data"
+          onClick={resetFilters}
+          icon={<IoRefresh size={20} />}
         />
       </div>
     </div>
