@@ -278,7 +278,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
                   left: 0,
                   width: tableScrollWidth > 0 ? `${tableScrollWidth}px` : '100%',
                   height: `${virtualRow.size}px`,
-                  backgroundColor: 'rgba(0, 0, 0, 0.05)', // subtle dark overlay
+                  backgroundColor: 'rgba(0, 0, 0, 0.08)', // subtle dark overlay
                   pointerEvents: 'none',
                   zIndex: 2,
                   opacity: isHovered ? 1 : 0,
