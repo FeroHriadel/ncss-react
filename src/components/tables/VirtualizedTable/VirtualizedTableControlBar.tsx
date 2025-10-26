@@ -26,7 +26,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
   handleZoomIn,
   handleZoomOut,
   columns,
-  setColumnsFilter,
+  setColumnsFilter
 }) => {
 
   // Refs & values

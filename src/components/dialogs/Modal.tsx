@@ -1,3 +1,5 @@
+import React, { useEffect, useRef, useState, useCallback } from "react";
+import { createPortal } from 'react-dom';
 import CloseButton from "../buttons/CloseButton";
 
 
@@ -15,8 +17,6 @@ export interface ModalProps {
 
 
 
-import React, { useEffect, useRef, useState, useCallback } from "react";
-
 export default function Modal({
   isOpen: isOpenProp,
   onClose: onCloseProp,
@@ -24,8 +24,7 @@ export default function Modal({
   className,
   style,
   id,
-  trigger,
-  width,
+  trigger
 }: ModalProps) {
   const [internalOpen, setInternalOpen] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -80,8 +79,8 @@ export default function Modal({
                 "modal-content relative p-5 sm:p-8 bg-white rounded min-w-[260px] sm:min-w-[320px] min-h-[180px] sm:min-h-[200px] shadow-lg max-w-[95%] max-h-[95%] overflow-auto z-[101] " +
                 (className || "")
             }
-            style={{ minWidth: 260, zIndex: 101, ...(width ? { width } : {}), ...style }}
             id={id}
+            style={style}
             onClick={e => e.stopPropagation()}
           >
 
@@ -91,7 +90,6 @@ export default function Modal({
               onClick={onClose}
               title="Close"
             />
-
 
             {/* Content */}
             {children}
@@ -107,11 +105,11 @@ export default function Modal({
         <span style={{ display: "inline-block" }}onClick={() => setInternalOpen(true)}>
           {trigger}
         </span>
-        {isOpen && renderModal()}
+        {isOpen && createPortal(renderModal(), document.body)}
       </>
     );
   }
 
-  if (isOpen) return renderModal();
+  if (isOpen) return createPortal(renderModal(), document.body);
   return null;
 }
