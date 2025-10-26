@@ -56,7 +56,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
 
         {/* Filter Modal */}
         <Modal
-          trigger={<IconButton className="p-1 hover:bg-gray-200 rounded transition-colors" title="Filter" icon={<CiFilter size={20} />} />}
+          trigger={<IconButton title="Filter" icon={<CiFilter size={20} />} />}
           className="w-[95%] sm:w-[75%]"
         >
           <VirtualizedTableFilter />
@@ -65,8 +65,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
 
         {/* Hide/show columns dropdown */}
         <MultiSelect
-          className="p-1 hover:bg-gray-200 rounded transition-colors"
-          trigger={<CiViewColumn size={20} />}
+          trigger={<IconButton title="Show/Hide Columns" icon={<CiViewColumn size={20} />} />}
           options={columnOptions}
           title="Show/Hide Columns"
           preselectedOptions={preselectedOptions}
@@ -76,10 +75,9 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
 
         {/* Zoom Controls */}
         <IconButton
-          className="p-1 hover:bg-gray-200 rounded transition-colors"
           title="Zoom Out"
           onClick={handleZoomOut}
-          icon={<CiZoomOut size={20} className={zoomLevel <= minZoom ? 'text-gray-400' : ''} />}
+          icon={<CiZoomOut size={20} />}
           style={zoomLevel <= minZoom ? { pointerEvents: 'none', opacity: 0.6 } : undefined}
           disabled={zoomLevel <= minZoom}
         />
@@ -89,10 +87,9 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
         </span>
 
         <IconButton
-          className="p-1 hover:bg-gray-200 rounded transition-colors"
           title="Zoom In"
           onClick={handleZoomIn}
-          icon={<CiZoomIn size={20} className={zoomLevel >= maxZoom ? 'text-gray-400' : ''} />}
+          icon={<CiZoomIn size={20} />}
           style={zoomLevel >= maxZoom ? { pointerEvents: 'none', opacity: 0.6 } : undefined}
           disabled={zoomLevel >= maxZoom}
         />

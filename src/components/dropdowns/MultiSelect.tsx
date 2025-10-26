@@ -161,16 +161,13 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
     <div className={className ? `${className} relative` : 'relative'} style={style} ref={dropdownRef} id={id}>
       
       {/* Trigger Icon Button */}
-      <button
-        type="button"
+      <span
         ref={triggerRef}
         onClick={toggleDropdownOpen}
-        disabled={disabled}
         title={title}
-        className="p-1 hover:bg-gray-200 rounded transition-colors"
       >
         {trigger}
-      </button>
+      </span>
 
       {/* Dropdown Body */}
       {open && (
