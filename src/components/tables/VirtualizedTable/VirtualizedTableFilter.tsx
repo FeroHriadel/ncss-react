@@ -6,11 +6,13 @@ import Input from "../../inputs/Input";
 import Pill from "../../pills/Pill";
 import CloseButton from "../../buttons/CloseButton";
 
-interface VirtualizedTableFilterProps {
+
+
+export interface VirtualizedTableFilterProps {
   columns: { column: string; displayValue: string }[];
 }
 
-interface FilterRow {
+export interface FilterRow {
   id: number;
   column: string | null;
   condition: string | null;
@@ -18,7 +20,10 @@ interface FilterRow {
   operator: string | null;
 }
 
+
+
 export default function VirtualizedTableFilter({ columns }: VirtualizedTableFilterProps) {
+  // STATE & DROPDOWNS OPTIONS
   const columnsSelectOptions: DropdownOption[] = columns.map(col => ({
     value: col.column,
     displayValue: col.displayValue
@@ -38,11 +43,12 @@ export default function VirtualizedTableFilter({ columns }: VirtualizedTableFilt
     {value: 'and', displayValue: 'AND'},
     {value: 'or', displayValue: 'OR'},
   ];
-
   const [filterRows, setFilterRows] = useState<FilterRow[]>([
     { id: 1, column: null, condition: null, value: '', operator: null }
   ]);
 
+
+  // HANDLERS
   const isRowValid = (row: FilterRow) => {
     return row.column !== null && 
            row.condition !== null && 
@@ -62,7 +68,7 @@ export default function VirtualizedTableFilter({ columns }: VirtualizedTableFilt
 
   const removeRow = (id: number) => {
     setFilterRows(rows => {
-      // Don't allow removing the last row
+      //don't allow removing the last row
       if (rows.length === 1) {
         return [{ id: Date.now(), column: null, condition: null, value: '', operator: null }];
       }
@@ -72,11 +78,8 @@ export default function VirtualizedTableFilter({ columns }: VirtualizedTableFilt
 
   const updateRow = (id: number, field: keyof FilterRow, value: string | null) => {
     setFilterRows(rows => {
-      const updatedRows = rows.map(row => 
-        row.id === id ? { ...row, [field]: value } : row
-      );
-      
-      // If we just set an operator and the row is now fully valid, add a new row
+      const updatedRows = rows.map(row => row.id === id ? { ...row, [field]: value } : row);
+      //if we just set an operator and the row is now fully valid, add a new row
       if (field === 'operator' && value !== null) {
         const updatedRow = updatedRows.find(r => r.id === id);
         if (updatedRow && isRowValid(updatedRow)) {
@@ -90,11 +93,12 @@ export default function VirtualizedTableFilter({ columns }: VirtualizedTableFilt
           return [...updatedRows, newRow];
         }
       }
-      
       return updatedRows;
     });
   };
 
+
+  // RENDER
   return (
     <div className="w-full h-full">
       {/* Clear and Presets */}
