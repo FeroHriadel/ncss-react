@@ -119,7 +119,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
 
           {/* Filter Modal */}
           <Modal
-            trigger={<IconButton title="Filter" icon={<CiFilter size={20} onClick={openModal} />} />}
+            trigger={<IconButton title="Filter" icon={<CiFilter size={20} />} onClick={openModal} />}
             className="w-[95%] sm:w-[75%]"
             isOpen={modalOpen}
             onClose={closeModal}
