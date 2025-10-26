@@ -54,7 +54,7 @@ const data = generateData(100)
 
 export default function TablePage() {
   return (
-    <Container>
+    <Container className="px-2">
       <h1 className="mb-10">Virtualized Table</h1>
       <Card className="mb-16">
         <VirtualizedTable 
