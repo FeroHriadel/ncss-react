@@ -11,6 +11,8 @@ import CloseButton from "../../buttons/CloseButton";
 export interface VirtualizedTableFilterProps {
   columns: { column: string; displayValue: string }[];
   closeModal: () => void;
+  filterConditions: FilterRow[];
+  setFilterConditions: (conditions: FilterRow[]) => void;
 }
 
 export interface FilterRow {
@@ -23,30 +25,35 @@ export interface FilterRow {
 
 
 
-export default function VirtualizedTableFilter({ columns, closeModal }: VirtualizedTableFilterProps) {
+export default function VirtualizedTableFilter({ columns, closeModal, filterConditions, setFilterConditions }: VirtualizedTableFilterProps) {
   // STATE & DROPDOWNS OPTIONS
   const columnsSelectOptions: DropdownOption[] = columns.map(col => ({
     value: col.column,
     displayValue: col.displayValue
   }));
   const conditionSelectOptions: DropdownOption []= [
-    {value: 'equals', displayValue: 'Equals'}, 
-    {value: 'not_equals', displayValue: 'Does not equal'},
-    {value: 'contains', displayValue: 'Contains'},
-    {value: 'not_contains', displayValue: 'Does not contain'},
-    {value: 'greater_than', displayValue: 'Greater than'},
-    {value: 'less_than', displayValue: 'Less than'},
-    {value: 'starts_with', displayValue: 'Starts with'},
-    {value: 'ends_with', displayValue: 'Ends with'},
-    {value: 'is_between', displayValue: 'Is between'},
+    {value: 'equals', displayValue: 'equals'}, 
+    {value: 'not_equals', displayValue: 'does not equal'},
+    {value: 'contains', displayValue: 'contains'},
+    {value: 'not_contains', displayValue: 'does not contain'},
+    {value: 'greater_than', displayValue: 'is greater than'},
+    {value: 'less_than', displayValue: 'is less than'},
+    {value: 'starts_with', displayValue: 'starts with'},
+    {value: 'ends_with', displayValue: 'ends with'},
+    {value: 'is_between', displayValue: 'is between'},
   ];
   const operatorSelectOptions: DropdownOption[] = [
     {value: 'and', displayValue: 'AND'},
     {value: 'or', displayValue: 'OR'},
   ];
-  const [filterRows, setFilterRows] = useState<FilterRow[]>([
-    { id: 1, column: null, condition: null, value: '', operator: null }
-  ]);
+  
+  // Use local state for editing, then apply on button click
+  const [filterRows, setFilterRows] = useState<FilterRow[]>(() => {
+    if (filterConditions && filterConditions.length > 0) {
+      return filterConditions;
+    }
+    return [{ id: 1, column: null, condition: null, value: '', operator: null }];
+  });
 
 
   // HANDLERS
@@ -96,6 +103,15 @@ export default function VirtualizedTableFilter({ columns, closeModal }: Virtuali
       }
       return updatedRows;
     });
+  };
+
+  const handleApplyFilters = () => {
+    // Filter out invalid rows (rows that don't have all required fields)
+    const validRows = filterRows.filter(row => 
+      row.column !== null && row.condition !== null && row.value.trim() !== ''
+    );
+    setFilterConditions(validRows);
+    closeModal();
   };
 
 
@@ -174,7 +190,7 @@ export default function VirtualizedTableFilter({ columns, closeModal }: Virtuali
       {/* Close & Apply */}
       <section className="w-full flex gap-1 justify-end">
         <Button variant="red" onClick={closeModal}>Cancel</Button>
-        <Button>Apply Filters</Button>
+        <Button onClick={handleApplyFilters}>Apply Filters</Button>
       </section>
     </div>
   )

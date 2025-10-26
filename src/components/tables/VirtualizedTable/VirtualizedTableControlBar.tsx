@@ -3,9 +3,15 @@ import IconButton from "../../buttons/IconButton";
 import MultiSelect, { type MultiSelectHandle } from "../../dropdowns/MultiSelect";
 import { CiZoomIn, CiZoomOut, CiViewColumn, CiFilter } from "react-icons/ci";
 import Modal from "../../dialogs/Modal";
-import VirtualizedTableFilter from "./VirtualizedTableFilter";
+import VirtualizedTableFilter, { type FilterRow } from "./VirtualizedTableFilter";
 
 
+
+interface FilterState {
+  columnsFilter: string[];
+  columnOrder: string[];
+  conditions: FilterRow[];
+}
 
 interface ControlBarProps {
   zoomLevel: number;
@@ -15,6 +21,8 @@ interface ControlBarProps {
   handleZoomOut: () => void;
   columns: { column: string; displayValue: string }[];
   setColumnsFilter: (selectedColumns: string[]) => void;
+  filterState: FilterState;
+  setFilterConditions: (conditions: FilterRow[]) => void;
 }
 
 
@@ -26,7 +34,9 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
   handleZoomIn,
   handleZoomOut,
   columns,
-  setColumnsFilter
+  setColumnsFilter,
+  filterState,
+  setFilterConditions,
 }) => {
 
   // Refs & values
@@ -70,7 +80,12 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
           isOpen={modalOpen}
           onClose={closeModal}
         >
-          <VirtualizedTableFilter columns={columns} closeModal={closeModal} />
+          <VirtualizedTableFilter 
+            columns={columns} 
+            closeModal={closeModal}
+            filterConditions={filterState.conditions}
+            setFilterConditions={setFilterConditions}
+          />
         </Modal>
           
 
