@@ -11,7 +11,7 @@ export interface ButtonProps {
   title?: string;
   size?: 'sm' | 'md' | 'lg';
   width?: string;
-  variant?: 'dark' | 'transparent';
+  variant?: 'dark' | 'outline' | 'transparent' | 'red';
 }
 
 
@@ -58,8 +58,12 @@ const Button: React.FC<ButtonProps> = ({
     switch (variant) {
       case 'dark': 
         return 'bg-gray-800 text-white border border-black hover:bg-gray-950 active:bg-gray-950 focus:bg-gray-950';
-      case 'transparent': 
+      case 'outline': 
         return 'bg-transparent text-gray-700 border border-gray-500 hover:bg-gray-100 active:bg-gray-200 focus:bg-gray-100';
+      case 'red':
+        return 'bg-red-900 hover:bg-red-800 focus:bg-red-800 active:bg-red-800 text-white'
+      case 'transparent': 
+        return 'bg-transparent text-gray-700 hover:bg-gray-100 active:bg-gray-200 focus:bg-gray-100';
       default: 
         return '';
     }

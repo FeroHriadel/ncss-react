@@ -25,7 +25,7 @@ const CloseButton: React.FC<CloseButtonProps> = ({
   title,
 }) => (
   <IconButton
-    className={'text-red-950 ' + (className ? className : '')}
+    className={'text-red-900 ' + (className ? className : '')}
     id={id}
     style={style}
     onClick={onClick}
