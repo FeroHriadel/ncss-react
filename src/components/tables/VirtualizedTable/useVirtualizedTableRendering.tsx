@@ -188,8 +188,12 @@ export function useVirtualizedTableRendering({
       if (!bodyRef.current) return;
       const container = bodyRef.current;
       const containerHeight = container.clientHeight;
+      const containerWidth = container.clientWidth;
       const scrollTop = container.scrollTop;
+      const scrollLeft = container.scrollLeft;
       const scrollHeight = container.scrollHeight;
+      const scrollWidth = container.scrollWidth;
+      
       if (e.key === 'ArrowDown') {
         e.preventDefault();
         e.stopPropagation();
@@ -198,6 +202,14 @@ export function useVirtualizedTableRendering({
         e.preventDefault();
         e.stopPropagation();
         container.scrollTop = Math.max(0, scrollTop - estimatedRowHeight);
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        e.stopPropagation();
+        container.scrollLeft = Math.min(scrollWidth - containerWidth, scrollLeft + 100);
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        e.stopPropagation();
+        container.scrollLeft = Math.max(0, scrollLeft - 100);
       } else if (e.key === 'PageDown') {
         e.preventDefault();
         e.stopPropagation();
