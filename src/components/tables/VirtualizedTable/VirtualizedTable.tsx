@@ -143,8 +143,7 @@ function VirtualizedTable({
     return (
       <section 
         ref={sectionRef}
-        tabIndex={0}
-        className={'virtualized-table-wrap rounded focus:outline-none focus:ring-2 focus:ring-gray-300 ' + (className || '')}
+        className={'virtualized-table-wrap rounded ' + (className || '')}
         style={{
           contain: 'layout style',
           willChange: 'contents',
@@ -153,7 +152,6 @@ function VirtualizedTable({
           maxHeight: lockedHeight || 'auto',
           ...style
         }}
-        onKeyDown={handleKeyDown}
       >
         {/* Control Bar */}
         <VirtualizedTableControlBar
@@ -171,25 +169,31 @@ function VirtualizedTable({
           resultCount={filteredData.length}
         />
 
-        {/* Fixed Header */}
-        <div className="flex">
-          <div className="border border-gray-300 overflow-hidden flex-1">
-            <VirtualizedTableHeader
-              headerRef={headerRef as React.RefObject<HTMLDivElement>}
-              visibleColumns={filteredColumns}
-              getColumnStyle={getColumnStyle}
-              zoomLevel={zoomLevel}
-              verticalSeparators={verticalSeparators}
-              handleHeaderScroll={handleHeaderScroll}
-              setColumnOrder={setColumnOrder}
-            />
+        {/* Header and Body wrapper with focus outline */}
+        <div 
+          className="focus:outline-none focus:ring-2 focus:ring-gray-300 rounded"
+          tabIndex={0}
+          onKeyDown={handleKeyDown}
+        >
+          {/* Fixed Header */}
+          <div className="flex">
+            <div className="border border-gray-300 overflow-hidden flex-1">
+              <VirtualizedTableHeader
+                headerRef={headerRef as React.RefObject<HTMLDivElement>}
+                visibleColumns={filteredColumns}
+                getColumnStyle={getColumnStyle}
+                zoomLevel={zoomLevel}
+                verticalSeparators={verticalSeparators}
+                handleHeaderScroll={handleHeaderScroll}
+                setColumnOrder={setColumnOrder}
+              />
+            </div>
+            {/* Spacer to account for custom scrollbar */}
+            <div className="w-3 border-t border-r border-gray-300 bg-gray-50"></div>
           </div>
-          {/* Spacer to account for custom scrollbar */}
-          <div className="w-3 border-t border-r border-gray-300 bg-gray-50"></div>
-        </div>
 
-        {/* Table Body */}
-        <VirtualizedTableBody
+          {/* Table Body */}
+          <VirtualizedTableBody
           bodyRef={bodyRef as React.RefObject<HTMLDivElement>}
           scrollbarRef={scrollbarRef as React.RefObject<HTMLDivElement>}
           data={filteredData}
@@ -210,6 +214,7 @@ function VirtualizedTable({
           getVirtualItems={getVirtualItems}
           measureElement={measureElement}
         />
+        </div>
       </section>
     );
   }

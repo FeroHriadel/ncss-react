@@ -108,7 +108,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
   return (
     <>
       {/* Row number (left side) and controls (right side) Container */}
-      <div className="w-full flex justify-between items-center p-2 border border-gray-300 border-b-0 bg-gray-100 rounded">
+      <div className="w-full flex justify-between items-center p-2 border border-gray-300 bg-gray-200 rounded mb-2">
 
         {/*Left Side */}
         <div className="flex items-center">
@@ -180,8 +180,8 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
 
       {/* Applied filters info bar */}
       {filterState.conditions.length > 0 && (
-        <div className="applied-filters-wrap w-full p-2 border border-gray-300 border-t-0 bg-gray-50">
-          <span className="text-xs text-gray-600 font-light block mb-2">Active Filters:</span>
+        <div className="applied-filters-wrap w-full p-2 rounded border border-gray-300 bg-gray-100 mb-2">
+          <span className="text-xs text-gray-600 font-light block mb-1">Active Filters:</span>
           <div className="flex gap-2 flex-wrap items-center">
             {filterState.conditions.map((filter, index) => {
               const isLastPill = index === filterState.conditions.length - 1;

@@ -75,7 +75,7 @@ export default function TablePage() {
           ]}
         />
 
-        <Break amount={2} />
+        <Break amount={4} />
     </Container>
   )
 }
