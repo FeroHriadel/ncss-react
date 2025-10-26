@@ -188,7 +188,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
             top: 0,
             left: 0,
             width: '100%',
-            zIndex: 10,
+            zIndex: 3,
             backgroundColor: 'transparent',
           }}
         >
@@ -264,7 +264,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
                 height: `${virtualRow.size}px`,
                 backgroundColor: bgColor,
                 pointerEvents: 'none',
-                zIndex: 5,
+                zIndex: 1,
               }}
             />
             {/* Hover overlay - uses backdrop-filter for brightness effect */}
@@ -278,7 +278,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
                   height: `${virtualRow.size}px`,
                   backgroundColor: 'rgba(0, 0, 0, 0.05)', // subtle dark overlay
                   pointerEvents: 'none',
-                  zIndex: 6,
+                  zIndex: 2,
                   opacity: isHovered ? 1 : 0,
                   transition: 'opacity 0.15s ease-in-out',
                 }}
@@ -295,7 +295,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
                   height: '1px',
                   backgroundColor: 'rgb(229 231 235)',
                   pointerEvents: 'none',
-                  zIndex: 100,
+                  zIndex: 1,
                 }}
               />
             )}
@@ -315,7 +315,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
             width: '1px',
             backgroundColor: 'rgb(229 231 235)',
             pointerEvents: 'none',
-            zIndex: 100,
+            zIndex: 1,
           }}
         />
       ))}

@@ -66,8 +66,8 @@ export default function Modal({
       return (
         /* Overlay */
         <div
-          className="modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60"
-          style={{ top: 0, left: 0, right: 0, bottom: 0 }}
+          className="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-60"
+          style={{ top: 0, left: 0, right: 0, bottom: 0, zIndex: 100 }}
           onClick={handleOverlayClick}
           aria-modal="true"
           role="dialog"
@@ -77,17 +77,17 @@ export default function Modal({
           <div
             ref={dialogRef}
               className={
-                "modal-content relative p-5 sm:p-8 bg-white rounded min-w-[260px] sm:min-w-[320px] min-h-[180px] sm:min-h-[200px] shadow-lg max-w-[95%] max-h-[95%] overflow-auto " +
+                "modal-content relative p-5 sm:p-8 bg-white rounded min-w-[260px] sm:min-w-[320px] min-h-[180px] sm:min-h-[200px] shadow-lg max-w-[95%] max-h-[95%] overflow-auto z-[101] " +
                 (className || "")
             }
-            style={{ minWidth: 260, ...(width ? { width } : {}), ...style }}
+            style={{ minWidth: 260, zIndex: 101, ...(width ? { width } : {}), ...style }}
             id={id}
             onClick={e => e.stopPropagation()}
           >
 
             {/* Close Button */}
             <CloseButton
-              className="absolute top-2 right-2 z-10"
+              className="absolute top-2 right-2 z-[102]"
               onClick={onClose}
               title="Close"
             />
