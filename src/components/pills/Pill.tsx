@@ -16,10 +16,11 @@ export interface PillProps {
 export default function Pill({ children, className, style, onClose, onClick = () => {} }: PillProps) {
   return (
     <span 
-      className={`text-sm font-semibold text-gray-600 bg-gray-100 px-3 py-1 rounded ${className}`}    style={style}
+      className={`text-sm font-semibold text-gray-600 bg-gray-100 px-3 py-1 rounded flex items-center ${className}`} 
+      style={style}
       onClick={onClick}
     >
-      {onClose && <FaTimes className='mr-2' onClick={onClose} />}
+      {onClose && <FaTimes className='mr-2 cursor-pointer' onClick={onClose} />}
       {children}
     </span>
   )
