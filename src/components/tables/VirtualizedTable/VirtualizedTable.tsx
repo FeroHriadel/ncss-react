@@ -139,7 +139,8 @@ function VirtualizedTable({
     return (
       <section 
         ref={sectionRef}
-        className='virtualized-table-wrap rounded' 
+        tabIndex={0}
+        className='virtualized-table-wrap rounded focus:outline-none focus:ring-2 focus:ring-gray-300'
         style={{
           contain: 'layout style',
           willChange: 'contents',
@@ -147,6 +148,7 @@ function VirtualizedTable({
           minHeight: lockedHeight || 'auto',
           maxHeight: lockedHeight || 'auto',
         }}
+        onKeyDown={handleKeyDown}
       >
         {/* Control Bar */}
         <VirtualizedTableControlBar
@@ -189,7 +191,6 @@ function VirtualizedTable({
           handleTableMouseLeave={handleTableMouseLeave}
           handleWheelEvent={handleWheelEvent}
           handleScrollbarMouseDown={handleScrollbarMouseDown}
-          handleKeyDown={handleKeyDown}
           handleNativeScroll={handleNativeScroll}
           height={height}
           horizontalSeparators={horizontalSeparators}

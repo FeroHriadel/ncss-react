@@ -24,7 +24,6 @@ interface VirtualizedTableBodyProps {
   handleTableMouseLeave: (e: React.MouseEvent<HTMLDivElement>) => void;
   handleWheelEvent: (e: React.WheelEvent<HTMLDivElement>) => void;
   handleScrollbarMouseDown: (e: React.MouseEvent<HTMLDivElement>) => void;
-  handleKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => void;
   handleNativeScroll: (e: React.UIEvent<HTMLDivElement>) => void;
   height: string;
   striped: boolean | { enabled: boolean; color?: string };
@@ -49,7 +48,6 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
   handleTableMouseLeave,
   handleWheelEvent,
   handleScrollbarMouseDown,
-  handleKeyDown,
   handleNativeScroll,
   height,
   striped,
@@ -98,12 +96,6 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
   
   
   // EVENT HANDLERS
-    // Focus body container when clicked (for keyboard navigation)
-    function handleMouseDownWithFocus(e: React.MouseEvent<HTMLDivElement>) {
-      if (bodyRef.current) bodyRef.current.focus();
-      handleTableMouseDown(e);
-    }
-    
     // Update scroll width on scroll
     function handleScrollWithUpdate(e: React.UIEvent<HTMLDivElement>) {
       handleNativeScroll(e);
@@ -155,8 +147,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
     {/* Main scrollable container */}
     <div
       ref={bodyRef}
-      tabIndex={0}
-      className="overflow-auto border-l border-r border-b border-gray-300 [&::-webkit-scrollbar]:hidden flex-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      className="overflow-auto border-l border-r border-b border-gray-300 [&::-webkit-scrollbar]:hidden flex-1 focus:outline-none"
       style={{
         height,
         maxHeight: height,
@@ -164,10 +155,9 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
         scrollbarWidth: 'none',
         msOverflowStyle: 'none',
       }}
-      onMouseDown={handleMouseDownWithFocus}
+      onMouseDown={handleTableMouseDown}
       onMouseLeave={handleTableMouseLeave}
       onWheel={handleWheelEvent}
-      onKeyDown={handleKeyDown}
       onScroll={handleScrollWithUpdate}
     >
       {/* Container with total virtual height */}
