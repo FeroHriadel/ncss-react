@@ -38,7 +38,6 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
     style,
     className,
     trigger,
-    disabled,
     title = "Select Options",
     options,
     preselectedOptions = [],
