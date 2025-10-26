@@ -94,6 +94,7 @@ const Button: React.FC<ButtonProps> = ({
       className={
         [
           'appearance-none rounded p-0 px-4 m-0 shadow-none outline-none min-h-8 flex justify-center items-center font-medium active:scale-[0.99] transition-all',
+          disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
           getButtonHeight(),
           getTextSize(),
           filterVariantClass(getVariantClass(), className),
