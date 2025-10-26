@@ -33,6 +33,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
   const multiselectRef = React.useRef<MultiSelectHandle>(null);
   const columnOptions = columns.map(col => ({ value: col.column, displayValue: col.displayValue }));  
   const preselectedOptions = columns.map(col => col.column);
+  const [modalOpen, setModalOpen] = React.useState(false);
 
 
   // Handlers
@@ -40,7 +41,15 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
     setColumnsFilter(selectedColumns);
   }
 
-  
+  function closeModal() {
+    setModalOpen(false);
+  }
+
+  function openModal() {
+    setModalOpen(true);
+  }
+
+
   // Render
   return (
     <div className="w-full flex justify-between items-center p-2 border border-gray-300 border-b-0 bg-gray-50 rounded">
@@ -56,10 +65,12 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
 
         {/* Filter Modal */}
         <Modal
-          trigger={<IconButton title="Filter" icon={<CiFilter size={20} />} />}
+          trigger={<IconButton title="Filter" icon={<CiFilter size={20} onClick={openModal} />} />}
           className="w-[95%] sm:w-[75%]"
+          isOpen={modalOpen}
+          onClose={closeModal}
         >
-          <VirtualizedTableFilter columns={columns} />
+          <VirtualizedTableFilter columns={columns} closeModal={closeModal} />
         </Modal>
           
 

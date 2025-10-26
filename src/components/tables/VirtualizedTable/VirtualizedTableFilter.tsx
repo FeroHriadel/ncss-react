@@ -10,6 +10,7 @@ import CloseButton from "../../buttons/CloseButton";
 
 export interface VirtualizedTableFilterProps {
   columns: { column: string; displayValue: string }[];
+  closeModal: () => void;
 }
 
 export interface FilterRow {
@@ -22,7 +23,7 @@ export interface FilterRow {
 
 
 
-export default function VirtualizedTableFilter({ columns }: VirtualizedTableFilterProps) {
+export default function VirtualizedTableFilter({ columns, closeModal }: VirtualizedTableFilterProps) {
   // STATE & DROPDOWNS OPTIONS
   const columnsSelectOptions: DropdownOption[] = columns.map(col => ({
     value: col.column,
@@ -172,7 +173,7 @@ export default function VirtualizedTableFilter({ columns }: VirtualizedTableFilt
 
       {/* Close & Apply */}
       <section className="w-full flex gap-1 justify-end">
-        <Button variant="red">Cancel</Button>
+        <Button variant="red" onClick={closeModal}>Cancel</Button>
         <Button>Apply Filters</Button>
       </section>
     </div>
