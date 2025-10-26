@@ -120,8 +120,6 @@ const VirtualizedTableHeader: React.FC<VirtualizedTableHeaderProps> = ({
           className="w-full border-collapse"
           style={{
             tableLayout: "fixed",
-            fontSize: `${zoomLevel}rem`,
-            transition: "font-size 0.2s ease-out",
           }}
         >
           <thead className="bg-gray-50">

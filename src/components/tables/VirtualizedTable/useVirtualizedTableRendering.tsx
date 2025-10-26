@@ -221,8 +221,10 @@ export function useVirtualizedTableRendering({
   // EFFECTS
     // Clear all measurements when zoom level changes
     useEffect(() => {
-      const adjustedEstimate = Math.ceil(estimatedRowHeight * zoomLevel * 1.5);
-      rowHeights.current = new Array(data.length).fill(adjustedEstimate);
+      // Scale estimate proportionally to zoom to minimize initial discrepancy
+      // Actual measurements will refine this, but closer initial estimate prevents jumps
+      const scaledEstimate = Math.max(20, Math.ceil(estimatedRowHeight * zoomLevel));
+      rowHeights.current = new Array(data.length).fill(scaledEstimate);
       measurementCache.current.clear();
       //delay to let font-size transition complete before remeasuring
       const timer = setTimeout(() => {

@@ -79,6 +79,39 @@ function VirtualizedTable({
         handleZoomOut,
       } = useVirtualizedTableZoom(1, 0.5, 1.5, 0.1);
 
+      // Lock section height to prevent jumping
+      const sectionRef = React.useRef<HTMLElement>(null);
+      const [lockedHeight, setLockedHeight] = React.useState<string | null>(null);
+      
+      React.useEffect(() => {
+        // Measure and lock height on first render
+        if (sectionRef.current && !lockedHeight) {
+          const measuredHeight = sectionRef.current.getBoundingClientRect().height;
+          setLockedHeight(`${measuredHeight}px`);
+        }
+      }, [lockedHeight]);
+
+      // Preserve scroll position during zoom changes
+      const previousZoomRef = React.useRef(zoomLevel);
+      React.useEffect(() => {
+        if (bodyRef.current && previousZoomRef.current !== zoomLevel) {
+          // Store current scroll position
+          const scrollTop = bodyRef.current.scrollTop;
+          const scrollLeft = bodyRef.current.scrollLeft;
+          
+          // Restore after a brief delay to let measurements settle
+          const timer = setTimeout(() => {
+            if (bodyRef.current) {
+              bodyRef.current.scrollTop = scrollTop;
+              bodyRef.current.scrollLeft = scrollLeft;
+            }
+          }, 300);
+          
+          previousZoomRef.current = zoomLevel;
+          return () => clearTimeout(timer);
+        }
+      }, [zoomLevel]);
+
 
     // RENDERING (& SCROLLING LOGIC)
       // Main virtualization and scroll logic
@@ -104,7 +137,17 @@ function VirtualizedTable({
 
     // RENDER
     return (
-      <section className='virtualized-table-wrap rounded'>
+      <section 
+        ref={sectionRef}
+        className='virtualized-table-wrap rounded' 
+        style={{
+          contain: 'layout style',
+          willChange: 'contents',
+          height: lockedHeight || 'auto',
+          minHeight: lockedHeight || 'auto',
+          maxHeight: lockedHeight || 'auto',
+        }}
+      >
         {/* Control Bar */}
         <VirtualizedTableControlBar
           zoomLevel={zoomLevel}

@@ -159,6 +159,8 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
       className="overflow-auto border-l border-r border-b border-gray-300 [&::-webkit-scrollbar]:hidden flex-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
       style={{
         height,
+        maxHeight: height,
+        minHeight: height,
         scrollbarWidth: 'none',
         msOverflowStyle: 'none',
       }}
