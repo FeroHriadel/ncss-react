@@ -9,6 +9,8 @@ interface UseVirtualizedTableRenderingProps {
   headerRef?: React.RefObject<HTMLDivElement | null>;
   scrollbarRef: React.RefObject<HTMLDivElement | null>;
   zoomLevel?: number;
+  handleZoomIn?: () => void;
+  handleZoomOut?: () => void;
 }
 
 
@@ -19,6 +21,8 @@ export function useVirtualizedTableRendering({
   headerRef,
   scrollbarRef,
   zoomLevel = 1,
+  handleZoomIn,
+  handleZoomOut,
 }: UseVirtualizedTableRenderingProps) {
 
   // VALUES AND STATE
@@ -226,8 +230,16 @@ export function useVirtualizedTableRendering({
         e.preventDefault();
         e.stopPropagation();
         container.scrollTop = scrollHeight - containerHeight;
+      } else if (e.key === '+' || e.key === '=') {
+        e.preventDefault();
+        e.stopPropagation();
+        if (handleZoomIn) handleZoomIn();
+      } else if (e.key === '-' || e.key === '_') {
+        e.preventDefault();
+        e.stopPropagation();
+        if (handleZoomOut) handleZoomOut();
       }
-    }, [bodyRef]);
+    }, [bodyRef, handleZoomIn, handleZoomOut]);
   
 
   // EFFECTS

@@ -73,6 +73,7 @@ export default function TablePage() {
             { column: 'metadata', displayValue: 'INFO (OBJECT)', width: '300px' },
             { column: 'actions', displayValue: 'Actions', width: '100px' },
           ]}
+          controls={true}
         />
 
         <Break amount={4} />

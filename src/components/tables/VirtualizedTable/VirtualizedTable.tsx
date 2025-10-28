@@ -16,6 +16,7 @@ export interface VirtualizedTableProps {
   verticalSeparators?: boolean;
   striped?: { enabled: boolean; color?: string } | boolean;
   hover?: { enabled: boolean; color?: string } | boolean;
+  controls?: boolean;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -30,6 +31,7 @@ function VirtualizedTable({
   verticalSeparators = true,
   striped = true,
   hover = true,
+  controls = true,
   style, 
   className,
 }: VirtualizedTableProps) {
@@ -38,6 +40,7 @@ function VirtualizedTable({
     const headerRef = React.useRef<HTMLDivElement>(null);
     const bodyRef = React.useRef<HTMLDivElement | null>(null);
     const scrollbarRef = React.useRef<HTMLDivElement | null>(null);
+    const wrapperRef = React.useRef<HTMLDivElement>(null);
 
     // COLUMNS    
       // Determine columns from config or infer from data
@@ -136,6 +139,8 @@ function VirtualizedTable({
         headerRef,
         scrollbarRef,
         zoomLevel,
+        handleZoomIn,
+        handleZoomOut,
       }); 
 
 
@@ -154,26 +159,30 @@ function VirtualizedTable({
         }}
       >
         {/* Control Bar */}
-        <VirtualizedTableControlBar
-          zoomLevel={zoomLevel}
-          minZoom={minZoom}
-          maxZoom={maxZoom}
-          handleZoomIn={handleZoomIn}
-          handleZoomOut={handleZoomOut}
-          columns={getColumns()}
-          setColumnsFilter={setColumnsFilter}
-          filterState={filterState}
-          setFilterConditions={setFilterConditions}
-          data={data}
-          resetFilters={resetFilters}
-          resultCount={filteredData.length}
-        />
+        {controls && (
+          <VirtualizedTableControlBar
+            zoomLevel={zoomLevel}
+            minZoom={minZoom}
+            maxZoom={maxZoom}
+            handleZoomIn={handleZoomIn}
+            handleZoomOut={handleZoomOut}
+            columns={getColumns()}
+            setColumnsFilter={setColumnsFilter}
+            filterState={filterState}
+            setFilterConditions={setFilterConditions}
+            data={data}
+            resetFilters={resetFilters}
+            resultCount={filteredData.length}
+          />
+        )}
 
-        {/* Header and Body wrapper with focus outline */}
+        {/* Header and Body wrapper */}
         <div 
-          className="focus:outline-none focus:ring-2 focus:ring-gray-300 rounded"
+          ref={wrapperRef}
+          className="focus:outline-none rounded"
           tabIndex={0}
           onKeyDown={handleKeyDown}
+          onClick={() => wrapperRef.current?.focus()}
         >
           {/* Fixed Header */}
           <div className="flex">
