@@ -108,7 +108,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
   return (
     <>
       {/* Row number (left side) and controls (right side) Container */}
-      <div className="w-full flex justify-between items-center p-2 border border-gray-300 bg-gray-200 rounded mb-2">
+      <div className="w-full flex justify-between items-center p-2 border border-gray-300 bg-gray-200 rounded mb-1">
 
         {/*Left Side */}
         <div className="flex items-center">

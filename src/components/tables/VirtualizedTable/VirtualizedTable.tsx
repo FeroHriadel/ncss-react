@@ -177,7 +177,7 @@ function VirtualizedTable({
         >
           {/* Fixed Header */}
           <div className="flex">
-            <div className="border border-gray-300 rounded-t overflow-hidden flex-1">
+            <div className="border-t border-l border-b border-gray-300 rounded-tl overflow-hidden flex-1">
               <VirtualizedTableHeader
                 headerRef={headerRef as React.RefObject<HTMLDivElement>}
                 visibleColumns={filteredColumns}
@@ -189,7 +189,7 @@ function VirtualizedTable({
               />
             </div>
             {/* Spacer to account for custom scrollbar */}
-            <div className="w-3 border-t border-r border-gray-300 bg-gray-50 rounded-tr"></div>
+            <div className="w-3 border-t border-r border-b border-l-0 border-gray-300 bg-gray-200 rounded-tr"></div>
           </div>
 
           {/* Table Body */}
