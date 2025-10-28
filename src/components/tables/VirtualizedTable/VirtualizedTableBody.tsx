@@ -64,6 +64,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
     const [tableScrollWidth, setTableScrollWidth] = React.useState<number>(0);
     const [columnPositions, setColumnPositions] = React.useState<number[]>([]);
     const [hoveredRowIndex, setHoveredRowIndex] = React.useState<number | null>(null);
+    const [copyNotification, setCopyNotification] = React.useState<{ x: number; y: number; text: string } | null>(null);
     const virtualItems = getVirtualItems();
     const totalSize = getTotalSize();
     const visibleColumnsCount = columns.length;
@@ -92,6 +93,60 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
       if (React.isValidElement(cellValue)) return cellValue;
       if (typeof cellValue !== 'string') return JSON.stringify(cellValue);
       return String(cellValue);
+    }
+
+    // Extract text content from cell value for clipboard
+    function extractTextFromCell(cellValue: unknown): string {
+      if (cellValue === null) return 'null';
+      if (cellValue === undefined) return 'undefined';
+      if (typeof cellValue === 'string') return cellValue;
+      if (typeof cellValue === 'number') return String(cellValue);
+      if (typeof cellValue === 'boolean') return String(cellValue);
+      if (Array.isArray(cellValue)) return cellValue.join(', ');
+      if (React.isValidElement(cellValue)) {
+        // Extract text content from React elements
+        const extractText = (node: React.ReactNode): string => {
+          if (typeof node === 'string') return node;
+          if (typeof node === 'number') return String(node);
+          if (Array.isArray(node)) return node.map(extractText).join('');
+          if (React.isValidElement(node)) {
+            const props = node.props as { children?: React.ReactNode };
+            if (props.children) {
+              return extractText(props.children);
+            }
+          }
+          return '';
+        };
+        return extractText(cellValue);
+      }
+      if (typeof cellValue === 'object') return JSON.stringify(cellValue);
+      return String(cellValue);
+    }
+
+    // Handle double-click to copy cell content
+    function handleCellDoubleClick(cellValue: unknown, event: React.MouseEvent<HTMLTableCellElement>) {
+      const textContent = extractTextFromCell(cellValue);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(textContent)
+          .then(() => {
+            console.log('Copied to clipboard:', textContent);
+            
+            // Show notification at cursor position
+            setCopyNotification({
+              x: event.clientX,
+              y: event.clientY,
+              text: 'Copied!'
+            });
+            
+            // Hide notification after 1 second
+            setTimeout(() => {
+              setCopyNotification(null);
+            }, 1000);
+          })
+          .catch((err) => {
+            console.error('Failed to copy to clipboard:', err);
+          });
+      }
     }
   
   
@@ -226,7 +281,10 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
                       backgroundColor: 'transparent',
                       wordWrap: 'break-word',
                       overflowWrap: 'break-word',
+                      cursor: 'pointer',
                     }}
+                    onDoubleClick={(e) => handleCellDoubleClick(cellValue, e)}
+                    title="Double-click to copy"
                   >
                     {renderedValue}
                   </td>
@@ -362,6 +420,21 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
         );
       })()}
     </div>
+
+    {/* Copy notification popup */}
+    {copyNotification && (
+      <div
+        className="fixed pointer-events-none z-[9999]"
+        style={{
+          left: copyNotification.x + 10,
+          top: copyNotification.y - 30,
+        }}
+      >
+        <span className="inline-flex items-center px-3 py-1 rounded text-sm font-semibold text-white bg-gray-800 bg-opacity-90 shadow-lg">
+          {copyNotification.text}
+        </span>
+      </div>
+    )}
   </div>
   );
 };

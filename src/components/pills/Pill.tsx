@@ -16,7 +16,7 @@ export interface PillProps {
 export default function Pill({ children, className, style, onClose, onClick = () => {} }: PillProps) {
   return (
     <span 
-      className={`text-sm font-semibold text-gray-600 bg-gray-100 px-3 py-1 rounded flex items-center ${className}`} 
+      className={`text-sm font-semibold text-gray-600 bg-gray-100 px-3 py-1 rounded inline-flex items-center ${className}`} 
       style={style}
       onClick={onClick}
     >

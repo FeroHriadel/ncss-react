@@ -396,7 +396,7 @@ export default function VirtualizedTableFilter({ columns, closeModal, filterCond
               <CloseButton className="min-w-[40px] h-[40px]" title="Remove condition" onClick={() => removeRow(row.id)} />
             </div>
             {row.operator && index < filterRows.length - 1 && (
-              <div className="mb-4">
+              <div className="mb-4 flex">
                 <Pill>{row.operator.toUpperCase()}</Pill>
               </div>
             )}

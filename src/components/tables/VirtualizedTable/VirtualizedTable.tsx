@@ -156,7 +156,6 @@ function VirtualizedTable({
         ref={sectionRef}
         className={'virtualized-table-wrap rounded ' + (className || '')}
         style={{
-          contain: 'layout style',
           willChange: 'contents',
           height: lockedHeight || 'auto',
           minHeight: lockedHeight || 'auto',
