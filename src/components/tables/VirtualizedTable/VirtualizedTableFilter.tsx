@@ -1,13 +1,26 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import * as React from 'react';
 import Button from "../../buttons/Button";
 import type { DropdownOption } from "../../dropdowns/MultiSelect";
-import Select from "../../dropdowns/Select";
+import Select, { type SelectHandle } from "../../dropdowns/Select";
 import Input from "../../inputs/Input";
 import Pill from "../../pills/Pill";
 import CloseButton from "../../buttons/CloseButton";
 
 
+
+export interface FilterRow {
+  id: number;
+  column: string | null;
+  condition: string | null;
+  value: string;
+  operator: 'and' | 'or' | null;
+}
+
+export interface FilterPreset {
+  name: string;
+  filters: Omit<FilterRow, 'id'>[];
+}
 
 export interface VirtualizedTableFilterProps {
   columns: { column: string; displayValue: string }[];
@@ -15,14 +28,7 @@ export interface VirtualizedTableFilterProps {
   filterConditions: FilterRow[];
   setFilterConditions: (conditions: FilterRow[]) => void;
   data?: Record<string, unknown>[]; // Sample data to infer column types
-}
-
-export interface FilterRow {
-  id: number;
-  column: string | null;
-  condition: string | null;
-  value: string;
-  operator: string | null;
+  filterPresets?: FilterPreset[];
 }
 
 type ColumnType = 'number' | 'string' | 'boolean' | 'array' | 'object' | 'html' | 'unknown';
@@ -30,7 +36,7 @@ type ColumnType = 'number' | 'string' | 'boolean' | 'array' | 'object' | 'html' 
 
 
 
-export default function VirtualizedTableFilter({ columns, closeModal, filterConditions, setFilterConditions, data }: VirtualizedTableFilterProps) {
+export default function VirtualizedTableFilter({ columns, closeModal, filterConditions, setFilterConditions, data, filterPresets }: VirtualizedTableFilterProps) {
   // HELPER FUNCTIONS
   // Infer column type from sample data
   const inferColumnType = (columnName: string): ColumnType => {
@@ -178,6 +184,9 @@ export default function VirtualizedTableFilter({ columns, closeModal, filterCond
     {value: 'or', displayValue: 'OR'},
   ];
   
+  // Refs
+  const presetSelectRef = useRef<SelectHandle>(null);
+  
   // Use local state for editing, then apply on button click
   const [filterRows, setFilterRows] = useState<FilterRow[]>(() => {
     if (filterConditions && filterConditions.length > 0) {
@@ -203,6 +212,9 @@ export default function VirtualizedTableFilter({ columns, closeModal, filterCond
 
   const handleClearFilters = () => {
     setFilterRows([{ id: Date.now(), column: null, condition: null, value: '', operator: null }]);
+    if (presetSelectRef.current) {
+      presetSelectRef.current.clear();
+    }
   };
 
   const removeRow = (id: number) => {
@@ -274,6 +286,42 @@ export default function VirtualizedTableFilter({ columns, closeModal, filterCond
     closeModal();
   };
 
+  const handlePresetChange = (presetName: string | null) => {
+    if (!presetName || !filterPresets) return;
+    
+    const preset = filterPresets.find(p => p.name === presetName);
+    if (!preset) return;
+    
+    // Convert preset filters to FilterRows with unique IDs
+    const newRows: FilterRow[] = preset.filters.map((filter, index) => ({
+      ...filter,
+      id: Date.now() + index,
+    }));
+    
+    // Add an empty row at the end for adding more filters
+    newRows.push({
+      id: Date.now() + preset.filters.length,
+      column: null,
+      condition: null,
+      value: '',
+      operator: null
+    });
+    
+    setFilterRows(newRows);
+  };
+
+  // Create preset options for Select
+  const presetOptions: DropdownOption[] = filterPresets
+    ? filterPresets.map(preset => ({
+        value: preset.name,
+        displayValue: preset.name
+      }))
+    : [];
+
+  const presetHeaderTitle = filterPresets && filterPresets.length > 0 
+    ? 'Filter Presets' 
+    : 'No presets available';
+
 
   // RENDER
   return (
@@ -290,7 +338,16 @@ export default function VirtualizedTableFilter({ columns, closeModal, filterCond
         >
           Clear Filters
         </Button>
-        <Select width="160px" className="m-1 mt-0 ml-0" title="Filter Presets" options={[{ value: 'preset1', displayValue: 'Preset 1' }, { value: 'preset2', displayValue: 'Preset 2' }]} />
+        <Select 
+          ref={presetSelectRef}
+          width="160px" 
+          className="m-1 mt-0 ml-0" 
+          title="Filter Presets"
+          headerTitle={presetHeaderTitle}
+          options={presetOptions}
+          onChange={handlePresetChange}
+          disabled={!filterPresets || filterPresets.length === 0}
+        />
       </section>
 
       {/* Filters */}

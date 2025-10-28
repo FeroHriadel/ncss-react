@@ -5,6 +5,10 @@ import VirtualizedTableBody from "./VirtualizedTableBody";
 import { useVirtualizedTableRendering } from "./useVirtualizedTableRendering"
 import { useVirtualizedTableZoom } from "./useVirtualizedTableZoom"
 import { useVirtualizedTableFilter } from "./useVirtualizedTableFilter"
+import type { FilterPreset } from "./VirtualizedTableFilter";
+
+// Re-export FilterPreset for easy importing
+export type { FilterPreset } from "./VirtualizedTableFilter";
 
 
 
@@ -17,6 +21,7 @@ export interface VirtualizedTableProps {
   striped?: { enabled: boolean; color?: string } | boolean;
   hover?: { enabled: boolean; color?: string } | boolean;
   controls?: boolean;
+  filterPresets?: FilterPreset[];
   className?: string;
   style?: React.CSSProperties;
 }
@@ -32,6 +37,7 @@ function VirtualizedTable({
   striped = true,
   hover = true,
   controls = true,
+  filterPresets,
   style, 
   className,
 }: VirtualizedTableProps) {
@@ -173,6 +179,7 @@ function VirtualizedTable({
             data={data}
             resetFilters={resetFilters}
             resultCount={filteredData.length}
+            filterPresets={filterPresets}
           />
         )}
 

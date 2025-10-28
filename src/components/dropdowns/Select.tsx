@@ -15,6 +15,7 @@ export interface SelectProps {
 	trigger?: React.ReactNode;
 	disabled?: boolean;
 	title?: string;
+	headerTitle?: string; // Optional custom header text, if not provided uses title
 	options: DropdownOption[];
 	preselectedOption?: string;
 	onChange?: (selectedOption: string | null) => void;
@@ -39,6 +40,7 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 		trigger,
 		disabled,
 		title = "Select Option",
+		headerTitle,
 		options,
 		preselectedOption = null,
 		onChange,
@@ -149,22 +151,28 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 						{trigger}
 					</button>
 				) : (
-					<span ref={triggerRef}>
+					<span ref={triggerRef} className="relative block">
 						<Button
 							onClick={toggleDropdownOpen}
 							disabled={disabled}
 							title={title}
               variant="outline"
-							className="flex justify-center active:scale-[1]"
+							className="!justify-start active:scale-[1] w-full overflow-hidden"
               style={{ width: '100%' }}
 						>
-							<span className="truncate flex-1 text-left">
-								{selectedOption
-									? options.find(opt => opt.value === selectedOption)?.displayValue
-									: title}
-							</span>
-							<FaChevronDown className="ml-2 text-gray-700 text-xs flex-shrink-0 translate-y-[2px]" aria-hidden="true" />
+							{/* Invisible placeholder to maintain button height */}
+							<span className="opacity-0">-</span>
 						</Button>
+						{/* Text overlay */}
+						<span 
+							className="absolute left-4 top-1/2 -translate-y-1/2 truncate text-left text-gray-700 text-md pointer-events-none"
+							style={{ maxWidth: 'calc(100% - 64px)' }}
+						>
+							{selectedOption
+								? options.find(opt => opt.value === selectedOption)?.displayValue
+								: title}
+						</span>
+						<FaChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700 text-xs pointer-events-none" aria-hidden="true" />
 					</span>
 				)}
 				{open && (
@@ -173,7 +181,7 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 						style={{ zIndex: 50, minWidth: `${effectiveMinWidth}px` }}
 					>
 						<div className="p-2 border-b border-gray-200">
-							<span className="text-sm font-medium text-gray-700">{title}</span>
+							<span className="text-sm font-medium text-gray-700">{headerTitle || title}</span>
 						</div>
 						<div className="options-wrap max-h-60 overflow-y-auto">
 							<ul className="list-none m-0 p-0">

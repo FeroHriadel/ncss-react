@@ -1,4 +1,6 @@
 import React, { useState, useCallback } from "react";
+import { createPortal } from "react-dom";
+
 
 
 
@@ -22,6 +24,8 @@ interface GhostElement {
   x: number;
   y: number;
   text: string;
+  width: string;
+  padding: string;
 }
 
 
@@ -42,13 +46,19 @@ const VirtualizedTableHeader: React.FC<VirtualizedTableHeaderProps> = ({
   const [ghostElement, setGhostElement] = useState<GhostElement | null>(null);
 
   // Drag handlers
-  const handleMouseDown = (e: React.MouseEvent, column: string, displayValue: string) => {
+  const handleMouseDown = (e: React.MouseEvent, column: string, displayValue: string, col: Column) => {
     e.preventDefault();
     setDraggedColumn(column);
+    const columnStyle = getColumnStyle(col);
+    const width = columnStyle.width as string || 'auto';
+    const padding = `${zoomLevel * 0.5}rem ${zoomLevel * 1}rem`;
+    
     setGhostElement({
       x: e.clientX,
       y: e.clientY,
       text: displayValue,
+      width: width,
+      padding: padding,
     });
   };
 
@@ -141,7 +151,7 @@ const VirtualizedTableHeader: React.FC<VirtualizedTableHeaderProps> = ({
                     ...getColumnStyle(col),
                     padding: `${zoomLevel * 0.5}rem ${zoomLevel * 1}rem`,
                   }}
-                  onMouseDown={(e) => handleMouseDown(e, col.column, col.displayValue)}
+                  onMouseDown={(e) => handleMouseDown(e, col.column, col.displayValue, col)}
                   onMouseEnter={() => handleMouseEnter(col.column)}
                   onMouseLeave={handleMouseLeave}
                 >
@@ -153,18 +163,21 @@ const VirtualizedTableHeader: React.FC<VirtualizedTableHeaderProps> = ({
         </table>
       </div>
 
-      {/* Ghost element that follows cursor */}
-      {ghostElement && (
+      {/* Ghost element that follows cursor - rendered in a portal to avoid positioning issues */}
+      {ghostElement && createPortal(
         <div
-          className="fixed pointer-events-none z-50 bg-white border border-gray-300 px-2 py-1 rounded shadow-lg text-sm"
+          className="fixed pointer-events-none z-50 bg-gray-200 border border-gray-300 rounded shadow-lg text-sm text-left text-gray-600 break-words"
           style={{
-            left: ghostElement.x + 15,
-            top: ghostElement.y - 5,
-            transform: "translateY(-50%)",
+            left: ghostElement.x,
+            top: ghostElement.y,
+            width: ghostElement.width,
+            padding: ghostElement.padding,
+            transform: 'translate(10px, 10px)',
           }}
         >
           {ghostElement.text}
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

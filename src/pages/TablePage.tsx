@@ -1,5 +1,5 @@
 import Break from "../components/spacers/Break";
-import VirtualizedTable from "../components/tables/VirtualizedTable/VirtualizedTable";
+import VirtualizedTable, { type FilterPreset } from "../components/tables/VirtualizedTable/VirtualizedTable";
 import Container from "../components/wrappers/Container";
 
 
@@ -54,6 +54,28 @@ function generateData(count: number) {
 
 const data = generateData(100)
 
+const filterPresets: FilterPreset[] = [
+  {
+    name: "Young Adults (25-35)",
+    filters: [
+      { column: 'age', condition: 'greater_than', value: '24', operator: 'and' },
+      { column: 'age', condition: 'less_than', value: '36', operator: null }
+    ]
+  },
+  {
+    name: "Seniors (55+)",
+    filters: [
+      { column: 'age', condition: 'greater_than', value: '54', operator: null }
+    ]
+  },
+  {
+    name: "Low IDs (< 20)",
+    filters: [
+      { column: 'id', condition: 'less_than', value: '20', operator: null }
+    ]
+  }
+];
+
 export default function TablePage() {
   return (
     <Container className="px-2">
@@ -74,6 +96,7 @@ export default function TablePage() {
             { column: 'actions', displayValue: 'Actions', width: '100px' },
           ]}
           controls={true}
+          filterPresets={filterPresets}
         />
 
         <Break amount={4} />

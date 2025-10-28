@@ -3,7 +3,7 @@ import IconButton from "../../buttons/IconButton";
 import MultiSelect, { type MultiSelectHandle } from "../../dropdowns/MultiSelect";
 import { CiZoomIn, CiZoomOut, CiViewColumn, CiFilter } from "react-icons/ci";
 import Modal from "../../dialogs/Modal";
-import VirtualizedTableFilter, { type FilterRow } from "./VirtualizedTableFilter";
+import VirtualizedTableFilter, { type FilterRow, type FilterPreset } from "./VirtualizedTableFilter";
 import { IoRefresh } from "react-icons/io5";
 import Pill from "../../pills/Pill";
 
@@ -28,6 +28,7 @@ interface ControlBarProps {
   data: Record<string, unknown>[]; // For type inference in filter
   resetFilters: () => void; // Reset all filters to initial state
   resultCount: number; // Number of filtered results
+  filterPresets?: FilterPreset[];
 }
 
 
@@ -45,6 +46,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
   data,
   resetFilters,
   resultCount,
+  filterPresets,
 }) => {
 
   // Refs & values
@@ -134,6 +136,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
               filterConditions={filterState.conditions}
               setFilterConditions={setFilterConditions}
               data={data}
+              filterPresets={filterPresets}
             />
           </Modal>
             
@@ -180,7 +183,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
 
       {/* Applied filters info bar */}
       {filterState.conditions.length > 0 && (
-        <div className="applied-filters-wrap w-full p-2 rounded border border-gray-300 bg-gray-100 mb-2">
+        <div className="applied-filters-wrap w-full p-2 rounded border border-gray-300 bg-gray-100 mb-1">
           <span className="text-xs text-gray-600 font-light block mb-1">Active Filters:</span>
           <div className="flex gap-2 flex-wrap items-center">
             {filterState.conditions.map((filter, index) => {
