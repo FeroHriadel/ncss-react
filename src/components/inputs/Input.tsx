@@ -30,7 +30,7 @@ export default function Input({ type, name, className, id, style, value, onChang
       <input
         type={type || 'text'}
         name={name}
-        className={`outline-none border border-gray-300 rounded-md text-md bg-gray-100 text-gray-700 hover:bg-gray-200 focus:bg-gray-200 placeholder:text-gray-600 placeholder:font-light w-full h-10 indent-3 italic ${className}`}
+        className={`outline-none border border-gray-300 rounded-md text-md bg-gray-100 text-gray-700 hover:bg-gray-200 focus:bg-gray-200 placeholder:text-gray-600 placeholder:font-light placeholder:italic w-full h-10 indent-3 ${className}`}
         id={id}
         style={width ? { width, ...style } : { ...style }}
         value={value}
