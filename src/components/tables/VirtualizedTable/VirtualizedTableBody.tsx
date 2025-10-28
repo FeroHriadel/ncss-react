@@ -147,7 +147,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
     {/* Main scrollable container */}
     <div
       ref={bodyRef}
-      className="overflow-auto border-l border-r border-b border-gray-300 [&::-webkit-scrollbar]:hidden flex-1 focus:outline-none"
+      className="overflow-auto border-l border-r border-b border-gray-300 rounded-bl [&::-webkit-scrollbar]:hidden flex-1 focus:outline-none"
       style={{
         height: totalSize > 0 && totalSize < (parseInt(height) || 400) 
           ? `${totalSize}px` 
@@ -260,7 +260,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
                 zIndex: 1,
               }}
             />
-            {/* Hover overlay - uses backdrop-filter for brightness effect */}
+            {/* Hover overlay - uses bg-gray-200 background */}
             {hoverEnabled && (
               <div
                 style={{
@@ -269,7 +269,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
                   left: 0,
                   width: tableScrollWidth > 0 ? `${tableScrollWidth}px` : '100%',
                   height: `${virtualRow.size}px`,
-                  backgroundColor: 'rgba(0, 0, 0, 0.08)', // subtle dark overlay
+                  backgroundColor: 'rgb(229, 231, 235)', // Tailwind gray-200
                   pointerEvents: 'none',
                   zIndex: 2,
                   opacity: isHovered ? 1 : 0,
@@ -318,7 +318,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
     {/* Custom Scrollbar */}
     <div
       ref={scrollbarRef}
-      className="w-3 bg-gray-50 border-r border-b border-gray-300 relative cursor-pointer select-none"
+      className="w-3 bg-gray-50 border-r border-b border-gray-300 rounded-br relative cursor-pointer select-none"
       style={{ 
         height: totalSize > 0 && totalSize < (parseInt(height) || 400) 
           ? `${totalSize}px` 
