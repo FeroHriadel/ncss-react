@@ -112,11 +112,11 @@ export default function VirtualizedTableFilter({ columns, closeModal, filterCond
       case 'boolean':
         return 'Enter true or false';
       case 'array':
-        return 'Enter text to search in array';
+        return 'Enter text';
       case 'object':
-        return 'Enter text to search in object';
+        return 'Enter text';
       case 'html':
-        return 'Enter text to search in content';
+        return 'Enter text';
       default:
         return 'Enter value';
     }
@@ -204,12 +204,6 @@ export default function VirtualizedTableFilter({ columns, closeModal, filterCond
            row.operator !== null;
   };
 
-  const isRowPartiallyValid = (row: FilterRow) => {
-    return row.column !== null && 
-           row.condition !== null && 
-           row.value.trim() !== '';
-  };
-
   const handleClearFilters = () => {
     setFilterRows([{ id: Date.now(), column: null, condition: null, value: '', operator: null }]);
     if (presetSelectRef.current) {
@@ -232,16 +226,33 @@ export default function VirtualizedTableFilter({ columns, closeModal, filterCond
       const updatedRows = rows.map(row => {
         if (row.id !== id) return row;
         
-        // When column changes, reset condition if it's not valid for new column type
+        // When column changes, reset condition, value, and operator
         if (field === 'column' && value !== null) {
-          const availableConditions = getConditionsForColumn(value);
-          const currentConditionValid = row.condition && availableConditions.some(opt => opt.value === row.condition);
-          
           return {
             ...row,
             column: value,
-            condition: currentConditionValid ? row.condition : null,
-            value: currentConditionValid ? row.value : ''
+            condition: null,
+            value: '',
+            operator: null
+          };
+        }
+        
+        // When condition changes, reset value and operator
+        if (field === 'condition' && value !== null) {
+          return {
+            ...row,
+            condition: value,
+            value: '',
+            operator: null
+          };
+        }
+        
+        // When value is cleared, reset operator
+        if (field === 'value' && (!value || value.trim() === '')) {
+          return {
+            ...row,
+            value: value || '',
+            operator: null
           };
         }
         
@@ -360,7 +371,7 @@ export default function VirtualizedTableFilter({ columns, closeModal, filterCond
               <Select 
                 options={columnsSelectOptions} 
                 title="Column" 
-                width="160px" 
+                width="200px" 
                 className="" 
                 preselectedOption={row.column || undefined}
                 onChange={(value) => updateRow(row.id, 'column', value)}
@@ -369,24 +380,26 @@ export default function VirtualizedTableFilter({ columns, closeModal, filterCond
               <Select 
                 options={getConditionsForColumn(row.column)} 
                 title="Condition" 
-                width="160px" 
+                width="200px" 
                 className="" 
                 preselectedOption={row.condition || undefined}
                 onChange={(value) => updateRow(row.id, 'condition', value)}
                 openY="up"
+                disabled={!row.column}
               />
               <Input 
-                width="160px" 
+                width="200px" 
                 className="border border-gray-300" 
                 placeholder={getPlaceholderForCondition(row.column, row.condition)} 
                 value={row.value}
                 onChange={(e) => updateRow(row.id, 'value', e.target.value)}
+                disabled={!row.column || !row.condition}
               />
-              {isRowPartiallyValid(row) && (
+              {row.value.trim() !== '' && (
                 <Select 
                   options={operatorSelectOptions} 
                   title="Operator" 
-                  width="160px" 
+                  width="200px" 
                   className="" 
                   preselectedOption={row.operator || undefined}
                   onChange={(value) => updateRow(row.id, 'operator', value)}

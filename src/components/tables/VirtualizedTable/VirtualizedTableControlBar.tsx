@@ -110,10 +110,10 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
   return (
     <>
       {/* Row number (left side) and controls (right side) Container */}
-      <div className="w-full flex justify-between items-center p-2 border border-gray-300 bg-gray-200 rounded mb-1">
+      <div className="w-full flex justify-between items-center p-2 border border-gray-300 bg-gray-200 rounded mb-1 overflow-x-auto [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
 
         {/*Left Side */}
-        <div className="flex items-center">
+        <div className="flex items-center flex-shrink-0">
           <span className="text-sm text-gray-600">
             {resultCount} {resultCount === 1 ? 'result' : 'results'}
           </span>
@@ -121,11 +121,11 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
 
 
         {/** Right Side */}
-        <div className="flex items-center gap-2 relative">
+        <div className="flex items-center gap-2 relative flex-shrink-0">
 
           {/* Filter Modal */}
           <Modal
-            trigger={<IconButton title="Filter" icon={<CiFilter size={20} />} onClick={openModal} />}
+            trigger={<IconButton title="Filter" icon={<CiFilter size={20} />} onClick={openModal} className="ml-5" />}
             className="w-[95%] sm:w-[75%]"
             isOpen={modalOpen}
             onClose={closeModal}
