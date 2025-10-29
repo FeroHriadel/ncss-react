@@ -11,6 +11,7 @@ export interface CloseButtonProps {
   icon?: React.ReactNode;
   disabled?: boolean;
   title?: string;
+  ariaLabel?: string;
 }
 
 
@@ -22,7 +23,8 @@ const CloseButton: React.FC<CloseButtonProps> = ({
   onClick,
   icon = <FaTimes />,
   disabled,
-  title,
+  title = "Close",
+  ariaLabel,
 }) => (
   <IconButton
     className={'text-red-900 ' + (className ? className : '')}
@@ -32,6 +34,7 @@ const CloseButton: React.FC<CloseButtonProps> = ({
     disabled={disabled}
     title={title}
     icon={icon}
+    ariaLabel={ariaLabel || title}
   />
 );
 

@@ -11,6 +11,10 @@ export interface IconButtonProps {
   disabled?: boolean;
   title?: string;
   size?: string;
+  ariaLabel?: string;
+  ariaPressed?: boolean;
+  ariaExpanded?: boolean;
+  ariaHaspopup?: 'true' | 'false' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog';
 }
 
 
@@ -23,7 +27,11 @@ const IconButton: React.FC<IconButtonProps> = ({
   icon,
   disabled,
   title,
-  size="35px"
+  size="35px",
+  ariaLabel,
+  ariaPressed,
+  ariaExpanded,
+  ariaHaspopup,
 }) => (
   <button
     type="button"
@@ -33,8 +41,13 @@ const IconButton: React.FC<IconButtonProps> = ({
     onClick={onClick}
     disabled={disabled}
     title={title}
+    aria-label={ariaLabel || title}
+    aria-pressed={ariaPressed}
+    aria-expanded={ariaExpanded}
+    aria-haspopup={ariaHaspopup}
+    aria-disabled={disabled}
   >
-    {icon}
+    <span aria-hidden="true">{icon}</span>
   </button>
 );
 

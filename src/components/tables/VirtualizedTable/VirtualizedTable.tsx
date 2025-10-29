@@ -24,6 +24,8 @@ export interface VirtualizedTableProps {
   filterPresets?: FilterPreset[];
   className?: string;
   style?: React.CSSProperties;
+  ariaLabel?: string;
+  ariaDescribedBy?: string;
 }
 
 
@@ -40,6 +42,8 @@ function VirtualizedTable({
   filterPresets,
   style, 
   className,
+  ariaLabel,
+  ariaDescribedBy,
 }: VirtualizedTableProps) {
 
     // REFS
@@ -162,6 +166,9 @@ function VirtualizedTable({
           maxHeight: lockedHeight || 'auto',
           ...style
         }}
+        role="region"
+        aria-label={ariaLabel || "Data table"}
+        aria-describedby={ariaDescribedBy}
       >
         {/* Control Bar */}
         {controls && (
@@ -189,6 +196,9 @@ function VirtualizedTable({
           tabIndex={0}
           onKeyDown={handleKeyDown}
           onClick={() => wrapperRef.current?.focus()}
+          role="table"
+          aria-rowcount={filteredData.length}
+          aria-colcount={filteredColumns.length}
         >
           {/* Fixed Header */}
           <div className="flex">

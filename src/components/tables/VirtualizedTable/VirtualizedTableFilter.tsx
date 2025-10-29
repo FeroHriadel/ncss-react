@@ -336,7 +336,7 @@ export default function VirtualizedTableFilter({ columns, closeModal, filterCond
 
   // RENDER
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full" role="form" aria-label="Table filters">
       {/* Clear and Presets */}
       <h2 className="text-2xl font-bold mb-6">DATA FILTER</h2>
       <h3 className="text-lg font-semibold">Filter Options</h3>

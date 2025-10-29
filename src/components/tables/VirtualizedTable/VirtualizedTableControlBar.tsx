@@ -110,18 +110,23 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
   return (
     <>
       {/* Row number (left side) and controls (right side) Container */}
-      <div className="w-full flex justify-between items-center p-2 border border-gray-300 bg-gray-200 rounded mb-1 overflow-x-auto [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      <div 
+        className="w-full flex justify-between items-center p-2 border border-gray-300 bg-gray-200 rounded mb-1 overflow-x-auto [&::-webkit-scrollbar]:hidden" 
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        role="toolbar"
+        aria-label="Table controls"
+      >
 
         {/*Left Side */}
         <div className="flex items-center flex-shrink-0">
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-gray-600" role="status" aria-live="polite">
             {resultCount} {resultCount === 1 ? 'result' : 'results'}
           </span>
         </div>
 
 
         {/** Right Side */}
-        <div className="flex items-center gap-2 relative flex-shrink-0">
+        <div className="flex items-center gap-2 relative flex-shrink-0" role="group" aria-label="Table actions">
 
           {/* Filter Modal */}
           <Modal

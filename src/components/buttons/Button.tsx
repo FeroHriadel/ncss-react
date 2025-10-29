@@ -12,6 +12,11 @@ export interface ButtonProps {
   size?: 'sm' | 'md' | 'lg';
   width?: string;
   variant?: 'dark' | 'outline' | 'transparent' | 'red';
+  ariaLabel?: string;
+  ariaPressed?: boolean;
+  ariaExpanded?: boolean;
+  ariaHaspopup?: 'true' | 'false' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog';
+  type?: 'button' | 'submit' | 'reset';
 }
 
 
@@ -26,6 +31,11 @@ const Button: React.FC<ButtonProps> = ({
   size = 'md',
   width,
   variant = 'dark',
+  ariaLabel,
+  ariaPressed,
+  ariaExpanded,
+  ariaHaspopup,
+  type = 'button',
 }) => {
 
   function getButtonHeight() {
@@ -91,6 +101,7 @@ const Button: React.FC<ButtonProps> = ({
 
   return (
     <button
+      type={type}
       className={
         [
           'appearance-none rounded p-0 px-4 m-0 shadow-none outline-none min-h-8 flex justify-center items-center font-medium active:scale-[0.99] transition-all',
@@ -106,6 +117,11 @@ const Button: React.FC<ButtonProps> = ({
       onClick={onClick}
       disabled={disabled}
       title={title}
+      aria-label={ariaLabel}
+      aria-pressed={ariaPressed}
+      aria-expanded={ariaExpanded}
+      aria-haspopup={ariaHaspopup}
+      aria-disabled={disabled}
     >
       <span className="leading-none p-0 m-0 flex justify-center items-center -translate-y-[1px]">
         {children}

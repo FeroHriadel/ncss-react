@@ -45,6 +45,14 @@ const FullScreenView: React.FC<FullScreenViewProps> = ({
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      // Focus trap: focus the dialog when opened
+      const focusableElements = document.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      const firstFocusable = focusableElements[0] as HTMLElement;
+      if (firstFocusable) {
+        firstFocusable.focus();
+      }
     } else {
       document.body.style.overflow = '';
     }
@@ -100,6 +108,9 @@ const FullScreenView: React.FC<FullScreenViewProps> = ({
           margin: 0,
           padding: 0,
         }}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={typeof header === 'string' ? 'fullscreen-header' : undefined}
       >
         {/* Header */}
         <div
@@ -111,8 +122,12 @@ const FullScreenView: React.FC<FullScreenViewProps> = ({
         >
           {typeof header === 'string' ? (
             <>
-              <h2 className="text-xl font-semibold ml-4">{header}</h2>
-              <CloseButton onClick={handleClose} className='absolute right-4 top-1/2 transform -translate-y-1/2' />
+              <h2 id="fullscreen-header" className="text-xl font-semibold ml-4">{header}</h2>
+              <CloseButton 
+                onClick={handleClose} 
+                className='absolute right-4 top-1/2 transform -translate-y-1/2' 
+                aria-label="Close full screen view"
+              />
             </>
           ) : (
             header

@@ -130,6 +130,7 @@ const VirtualizedTableHeader: React.FC<VirtualizedTableHeaderProps> = ({
         }}
         className="[&::-webkit-scrollbar]:hidden"
         onScroll={handleHeaderScroll}
+        role="rowgroup"
       >
         <table
           className="w-full border-collapse"
@@ -138,8 +139,8 @@ const VirtualizedTableHeader: React.FC<VirtualizedTableHeaderProps> = ({
           }}
         >
           <thead className="bg-gray-200">
-            <tr>
-              {visibleColumns.map((col) => (
+            <tr role="row">
+              {visibleColumns.map((col, index) => (
                 <th
                   key={col.column}
                   className={`
@@ -154,6 +155,9 @@ const VirtualizedTableHeader: React.FC<VirtualizedTableHeaderProps> = ({
                   onMouseDown={(e) => handleMouseDown(e, col.column, col.displayValue, col)}
                   onMouseEnter={() => handleMouseEnter(col.column)}
                   onMouseLeave={handleMouseLeave}
+                  role="columnheader"
+                  aria-colindex={index + 1}
+                  aria-sort="none"
                 >
                   {col.displayValue}
                 </th>
@@ -167,6 +171,8 @@ const VirtualizedTableHeader: React.FC<VirtualizedTableHeaderProps> = ({
       {ghostElement && createPortal(
         <div
           className="fixed pointer-events-none z-50 bg-gray-200 border border-gray-300 rounded shadow-lg text-sm text-left text-gray-600 break-words"
+          role="presentation"
+          aria-hidden="true"
           style={{
             left: ghostElement.x,
             top: ghostElement.y,

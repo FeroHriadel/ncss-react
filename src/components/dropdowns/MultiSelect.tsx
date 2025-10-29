@@ -164,6 +164,20 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
         ref={triggerRef}
         onClick={toggleDropdownOpen}
         title={title}
+        role="button"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-label={title}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleDropdownOpen();
+          }
+          if (e.key === 'Escape' && open) {
+            setOpen(false);
+          }
+        }}
       >
         {trigger}
       </span>
@@ -173,26 +187,42 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
         <div
           className={`absolute ${hasSpaceBelow() ? 'top-full' : 'bottom-full'} ${hasSpaceOnRight() ? 'left-0' : 'right-0'} mt-1 bg-white border border-gray-300 rounded shadow-lg z-50`}
           style={{ zIndex: 50, minWidth: `${effectiveMinWidth}px` }}
+          role="listbox"
+          aria-label={title}
+          aria-multiselectable="true"
         >
 
           {/* Dropdown Header */}
-          <div className="p-2 border-b border-gray-200">
+          <div className="p-2 border-b border-gray-200" role="presentation">
             <span className="text-sm font-medium text-gray-700">{title}</span>
           </div>
 
           {/* Dropdown Options */}
           <div className="options-wrap max-h-60 overflow-y-auto">
-            <ul className="list-none m-0 p-0">
+            <ul className="list-none m-0 p-0" role="presentation">
               {options.map(opt => {
+                const isSelected = selectedOptions.includes(opt.value);
                 return (
-                  <li key={opt.value} onClick={() => handleOptionClick(opt.value)}>
+                  <li 
+                    key={opt.value} 
+                    onClick={() => handleOptionClick(opt.value)}
+                    role="option"
+                    aria-selected={isSelected}
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleOptionClick(opt.value);
+                      }
+                    }}
+                  >
                     <span className="w-full text-left p-2 flex items-center justify-between hover:bg-gray-100 transition-colors text-sm text-gray-700"                    >
                       <span className="truncate">{opt.displayValue}</span>
-                      {selectedOptions.includes(opt.value) 
+                      {isSelected 
                         ? 
                         <FaTick className="ml-3 text-gray-500 text-xs flex-shrink-0" aria-hidden="true" />
                         : 
-                        <span className="ml-6"></span>
+                        <span className="ml-6" aria-hidden="true"></span>
                       }
                     </span>
                   </li>

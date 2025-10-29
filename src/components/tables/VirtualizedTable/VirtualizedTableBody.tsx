@@ -240,7 +240,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
             backgroundColor: 'transparent',
           }}
         >
-          <tbody>
+          <tbody role="rowgroup">
             {virtualItems.map((virtualRow) => {
               const row = data[virtualRow.index];
               const rowIndex = virtualRow.index;
@@ -261,13 +261,15 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
                   }}
                   onMouseEnter={() => setHoveredRowIndex(rowIndex)}
                   onMouseLeave={() => setHoveredRowIndex(null)}
+                  role="row"
+                  aria-rowindex={rowIndex + 1}
                 >
-              {columns.map((col, index) => {
+              {columns.map((col, colIndex) => {
                 const cellValue = row[col.column];
                 const renderedValue = renderCellValue(cellValue);
                 
                 // Apply vertical separator to all columns except last
-                const verticalSepClass = verticalSeparators && index < columns.length - 1
+                const verticalSepClass = verticalSeparators && colIndex < columns.length - 1
                   ? 'border-r border-gray-200'
                   : '';
                 
@@ -285,6 +287,8 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
                     }}
                     onDoubleClick={(e) => handleCellDoubleClick(cellValue, e)}
                     title="Double-click to copy"
+                    role="cell"
+                    aria-colindex={colIndex + 1}
                   >
                     {renderedValue}
                   </td>
@@ -429,6 +433,8 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
           left: copyNotification.x + 10,
           top: copyNotification.y - 30,
         }}
+        role="status"
+        aria-live="polite"
       >
         <span className="inline-flex items-center px-3 py-1 rounded text-sm font-semibold text-white bg-gray-800 bg-opacity-90 shadow-lg">
           {copyNotification.text}

@@ -53,6 +53,30 @@ export default function Modal({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
+  // Focus management
+  useEffect(() => {
+    if (isOpen && dialogRef.current) {
+      // Save currently focused element
+      const previouslyFocused = document.activeElement as HTMLElement;
+      
+      // Focus the dialog
+      const focusableElements = dialogRef.current.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      const firstFocusable = focusableElements[0] as HTMLElement;
+      if (firstFocusable) {
+        firstFocusable.focus();
+      }
+
+      // Return focus when closed
+      return () => {
+        if (previouslyFocused) {
+          previouslyFocused.focus();
+        }
+      };
+    }
+  }, [isOpen]);
+
   // Close on outside click
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -68,8 +92,7 @@ export default function Modal({
           className="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-60"
           style={{ top: 0, left: 0, right: 0, bottom: 0, zIndex: 100 }}
           onClick={handleOverlayClick}
-          aria-modal="true"
-          role="dialog"
+          role="presentation"
         >
 
           {/* Dialog */}
@@ -82,6 +105,9 @@ export default function Modal({
             id={id}
             style={style}
             onClick={e => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={id ? `${id}-title` : undefined}
           >
 
             {/* Close Button */}
@@ -89,6 +115,7 @@ export default function Modal({
               className="absolute top-2 right-2 z-[102]"
               onClick={onClose}
               title="Close"
+              aria-label="Close modal"
             />
 
             {/* Content */}
