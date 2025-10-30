@@ -71,7 +71,7 @@ function VirtualizedTable({
   
     // FILTERING
       // Filter data based on search criteria
-      const { filteredData, filteredColumns, setColumnsFilter, setColumnOrder, filterState, setFilterConditions, resetFilters } = useVirtualizedTableFilter({ data, columns });
+      const { filteredData, filteredColumns, setColumnsFilter, setColumnOrder, filterState, setFilterConditions, resetFilters, setSortColumn } = useVirtualizedTableFilter({ data, columns });
 
       // Reset scroll position when filters change
       React.useEffect(() => {
@@ -211,6 +211,9 @@ function VirtualizedTable({
                 verticalSeparators={verticalSeparators}
                 handleHeaderScroll={handleHeaderScroll}
                 setColumnOrder={setColumnOrder}
+                sortColumn={filterState.sortColumn}
+                sortDirection={filterState.sortDirection}
+                setSortColumn={setSortColumn}
               />
             </div>
             {/* Spacer to account for custom scrollbar */}

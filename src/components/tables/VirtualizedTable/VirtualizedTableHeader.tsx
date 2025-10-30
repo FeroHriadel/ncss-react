@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { createPortal } from "react-dom";
+import { BiSolidUpArrow } from "react-icons/bi";
 
 
 
@@ -18,6 +19,9 @@ interface VirtualizedTableHeaderProps {
   verticalSeparators: boolean;
   handleHeaderScroll: (e: React.UIEvent<HTMLDivElement>) => void;
   setColumnOrder: (newOrder: string[]) => void;
+  sortColumn: string | null;
+  sortDirection: 'asc' | 'desc' | null;
+  setSortColumn: (column: string) => void;
 }
 
 interface GhostElement {
@@ -38,7 +42,10 @@ const VirtualizedTableHeader: React.FC<VirtualizedTableHeaderProps> = ({
   zoomLevel,
   handleHeaderScroll,
   setColumnOrder,
-  verticalSeparators
+  verticalSeparators,
+  sortColumn,
+  sortDirection,
+  setSortColumn,
 }) => {
   // Drag state
   const [draggedColumn, setDraggedColumn] = useState<string | null>(null);
@@ -157,9 +164,34 @@ const VirtualizedTableHeader: React.FC<VirtualizedTableHeaderProps> = ({
                   onMouseLeave={handleMouseLeave}
                   role="columnheader"
                   aria-colindex={index + 1}
-                  aria-sort="none"
+                  aria-sort={sortColumn === col.column ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}
                 >
-                  {col.displayValue}
+                  <div className="flex items-center justify-between gap-2">
+                    <span>{col.displayValue}</span>
+                    <span
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSortColumn(col.column);
+                      }}
+                      role="button"
+                      aria-label={`Sort by ${col.displayValue}`}
+                      tabIndex={0}
+                      className="cursor-pointer hover:text-gray-800 transition-colors flex-shrink-0"
+                      style={{
+                        transform: sortColumn === col.column && sortDirection === 'desc' ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.2s',
+                        opacity: sortColumn === col.column ? 1 : 0.4,
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          setSortColumn(col.column);
+                        }
+                      }}
+                    >
+                      <BiSolidUpArrow size={12} />
+                    </span>
+                  </div>
                 </th>
               ))}
             </tr>
