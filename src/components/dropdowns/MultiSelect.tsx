@@ -186,7 +186,7 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
       {open && (
         <div
           className={`absolute ${hasSpaceBelow() ? 'top-full' : 'bottom-full'} ${hasSpaceOnRight() ? 'left-0' : 'right-0'} mt-1 bg-white border border-gray-300 rounded shadow-lg z-50`}
-          style={{ zIndex: 50, minWidth: `${effectiveMinWidth}px` }}
+          style={{ zIndex: 9999, minWidth: `${effectiveMinWidth}px` }}
           role="listbox"
           aria-label={title}
           aria-multiselectable="true"

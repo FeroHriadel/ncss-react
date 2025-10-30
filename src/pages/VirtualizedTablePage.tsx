@@ -76,9 +76,11 @@ const filterPresets: FilterPreset[] = [
   }
 ];
 
-export default function TablePage() {
+
+
+export default function VirtualizedTablePage() {
   return (
-    <Container className="px-2">
+    <Container className="px-2 pt-24">
       <h1 className="mb-10">Virtualized Table</h1>
         <VirtualizedTable
           data={data} 

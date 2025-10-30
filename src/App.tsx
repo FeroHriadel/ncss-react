@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import HomePage from './pages/HomePage'
-import TablePage from './pages/TablePage'
+import VirtualizedTablePage from './pages/VirtualizedTablePage'
 import TopNav from './components/navs/TopNav';
 import Button from './components/buttons/Button';
 import logo from './assets/logo.png'
@@ -26,7 +26,7 @@ function App() {
 
   const customContent = () => <Button variant='outline' className='bg-white' onClick={() => alert('TopNav customContent clicked')}>Sign In</Button>;
 
-  
+
   return (
     <Router>
       <div className="min-h-screen bg-gray-50">
@@ -41,7 +41,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/tables/table" element={<span>Table Page</span>} />
-          <Route path="/tables/virtualizedtable" element={<TablePage />} />
+          <Route path="/tables/virtualizedtable" element={<VirtualizedTablePage />} />
         </Routes>
       </div>
     </Router>

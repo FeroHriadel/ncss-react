@@ -26,25 +26,38 @@ export interface TopNavProps {
   height?: string;
   className?: string;
   style?: React.CSSProperties;
+  fixed?: boolean;
 }
 
 
 
-export default function TopNav({logo, logoUrl, links, customContent, height, className, style, keepCustomContentOnSmallScreens = true}: TopNavProps) {
+export default function TopNav({
+  logo, 
+  logoUrl, 
+  links, 
+  customContent, 
+  height, 
+  className, 
+  style, 
+  keepCustomContentOnSmallScreens = true,
+  fixed = true
+}: TopNavProps) {
+
+  // Refs & state
   const leftSideRef = useRef<HTMLSpanElement>(null);
   const rightSideRef = useRef<HTMLDivElement>(null);
-  const [showHamburger, setShowHamburger] = useState<boolean>(hasEnoughSpace());
+  const [showHamburger, setShowHamburger] = useState<boolean>(false);
   
-  // Build hamburger menu options
+  // Hamburger menu options
   const hamburgerOptions = links.flatMap((link) => {
-    // If link has options, flatten them into individual Links
+    //if link has options, flatten them into individual Links
     if (link.options && link.options.length > 0) {
       return link.options.map((opt) => ({
         render: <Link to={opt.optionUrl || '/'} className="block w-full text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-4 py-2">{opt.optionName}</Link>,
         value: opt.optionUrl || opt.optionName
       }));
     }
-    // If link is a simple link, render it
+    //if link is a simple link, render it
     else {
       return [{
         render: <Link to={link.linkUrl || '/'} className="block w-full text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-4 py-2">{link.linkName}</Link>,
@@ -53,25 +66,26 @@ export default function TopNav({logo, logoUrl, links, customContent, height, cla
     }
   });
 
-  // Check if there's at least 100px space between left and right sides
+
+  // Check if there's at least 200px space between left and right sides
   function hasEnoughSpace(): boolean {
     const leftRect = leftSideRef.current?.getBoundingClientRect();
     const rightRect = rightSideRef.current?.getBoundingClientRect();
     if (!leftRect || !rightRect) return true;
     const spaceBetween = rightRect.left - leftRect.right;
-    return spaceBetween >= 100;
+    return spaceBetween >= 200;
   }
 
 
   // Handle window resize
   useEffect(() => {
-    function handleResize() {
-      setShowHamburger(!hasEnoughSpace());
-    }
+    function handleResize() { setShowHamburger(!hasEnoughSpace()); }
+    
+    // Check on mount
+    handleResize();
+    
     window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
 
@@ -79,7 +93,7 @@ export default function TopNav({logo, logoUrl, links, customContent, height, cla
   return (
     /* Top Navigation Bar wrap */
     <nav 
-      className={`top-nav w-full px-4 py-2 flex justify-between ${height ? `min-h-[${height}]` : 'min-h-24'} ` + className} 
+      className={`top-nav w-full px-4 py-2 flex justify-between ${height ? `min-h-[${height}]` : 'min-h-24'} ${fixed ? 'fixed top-0 left-0 right-0 z-30' : ''} ${className ? className : ''}`} 
       style={style} 
     >
 
