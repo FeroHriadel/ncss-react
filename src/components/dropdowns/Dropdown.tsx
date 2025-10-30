@@ -42,12 +42,20 @@ export default function Dropdown({ options, className, style, id, disabled, trig
       }
     }
 
+    function handleEscapeKey(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+      }
+    }
+
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleEscapeKey);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscapeKey);
     };
   }, [isOpen]);
 
@@ -81,10 +89,10 @@ export default function Dropdown({ options, className, style, id, disabled, trig
     >
 
       {/* trigger button - render trigger or children (children has precedence) */}
-      <button className="w-full appearance-none outline-none border-none p-0 m-0 bg-transparent" onClick={toggleDropdown}>
+      <span className="w-full appearance-none outline-none border-none p-0 m-0 bg-transparent" onClick={toggleDropdown}>
         {children && !trigger && children}
         {trigger && !children && trigger}
-      </button>
+      </span>
 
       {
         //options
