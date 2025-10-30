@@ -89,7 +89,10 @@ export default function Dropdown({ options, className, style, id, disabled, trig
     >
 
       {/* trigger button - render trigger or children (children has precedence) */}
-      <span className="w-full appearance-none outline-none border-none p-0 m-0 bg-transparent" onClick={toggleDropdown}>
+      <span 
+        className="w-full appearance-none outline-none border-none p-0 m-0 bg-transparent cursor-pointer" 
+        onClick={toggleDropdown}
+      >
         {children && !trigger && children}
         {trigger && !children && trigger}
       </span>
