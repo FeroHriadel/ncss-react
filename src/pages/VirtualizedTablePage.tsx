@@ -81,27 +81,48 @@ const filterPresets: FilterPreset[] = [
 export default function VirtualizedTablePage() {
   return (
     <Container className="px-2 pt-24">
-      <h1 className="mb-10">Virtualized Table</h1>
-        <VirtualizedTable
-          data={data} 
-          height="500px"
-          horizontalSeparators={true}
-          verticalSeparators={true}
-          columnsConfig={[
-            { column: 'id', displayValue: 'ID', width: '80px' },
-            { column: 'name', displayValue: 'FULL NAME', width: '200px' },
-            { column: 'age', displayValue: 'AGE', width: '80px' },
-            { column: 'isActive', displayValue: 'STATUS', width: '120px' },
-            { column: 'description', displayValue: 'DESCRIPTION', width: '300px' },
-            { column: 'tags', displayValue: 'SKILLS (ARRAY)', width: '250px' },
-            { column: 'metadata', displayValue: 'INFO (OBJECT)', width: '300px' },
-            { column: 'actions', displayValue: 'Actions', width: '100px' },
-          ]}
-          controls={true}
-          filterPresets={filterPresets}
-        />
+      <h1 className="mb-8 uppercase font-bold text-3xl">Virtualized Table</h1>
+      <p className="text-gray-700 mb-4">Table for rendering 1000s of rows of data efficiently using virtualization.</p>
+      <p className="text-gray-700">Features:</p>
+      <ul className="text-gray-700 list-disc mb-12">
+        <li className="ml-8">Virtualized rendering for performance</li>
+        <li className="ml-8">Fleible column height (unlike most virtualized tables)</li>
+        <li className="ml-8">Column reordering (drag and drop column to reorder)</li>
+        <li className="ml-8">Column sorting (click the arrow in header cell to sort)</li>
+        <li className="ml-8">Hiding columns (click the table icon in the controls to hide/show columns)</li>
+        <li className="ml-8">Filtering (click the filter icon in the controls to filter shown data)</li>
+        <li className="ml-8">Zooming in and out (click the magnifying glass icons to zoom in/out)</li>
+        <li className="ml-8">Can render html, string, number, array, object, undefined, null in cells</li>
+        <li className="ml-8">Customizable column widths</li>
+        <li className="ml-8">Customizable table height</li>
+        <li className="ml-8">Mouse wheel & mouse drag scrolling, keyboard controlls: home, pgup, pgdn, home, end, arrow keys</li>
+        <li className="ml-8">Adjustability for developers (passing props to customize behavior & styles)</li>
+      </ul>
 
-        <Break amount={4} />
+      <VirtualizedTable
+        data={data} 
+        height="500px"
+        horizontalSeparators={true}
+        verticalSeparators={true}
+        columnsConfig={[
+          { column: 'id', displayValue: 'ID', width: '80px' },
+          { column: 'name', displayValue: 'FULL NAME', width: '200px' },
+          { column: 'age', displayValue: 'AGE', width: '80px' },
+          { column: 'isActive', displayValue: 'STATUS', width: '120px' },
+          { column: 'description', displayValue: 'DESCRIPTION', width: '300px' },
+          { column: 'tags', displayValue: 'SKILLS (ARRAY)', width: '250px' },
+          { column: 'metadata', displayValue: 'INFO (OBJECT)', width: '300px' },
+          { column: 'actions', displayValue: 'Actions', width: '100px' },
+        ]}
+        filterPresets={filterPresets}
+        controls={true}
+        controlBarClassName=""
+        controlBarStyle={{}}
+        headerClassName=""
+        headerStyle={{}}
+      />
+
+      <Break amount={4} />
     </Container>
   )
 }

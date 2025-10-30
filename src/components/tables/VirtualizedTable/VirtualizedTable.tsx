@@ -24,6 +24,10 @@ export interface VirtualizedTableProps {
   filterPresets?: FilterPreset[];
   className?: string;
   style?: React.CSSProperties;
+  controlBarClassName?: string;
+  controlBarStyle?: React.CSSProperties;
+  headerClassName?: string;
+  headerStyle?: React.CSSProperties;
   ariaLabel?: string;
   ariaDescribedBy?: string;
 }
@@ -44,6 +48,10 @@ function VirtualizedTable({
   className,
   ariaLabel,
   ariaDescribedBy,
+  controlBarClassName,
+  controlBarStyle,
+  headerClassName,
+  headerStyle,
 }: VirtualizedTableProps) {
 
     // REFS
@@ -186,6 +194,8 @@ function VirtualizedTable({
             resetFilters={resetFilters}
             resultCount={filteredData.length}
             filterPresets={filterPresets}
+            controlBarClassName={controlBarClassName}
+            controlBarStyle={controlBarStyle}
           />
         )}
 
@@ -214,6 +224,8 @@ function VirtualizedTable({
                 sortColumn={filterState.sortColumn}
                 sortDirection={filterState.sortDirection}
                 setSortColumn={setSortColumn}
+                headerClassName={headerClassName}
+                headerStyle={headerStyle}
               />
             </div>
             {/* Spacer to account for custom scrollbar */}

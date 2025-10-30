@@ -22,6 +22,8 @@ interface VirtualizedTableHeaderProps {
   sortColumn: string | null;
   sortDirection: 'asc' | 'desc' | null;
   setSortColumn: (column: string) => void;
+  headerClassName?: string;
+  headerStyle?: React.CSSProperties;
 }
 
 interface GhostElement {
@@ -46,6 +48,8 @@ const VirtualizedTableHeader: React.FC<VirtualizedTableHeaderProps> = ({
   sortColumn,
   sortDirection,
   setSortColumn,
+  headerClassName,
+  headerStyle,
 }) => {
   // Drag state
   const [draggedColumn, setDraggedColumn] = useState<string | null>(null);
@@ -134,8 +138,9 @@ const VirtualizedTableHeader: React.FC<VirtualizedTableHeaderProps> = ({
           overflow: "auto",
           scrollbarWidth: "none",
           msOverflowStyle: "none",
+          ...headerStyle,
         }}
-        className="[&::-webkit-scrollbar]:hidden"
+        className={"[&::-webkit-scrollbar]:hidden " + (headerClassName ? ` ${headerClassName}` : "")}
         onScroll={handleHeaderScroll}
         role="rowgroup"
       >

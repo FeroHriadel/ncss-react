@@ -29,6 +29,8 @@ interface ControlBarProps {
   resetFilters: () => void; // Reset all filters to initial state
   resultCount: number; // Number of filtered results
   filterPresets?: FilterPreset[];
+  controlBarClassName?: string;
+  controlBarStyle?: React.CSSProperties;
 }
 
 
@@ -47,6 +49,8 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
   resetFilters,
   resultCount,
   filterPresets,
+  controlBarClassName,
+  controlBarStyle,
 }) => {
 
   // Refs & values
@@ -111,9 +115,10 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
     <>
       {/* Row number (left side) and controls (right side) Container */}
       <div 
-        className="w-full flex justify-between items-center p-2 border border-gray-300 bg-gray-200 rounded mb-1" 
+        className={`w-full flex justify-between items-center p-2 border border-gray-300 bg-gray-200 rounded mb-1 ${controlBarClassName}`} 
         role="toolbar"
         aria-label="Table controls"
+        style={controlBarStyle}
       >
 
         {/*Left Side */}

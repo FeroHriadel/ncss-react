@@ -31,6 +31,8 @@ interface VirtualizedTableBodyProps {
   getTotalSize: () => number;
   getVirtualItems: () => Array<{ index: number; start: number; size: number; key: number }>;
   measureElement: (node: HTMLTableRowElement | null, index: number) => void;
+  bodyClassName?: string;
+  bodyStyle?: React.CSSProperties;
 }
 
 
@@ -54,7 +56,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
   hover,
   getTotalSize,
   getVirtualItems,
-  measureElement,
+  measureElement
 }) => {
 
   // VALUES
