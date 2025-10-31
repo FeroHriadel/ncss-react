@@ -142,7 +142,7 @@ export default function VirtualizedTablePage() {
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#eee' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -176,7 +176,7 @@ export default function VirtualizedTablePage() {
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#eee' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -221,7 +221,7 @@ export default function VirtualizedTablePage() {
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#eee' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
