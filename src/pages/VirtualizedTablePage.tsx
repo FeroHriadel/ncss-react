@@ -1,6 +1,12 @@
 import Break from "../components/spacers/Break";
 import VirtualizedTable, { type FilterPreset } from "../components/tables/VirtualizedTable/VirtualizedTable";
 import Container from "../components/wrappers/Container";
+import { Highlight, themes } from 'prism-react-renderer';
+import { basicUse, columnsConfig, filterPresetsCode } from "./VirtualizedTablePageCode";
+
+
+
+
 
 
 
@@ -80,11 +86,12 @@ const filterPresets: FilterPreset[] = [
 
 export default function VirtualizedTablePage() {
   return (
+    /* INTRO  */
     <Container className="px-2 pt-24">
       <h1 className="mb-8 uppercase font-bold text-3xl">Virtualized Table</h1>
-      <p className="text-gray-700 mb-4">Table for rendering 1000s of rows of data efficiently using virtualization.</p>
+      <p className="text-gray-700 mb-8">Table for rendering 1000s of rows of data efficiently using virtualization.</p>
       <p className="text-gray-700">Features:</p>
-      <ul className="text-gray-700 list-disc mb-12">
+      <ul className="text-gray-700 list-disc mb-16">
         <li className="ml-8">Virtualized rendering for performance</li>
         <li className="ml-8">Fleible column height (unlike most virtualized tables)</li>
         <li className="ml-8">Column reordering (drag and drop column to reorder)</li>
@@ -99,6 +106,7 @@ export default function VirtualizedTablePage() {
         <li className="ml-8">Adjustability for developers (passing props to customize behavior & styles)</li>
       </ul>
 
+      {/* TABLE EXAMPLE */}
       <VirtualizedTable
         data={data} 
         height="500px"
@@ -115,6 +123,8 @@ export default function VirtualizedTablePage() {
           { column: 'actions', displayValue: 'Actions', width: '100px' },
         ]}
         filterPresets={filterPresets}
+        className="mb-16"
+        style={{}}
         controls={true}
         controlBarClassName=""
         controlBarStyle={{}}
@@ -122,7 +132,108 @@ export default function VirtualizedTablePage() {
         headerStyle={{}}
       />
 
-      <Break amount={4} />
+      {/* BASIC USE */}
+      <h2 className="mb-4 text-2xl uppercase font-semibold">Basic use</h2>
+      <p className="mb-8 text-gray-700">Just pass your data (object[]) as data prop to VirtualizedTable component:</p>
+
+      <Highlight
+        theme={themes.vsLight}
+        code={basicUse}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#eee' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+
+
+      {/* COLUMNS CONFIG */}
+      <h2 className="mb-4 text-2xl uppercase font-semibold">Columns Config</h2>
+      <p className="text-gray-700 mb-4">If you need to configure the columns of the table, you can do so by passing a columnsConfig prop to the VirtualizedTable component.</p> 
+      
+      <p className="text-gray-700">{`It is an array of {column, displayName, width} objects:`}</p>
+      <ul className="text-gray-700 list-disc mb-4">
+        <li className="ml-8">column: the object key in your data array</li>
+        <li className="ml-8">displayName: renames the column header. If your data is e.g.: {`id: 1`} and you want to rename the column to "User ID", you would set displayName to "User ID".</li>
+        <li className="ml-8">width custom column width (e.g. "100px", "20%")</li>
+      </ul>
+
+      <p className="text-gray-700 mb-8">{`The order in which you define the columns will be the order in which they appear in the table. E.g. if you define the columns as [ { column: 'id', ... }, { column: 'name', ... } ], the table will show the ID column first, followed by the Name column.`}</p>
+
+      <Highlight
+        theme={themes.vsLight}
+        code={columnsConfig}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#eee' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+
+
+      {/* OTHER PROPS */}
+      <h2 className="mb-4 text-2xl uppercase font-semibold">Other Props</h2>
+
+      <p className="text-gray-700 mb-4">{`In addition to the props mentioned above, the VirtualizedTable component also accepts the following props:`}</p>
+      <ul className="text-gray-700 list-disc mb-4">
+        <li className="ml-8">{`className: additional class names to apply to the table`}</li>
+        <li className="ml-8">{`style: additional styles to apply to the table`}</li>
+        <li className="ml-8">{`headerClassName: additional class names to apply to the table header`}</li>
+        <li className="ml-8">{`headerStyle: additional styles to apply to the table header`}</li>
+        <li className="ml-8">{`controlBarClassName: additional class names to apply to the control bar`}</li>
+        <li className="ml-8">{`controlBarStyle: additional styles to apply to the control bar`}</li>
+        <li className="ml-8">{`height: height of the table (e.g. "500px", "50vh")`}</li>
+        <li className="ml-8">{`horizontalSeparators: boolean to show/hide horizontal row separators`}</li>
+        <li className="ml-8">{`verticalSeparators: boolean to show/hide vertical column separators`}</li>
+        <li className="ml-8">{`controls: boolean to show/hide the control bar`}</li>
+      </ul>
+      <Break amount={3} />
+
+
+
+      {/* FILTER PRESETS */}
+      <h2 className="mb-4 text-2xl uppercase font-semibold">Filter Presets</h2>
+      <p className="text-gray-700">{`The VirtualizedTable component allows you to define filter presets that users can quickly apply to the table data.`}</p>
+      <p className="text-gray-700 mb-4">{`Filter presets are defined as an array of objects, each containing a label and a filter function:`}</p>
+      <Highlight
+        theme={themes.vsLight}
+        code={filterPresetsCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#eee' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
     </Container>
   )
 }
