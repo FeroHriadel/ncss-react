@@ -125,8 +125,50 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
       return String(cellValue);
     }
 
+    // Check if an element or its parents are interactive
+    function isInteractiveElement(element: EventTarget | null): boolean {
+      if (!(element instanceof HTMLElement)) return false;
+      
+      const tagName = element.tagName.toLowerCase();
+      const interactiveTags = ['button', 'a', 'input', 'textarea', 'select', 'label'];
+      
+      // Check if element itself is interactive
+      if (interactiveTags.includes(tagName)) return true;
+      
+      // Check if element has onclick handler
+      if (element.onclick) return true;
+      
+      // Check if element has role="button"
+      if (element.getAttribute('role') === 'button') return true;
+      
+      // Check if element is contenteditable
+      if (element.contentEditable === 'true') return true;
+      
+      // Check if element is disabled (should not be considered interactive for copying purposes)
+      if (element.hasAttribute('disabled')) return false;
+      
+      // Check if parent is interactive (up to 3 levels)
+      let parent = element.parentElement;
+      let depth = 0;
+      while (parent && depth < 3) {
+        const parentTag = parent.tagName.toLowerCase();
+        if (interactiveTags.includes(parentTag)) return true;
+        if (parent.onclick) return true;
+        if (parent.getAttribute('role') === 'button') return true;
+        parent = parent.parentElement;
+        depth++;
+      }
+      
+      return false;
+    }
+
     // Handle double-click to copy cell content
     function handleCellDoubleClick(cellValue: unknown, event: React.MouseEvent<HTMLTableCellElement>) {
+      // Don't copy if double-clicking on interactive element
+      if (isInteractiveElement(event.target)) {
+        return;
+      }
+      
       const textContent = extractTextFromCell(cellValue);
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(textContent)
