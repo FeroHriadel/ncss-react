@@ -125,28 +125,21 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
       return String(cellValue);
     }
 
-    // Check if an element or its parents are interactive
+    // Check if an element or its parents are interactive (so we can interact with html passed into cells and copy-to-clipboard or drag-to-scroll doesn't interfere)
     function isInteractiveElement(element: EventTarget | null): boolean {
       if (!(element instanceof HTMLElement)) return false;
-      
       const tagName = element.tagName.toLowerCase();
       const interactiveTags = ['button', 'a', 'input', 'textarea', 'select', 'label'];
-      
       // Check if element itself is interactive
       if (interactiveTags.includes(tagName)) return true;
-      
       // Check if element has onclick handler
       if (element.onclick) return true;
-      
       // Check if element has role="button"
       if (element.getAttribute('role') === 'button') return true;
-      
       // Check if element is contenteditable
       if (element.contentEditable === 'true') return true;
-      
       // Check if element is disabled (should not be considered interactive for copying purposes)
       if (element.hasAttribute('disabled')) return false;
-      
       // Check if parent is interactive (up to 3 levels)
       let parent = element.parentElement;
       let depth = 0;
@@ -158,7 +151,6 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
         parent = parent.parentElement;
         depth++;
       }
-      
       return false;
     }
 
@@ -168,20 +160,16 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
       if (isInteractiveElement(event.target)) {
         return;
       }
-      
       const textContent = extractTextFromCell(cellValue);
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(textContent)
           .then(() => {
-            console.log('Copied to clipboard:', textContent);
-            
             // Show notification at cursor position
             setCopyNotification({
               x: event.clientX,
               y: event.clientY,
               text: 'Copied!'
             });
-            
             // Hide notification after 1 second
             setTimeout(() => {
               setCopyNotification(null);
@@ -198,7 +186,6 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
     // Update scroll width on scroll
     function handleScrollWithUpdate(e: React.UIEvent<HTMLDivElement>) {
       handleNativeScroll(e);
-      
       if (tableRef.current) {
         const newWidth = tableRef.current.scrollWidth;
         if (newWidth !== tableScrollWidth) setTableScrollWidth(newWidth);
@@ -260,6 +247,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
       onWheel={handleWheelEvent}
       onScroll={handleScrollWithUpdate}
     >
+
       {/* Container with total virtual height */}
       <div
         style={{
@@ -268,6 +256,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
           position: 'relative',
         }}
       >
+
         {/* Table with absolutely positioned rows */}
         <table
           ref={tableRef}
@@ -284,11 +273,14 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
             backgroundColor: 'transparent',
           }}
         >
+
+          {/* Table Body */}
           <tbody role="rowgroup">
+
+            {/* Render virtualized rows */}
             {virtualItems.map((virtualRow) => {
               const row = data[virtualRow.index];
               const rowIndex = virtualRow.index;
-
               return (
                 <tr 
                   key={virtualRow.key}
@@ -311,7 +303,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
               {columns.map((col, colIndex) => {
                 const cellValue = row[col.column];
                 const renderedValue = renderCellValue(cellValue);
-                
+
                 // Apply vertical separator to all columns except last
                 const verticalSepClass = verticalSeparators && colIndex < columns.length - 1
                   ? 'border-r border-gray-200'

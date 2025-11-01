@@ -164,6 +164,7 @@ function VirtualizedTable({
 
     // RENDER
     return (
+      /* MAIN WRAPPER - WRAPS EVERYTHING */
       <section 
         ref={sectionRef}
         className={'virtualized-table-wrap rounded ' + (className || '')}
@@ -178,6 +179,7 @@ function VirtualizedTable({
         aria-label={ariaLabel || "Data table"}
         aria-describedby={ariaDescribedBy}
       >
+
         {/* Control Bar */}
         {controls && (
           <VirtualizedTableControlBar
@@ -211,6 +213,7 @@ function VirtualizedTable({
           aria-rowcount={filteredData.length}
           aria-colcount={filteredColumns.length}
         >
+          
           {/* Fixed Header */}
           <div className="flex">
             <div className="border-t border-l border-b border-gray-300 rounded-tl overflow-hidden flex-1">

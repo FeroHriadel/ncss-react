@@ -20,8 +20,8 @@ interface FilterState {
 
 
 
-
 export function useVirtualizedTableFilter({ data, columns }: UseVirtualizedTableFilterOptions) {
+  // STATE & VALUES
   // Filter state - centralized for all filter types
   const [filterState, setFilterState] = useState<FilterState>({ 
     columnsFilter: columns.map(col => col.column),
@@ -69,44 +69,34 @@ export function useVirtualizedTableFilter({ data, columns }: UseVirtualizedTable
   // Evaluate a single condition
   function evaluateCondition(row: VirtualizedTableProps['data'][0], condition: FilterRow): boolean {
     if (!condition.column || !condition.condition || !condition.value) return true;
-    
     const cellValue = row[condition.column];
     const normalizedCellValue = normalizeValue(cellValue).toLowerCase();
     const normalizedFilterValue = condition.value.toLowerCase();
-
     switch (condition.condition) {
       case 'equals':
         return normalizedCellValue === normalizedFilterValue;
-      
       case 'not_equals':
         return normalizedCellValue !== normalizedFilterValue;
-      
       case 'contains':
         return normalizedCellValue.includes(normalizedFilterValue);
-      
       case 'not_contains':
         return !normalizedCellValue.includes(normalizedFilterValue);
-      
       case 'starts_with':
         return normalizedCellValue.startsWith(normalizedFilterValue);
-      
       case 'ends_with':
         return normalizedCellValue.endsWith(normalizedFilterValue);
-      
       case 'greater_than': {
         const cellNum = parseFloat(normalizedCellValue);
         const filterNum = parseFloat(normalizedFilterValue);
         if (isNaN(cellNum) || isNaN(filterNum)) return false;
         return cellNum > filterNum;
       }
-      
       case 'less_than': {
         const cellNum = parseFloat(normalizedCellValue);
         const filterNum = parseFloat(normalizedFilterValue);
         if (isNaN(cellNum) || isNaN(filterNum)) return false;
         return cellNum < filterNum;
       }
-      
       case 'is_between': {
         // Expected format: "min,max"
         const [min, max] = normalizedFilterValue.split(',').map(v => parseFloat(v.trim()));
@@ -114,7 +104,6 @@ export function useVirtualizedTableFilter({ data, columns }: UseVirtualizedTable
         if (isNaN(cellNum) || isNaN(min) || isNaN(max)) return false;
         return cellNum >= min && cellNum <= max;
       }
-      
       default:
         return true;
     }
@@ -123,18 +112,14 @@ export function useVirtualizedTableFilter({ data, columns }: UseVirtualizedTable
   // Evaluate all conditions with AND/OR logic (single pass)
   function evaluateAllConditions(row: VirtualizedTableProps['data'][0]): boolean {
     if (filterState.conditions.length === 0) return true;
-
     let result = true;
     let currentOperator: 'and' | 'or' | null = null;
-
     for (const condition of filterState.conditions) {
       // Skip invalid conditions
       if (!condition.column || !condition.condition || !condition.value.trim()) {
         continue;
       }
-
       const conditionResult = evaluateCondition(row, condition);
-
       if (currentOperator === null) {
         // First condition
         result = conditionResult;
@@ -143,11 +128,9 @@ export function useVirtualizedTableFilter({ data, columns }: UseVirtualizedTable
       } else if (currentOperator === 'or') {
         result = result || conditionResult;
       }
-
       // Set operator for next iteration
       currentOperator = condition.operator as 'and' | 'or' | null;
     }
-
     return result;
   }
 
@@ -197,35 +180,28 @@ export function useVirtualizedTableFilter({ data, columns }: UseVirtualizedTable
   function sortComparator(a: unknown, b: unknown): number {
     const typeA = getValueType(a);
     const typeB = getValueType(b);
-
     // Handle null/undefined - always sort to end
     if (typeA === 'null' && typeB === 'null') return 0;
     if (typeA === 'null') return 1;
     if (typeB === 'null') return -1;
-
     // If types differ, compare as strings
     if (typeA !== typeB) {
       return normalizeValue(a).localeCompare(normalizeValue(b));
     }
-
     // Same type comparisons
     switch (typeA) {
       case 'number':
         return (a as number) - (b as number);
-      
       case 'boolean':
         return a === b ? 0 : a ? 1 : -1;
-      
       case 'string':
         return (a as string).localeCompare(b as string);
-      
       case 'react': {
         // Extract text from React elements
         const textA = normalizeValue(a);
         const textB = normalizeValue(b);
         return textA.localeCompare(textB);
       }
-      
       case 'array':
       case 'object': {
         // Stringify and compare
@@ -233,7 +209,6 @@ export function useVirtualizedTableFilter({ data, columns }: UseVirtualizedTable
         const strB = JSON.stringify(b);
         return strA.localeCompare(strB);
       }
-      
       default:
         return normalizeValue(a).localeCompare(normalizeValue(b));
     }
@@ -243,7 +218,6 @@ export function useVirtualizedTableFilter({ data, columns }: UseVirtualizedTable
 
   // Filtered data - apply row filtering based on conditions, then column filtering, then sorting
   const filteredData = useMemo(() => {
-    // Single iteration - apply all filters at once
     let result = data
       .filter(row => evaluateAllConditions(row)) // Filter rows based on conditions
       .map(row => {
@@ -256,7 +230,6 @@ export function useVirtualizedTableFilter({ data, columns }: UseVirtualizedTable
         });
         return filteredRow;
       });
-
     // Apply sorting if a column is selected
     if (filterState.sortColumn && filterState.sortDirection) {
       result = [...result].sort((a, b) => {
@@ -266,7 +239,6 @@ export function useVirtualizedTableFilter({ data, columns }: UseVirtualizedTable
         return filterState.sortDirection === 'asc' ? comparison : -comparison;
       });
     }
-
     return result;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, filterState]);
@@ -276,19 +248,28 @@ export function useVirtualizedTableFilter({ data, columns }: UseVirtualizedTable
   useEffect(() => {
     // Set loading state to true when operation starts
     setIsSorting(true);
-    
     // Use a small timeout to ensure the loading state is visible
     // and then set it to false after the computation is done
     const timeoutId = setTimeout(() => {
       setIsSorting(false);
-    }, 0);
-    
+    }, 100);
     return () => clearTimeout(timeoutId);
   }, [data, filterState]);
 
+    // Reset all filters to initial state
+    const resetFilters = () => {
+      setFilterState({
+        columnsFilter: columns.map(col => col.column),
+        columnOrder: columns.map(col => col.column),
+        conditions: [],
+        sortColumn: null,
+        sortDirection: null,
+      });
+    };
 
 
 
+  // MAIN STATE (filterdColumns) COMPUTATION
   // Filtered columns - only show selected columns in header - affect table header only (not table rows in table body!)
   const filteredColumns = useMemo(() => {
     //apply order first, then filter
@@ -299,17 +280,6 @@ export function useVirtualizedTableFilter({ data, columns }: UseVirtualizedTable
     return orderedColumns.filter(col => filterState.columnsFilter.includes(col.column));
   }, [columns, filterState.columnsFilter, filterState.columnOrder]);
 
-
-  // Reset all filters to initial state
-  const resetFilters = () => {
-    setFilterState({
-      columnsFilter: columns.map(col => col.column),
-      columnOrder: columns.map(col => col.column),
-      conditions: [],
-      sortColumn: null,
-      sortDirection: null,
-    });
-  };
 
 
   // Expose state and setters
