@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import * as React from 'react';
 import type { VirtualizedTableProps } from './VirtualizedTable';
 import type { FilterRow } from './VirtualizedTableFilter';
@@ -30,6 +30,9 @@ export function useVirtualizedTableFilter({ data, columns }: UseVirtualizedTable
     sortColumn: null,
     sortDirection: null,
   });
+
+  // Loading state - indicates when data is being filtered/sorted
+  const [isSorting, setIsSorting] = useState(false);
 
 
   // HELPER FUNCTIONS
@@ -269,6 +272,22 @@ export function useVirtualizedTableFilter({ data, columns }: UseVirtualizedTable
   }, [data, filterState]);
 
 
+  // Track when filtering/sorting is in progress
+  useEffect(() => {
+    // Set loading state to true when operation starts
+    setIsSorting(true);
+    
+    // Use a small timeout to ensure the loading state is visible
+    // and then set it to false after the computation is done
+    const timeoutId = setTimeout(() => {
+      setIsSorting(false);
+    }, 0);
+    
+    return () => clearTimeout(timeoutId);
+  }, [data, filterState]);
+
+
+
 
   // Filtered columns - only show selected columns in header - affect table header only (not table rows in table body!)
   const filteredColumns = useMemo(() => {
@@ -303,5 +322,6 @@ export function useVirtualizedTableFilter({ data, columns }: UseVirtualizedTable
     setFilterConditions,
     setSortColumn,
     resetFilters,
+    isSorting,
   };
 }

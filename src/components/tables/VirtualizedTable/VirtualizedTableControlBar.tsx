@@ -31,6 +31,7 @@ interface ControlBarProps {
   filterPresets?: FilterPreset[];
   controlBarClassName?: string;
   controlBarStyle?: React.CSSProperties;
+  isSorting: boolean; // Indicates if data is currently being filtered/sorted
 }
 
 
@@ -51,6 +52,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
   filterPresets,
   controlBarClassName,
   controlBarStyle,
+  isSorting,
 }) => {
 
   // Refs & values
@@ -124,7 +126,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
         {/*Left Side */}
         <div className="flex items-center flex-shrink-0">
           <span className="text-sm text-gray-600" role="status" aria-live="polite">
-            {resultCount} {resultCount === 1 ? 'result' : 'results'}
+            {isSorting ? 'Loading...' : `${resultCount} ${resultCount === 1 ? 'result' : 'results'}`}
           </span>
         </div>
 
