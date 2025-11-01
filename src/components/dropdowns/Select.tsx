@@ -12,6 +12,8 @@ export interface SelectProps {
 	id?: string;
 	style?: React.CSSProperties;
 	className?: string;
+	optionsClassName?: string;
+	optionsStyle?: React.CSSProperties;
 	trigger?: React.ReactNode;
 	disabled?: boolean;
 	title?: string;
@@ -37,6 +39,8 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 		id,
 		style,
 		className,
+		optionsClassName,
+		optionsStyle,
 		trigger,
 		disabled,
 		title = "Select Option",
@@ -46,7 +50,7 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 		onChange,
 		openX,
 		openY,
-		width
+		width,
 	},
 	ref
 ) {
@@ -56,7 +60,7 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 	const [selectedOption, setSelectedOption] = React.useState<string | null>(preselectedOption);
 
 	// Trigger width: ensure dropdown is at least as wide as the trigger (or 200px)
-	const triggerRef = React.useRef<HTMLButtonElement | null>(null);
+	const triggerRef = React.useRef<HTMLSpanElement | null>(null);
 	const [triggerWidth, setTriggerWidth] = React.useState<number>(0);
 
 	// Measurer for actual menu width (may exceed the CSS min-width)
@@ -100,13 +104,13 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 
 	function hasSpaceOnRight() {
 		if (openX === "left") return false;
-		if (!dropdownRef.current) return false;
-		const { right: dropdownRight } = dropdownRef.current.getBoundingClientRect();
+		if (!triggerRef.current) return false;
+		const { right: triggerRight } = triggerRef.current.getBoundingClientRect();
 		const menuWidth = (measuredMenuWidth && measuredMenuWidth > triggerWidth)
 			? measuredMenuWidth
 			: Math.max(triggerWidth || 0, 200);
 		const margin = 8;
-		return dropdownRight + menuWidth + margin <= window.innerWidth;
+		return triggerRight + menuWidth + margin <= window.innerWidth;
 	}
 
 	function handleOptionClick(value: string) {
@@ -140,16 +144,9 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 		return (
 			<div className={className ? `${className} relative` : 'relative'} style={{ width, ...style }} ref={dropdownRef} id={id}>
 				{trigger ? (
-					<button
-						type="button"
-						ref={triggerRef}
-						onClick={toggleDropdownOpen}
-						disabled={disabled}
-						title={title}
-						className="p-1 hover:bg-gray-200 rounded transition-colors"
-					>
+					<span ref={triggerRef} onClick={disabled ? undefined : toggleDropdownOpen} className="cursor-pointer inline-block">
 						{trigger}
-					</button>
+					</span>
 				) : (
 					<span ref={triggerRef} className="relative block">
 						<Button
@@ -170,19 +167,25 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 						>
 							{selectedOption
 								? options.find(opt => opt.value === selectedOption)?.displayValue
-								: title}
+								: title
+							}
 						</span>
 						<FaChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700 text-xs pointer-events-none" aria-hidden="true" />
 					</span>
 				)}
+
+				{/* Options Menu */}
 				{open && (
 					<div
-						className={`absolute ${hasSpaceBelow() ? 'top-full' : 'bottom-full'} ${hasSpaceOnRight() ? 'left-0' : 'right-0'} mt-1 bg-white border border-gray-300 rounded shadow-lg z-50`}
-						style={{ zIndex: 50, minWidth: `${effectiveMinWidth}px` }}
+						className={`absolute ${hasSpaceBelow() ? 'top-full mt-1' : 'bottom-full mb-1'} ${hasSpaceOnRight() ? 'left-0' : 'right-0'} bg-white border border-gray-300 rounded shadow-lg z-50 ${optionsClassName || ''}`}
+						style={{ zIndex: 50, minWidth: `${effectiveMinWidth}px`, ...optionsStyle }}
 					>
+						{/* Header title */}
 						<div className="p-2 border-b border-gray-200">
 							<span className="text-sm font-medium text-gray-700">{headerTitle || title}</span>
 						</div>
+
+						{/* Options List */}
 						<div className="options-wrap max-h-60 overflow-y-auto">
 							<ul className="list-none m-0 p-0">
 								{options.map(opt => (
