@@ -90,6 +90,90 @@ export const selectWithRefCode = `
   }
 `;
 
+export const dropdownCode = `
+  import Dropdown from "../components/dropdowns/Dropdown";
+  import Button from "../components/buttons/Button";
+  import { CiViewColumn } from "react-icons/ci";
+
+  <Dropdown
+    trigger={<Button variant="outline">Open Menu</Button>}
+    options={[
+      { render: <button className="flex justify-between items-center w-full bg-gray-200 text-left px-4 py-2">Edit <CiViewColumn className="" /></button> },
+      { render: <button className="flex gap-2 items-center w-full bg-gray-300 text-left px-4 py-2">Delete <a className="font-thin text-gray-500" href="#">link</a></button> },
+      { render: <button className="w-full bg-gray-400 text-left px-4 py-2">
+        <span className="rounded-full w-4 h-4 bg-gray-100 p-1 text-xs">OK</span>
+      </button> }
+    ]}
+    closeOnSelect={true}
+  />
+`;
+
+export const dropdownWithChildrenCode = `
+  import Dropdown from "../components/dropdowns/Dropdown";
+  import IconButton from "../components/buttons/IconButton";
+  import { BiDotsVerticalRounded } from "react-icons/bi";
+
+  <Dropdown
+    options={[
+      { render: <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Profile</button> },
+      { render: <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Settings</button> },
+      { render: <hr className="my-1" /> },
+      { render: <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600">Logout</button> }
+    ]}
+    closeOnSelect={true}
+  >
+    <IconButton icon={<BiDotsVerticalRounded />} title="More options" />
+  </Dropdown>
+`;
+
+export const dropdownWithRefCode = `
+  import Dropdown from "../components/dropdowns/Dropdown";
+  import type { DropdownHandle } from "../components/dropdowns/Dropdown";
+  import Button from "../components/buttons/Button";
+  import { useRef } from "react";
+
+  export default function MyComponent() {
+    const dropdownRef = useRef<DropdownHandle>(null);
+
+    const handleOpen = () => {
+      dropdownRef.current?.open();
+    };
+
+    const handleClose = () => {
+      dropdownRef.current?.close();
+    };
+
+    const handleToggle = () => {
+      dropdownRef.current?.toggle();
+    };
+
+    const handleCheckStatus = () => {
+      const open = dropdownRef.current?.isOpen();
+      alert(\`Dropdown is \${open ? 'open' : 'closed'}\`);
+    };
+
+    return (
+      <>
+        <Dropdown
+          ref={dropdownRef}
+          trigger={<Button variant="outline">Open Menu</Button>}
+          options={[
+            { render: <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Edit</button> },
+            { render: <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Delete</button> },
+            { render: <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Share</button> }
+          ]}
+          closeOnSelect={true}
+        />
+        
+        <button onClick={handleOpen}>Open Dropdown</button>
+        <button onClick={handleClose}>Close Dropdown</button>
+        <button onClick={handleToggle}>Toggle Dropdown</button>
+        <button onClick={handleCheckStatus}>Check Status</button>
+      </>
+    );
+  }
+`;
+
 export const multiSelectCode = `
   import MultiSelect from "../components/dropdowns/MultiSelect";
 

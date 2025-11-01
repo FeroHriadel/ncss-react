@@ -3,26 +3,35 @@ import Select from "../components/dropdowns/Select";
 import type { SelectHandle } from "../components/dropdowns/Select";
 import MultiSelect from "../components/dropdowns/MultiSelect";
 import type { MultiSelectHandle } from "../components/dropdowns/MultiSelect";
+import Dropdown from "../components/dropdowns/Dropdown";
+import type { DropdownHandle } from "../components/dropdowns/Dropdown";
 import Break from "../components/spacers/Break";
 import { Highlight, themes } from "prism-react-renderer";
-import { selectCode, selectWithTriggerCode, selectWithRefCode, multiSelectCode, multiSelectWithTriggerCode, multiSelectWithRefCode } from "../utils/DropdownsPageCode";
+import { selectCode, selectWithTriggerCode, selectWithRefCode, multiSelectCode, multiSelectWithTriggerCode, multiSelectWithRefCode, dropdownCode, dropdownWithChildrenCode, dropdownWithRefCode } from "../utils/DropdownsPageCode";
 import { useRef } from "react";
 import Card from "../components/cards/Card";
 import Button from "../components/buttons/Button";
 import IconButton from "../components/buttons/IconButton";
 import { CiViewColumn } from "react-icons/ci";
+import { BiDotsVerticalRounded } from "react-icons/bi";
 
 
 
 export default function DropdownsPage() {
   const selectRef = useRef<SelectHandle>(null);
   const multiSelectRef = useRef<MultiSelectHandle>(null);
+  const dropdownRef = useRef<DropdownHandle>(null);
 
   return (
     <Container className="px-2 pt-24">
       {/* INTRO */}
       <h1 className="mb-4 uppercase font-bold text-3xl">Dropdowns</h1>
       <p className="text-gray-800 text-lg mb-12">Dropdown components: <code>Select</code>, <code>Multiselect</code>, and <code>Dropdown</code>.</p>
+      <Card className="mb-12 p-4 bg-gray-50 flex flex-col gap-4">
+        <div><code>Select</code> is a more customizable html select element <br /></div>
+        <div><code>MultiSelect</code> is like <code>Select</code> but allows multiple selections <br /></div>
+        <div><code>Dropdown</code> is a a highly-adjustable dropdown container for custom content.</div>
+      </Card>
 
 
       {/* SELECT - BASIC USE */}
@@ -198,6 +207,27 @@ export default function DropdownsPage() {
       </Highlight>
       <Break amount={3} />
 
+      <Card className="bg-gray-50 border border-gray-200 rounded p-4 mb-12">
+        <h3 className="text-lg font-semibold mb-2">Select Props</h3>
+        <ul className="space-y-2">
+          <li><code>options</code> (required): Array of objects with <code>value</code> and <code>displayValue</code> properties</li>
+          <li><code>title</code> (optional, default: "Select Option"): Text shown in the trigger button when nothing is selected</li>
+          <li><code>headerTitle</code> (optional): Custom text for the dropdown header (defaults to <code>title</code>)</li>
+          <li><code>trigger</code> (optional): Custom React element to use as the dropdown trigger</li>
+          <li><code>onChange</code> (optional): Callback function called when selection changes</li>
+          <li><code>preselectedOption</code> (optional): Initial selected value</li>
+          <li><code>disabled</code> (optional): Disables the select component</li>
+          <li><code>openX</code> (optional): Direction to open horizontally ("left" | "right")</li>
+          <li><code>openY</code> (optional): Direction to open vertically ("up" | "down")</li>
+          <li><code>width</code> (optional): Width of the select component</li>
+          <li><code>className</code> (optional): Additional CSS classes for the wrapper element</li>
+          <li><code>style</code> (optional): Inline styles for the wrapper element</li>
+          <li><code>optionsClassName</code> (optional): Additional CSS classes for the dropdown menu</li>
+          <li><code>optionsStyle</code> (optional): Inline styles for the dropdown menu</li>
+          <li><code>id</code> (optional): HTML id attribute</li>
+        </ul>
+      </Card>
+
 
 
       { /* MULTISELECT - BASIC USE */ }
@@ -255,7 +285,7 @@ export default function DropdownsPage() {
           { value: 'option3', displayValue: 'Option 3' },
           { value: 'option4', displayValue: 'Option 4' }
         ]}
-        trigger={<IconButton icon={<CiViewColumn />} title="Select options" />}
+        trigger={<IconButton icon={<CiViewColumn size={24} />} title="Select options" />}
         onChange={(selectedOptions) => console.log('Selected:', selectedOptions)}
         openX="right"
         openY="down"
@@ -306,7 +336,7 @@ export default function DropdownsPage() {
             { value: 'option3', displayValue: 'Option 3' },
             { value: 'option4', displayValue: 'Option 4' }
           ]}
-          trigger={<IconButton icon={<CiViewColumn />} title="Select options" />}
+          trigger={<IconButton icon={<CiViewColumn size={24}/>} title="Select options" />}
           onChange={(selectedOptions) => console.log('Selected:', selectedOptions)}
           className="mb-4"
         />
@@ -375,6 +405,200 @@ export default function DropdownsPage() {
         )}
       </Highlight>
       <Break amount={3} />
+
+      <Card className="bg-gray-50 border border-gray-200 rounded p-4 mb-12">
+        <h3 className="text-lg font-semibold mb-2">MultiSelect Props</h3>
+        <ul className="space-y-2">
+          <li><code>options</code> (required): Array of objects with <code>value</code> and <code>displayValue</code> properties</li>
+          <li><code>title</code> (optional, default: "Select Options"): Text shown in the trigger button when nothing is selected</li>
+          <li><code>headerTitle</code> (optional): Custom text for the dropdown header (defaults to <code>title</code>)</li>
+          <li><code>trigger</code> (optional): Custom React element to use as the dropdown trigger</li>
+          <li><code>onChange</code> (optional): Callback function called when selection changes (receives array of selected values)</li>
+          <li><code>preselectedOptions</code> (optional): Array of initially selected values</li>
+          <li><code>disabled</code> (optional): Disables the multiselect component</li>
+          <li><code>openX</code> (optional): Direction to open horizontally ("left" | "right")</li>
+          <li><code>openY</code> (optional): Direction to open vertically ("up" | "down")</li>
+          <li><code>className</code> (optional): Additional CSS classes for the wrapper element</li>
+          <li><code>style</code> (optional): Inline styles for the wrapper element</li>
+          <li><code>optionsClassName</code> (optional): Additional CSS classes for the dropdown menu</li>
+          <li><code>optionsStyle</code> (optional): Inline styles for the dropdown menu</li>
+          <li><code>id</code> (optional): HTML id attribute</li>
+        </ul>
+      </Card>
+      <Break amount={3} />
+
+
+
+      {/* DROPDOWN - BASIC USE */}
+      <h2 className="mb-4 text-2xl uppercase font-semibold">Dropdown</h2>
+      <p className="text-gray-700 mb-4">
+        The <code>Dropdown</code> component is a more flexible alternative to <code>Select</code> and <code>MultiSelect</code>. 
+        Unlike those components, <code>Dropdown</code> does not manage state internally - it simply renders custom content in a dropdown menu. 
+        Each option's <code>render</code> prop can contain any React element, making it perfect for action menus, navigation menus, or custom UI elements.
+        You can include icons, links, nested elements, or any other React components within each option.
+      </p>
+
+      <Dropdown
+        trigger={<Button variant="outline">Open Menu</Button>}
+        options={[
+          { render: <button className="flex justify-between items-center w-full bg-gray-50 text-left px-4 py-2">Edit <CiViewColumn className="" /></button> },
+          { render: <button className="flex gap-2 items-center w-full bg-gray-100 text-left px-4 py-2">Delete <a className="font-thin text-gray-100" href="#">link</a></button> },
+          { render: <button className="w-full bg-gray-200 text-left px-4 py-2">
+            <span className="rounded-full w-4 h-4 bg-gray-300 p-2 text-xs">OK</span>
+            {' '}
+            I agree
+          </button> }
+        ]}
+        closeOnSelect={true}
+        className="mb-8"
+      />
+
+      <Highlight
+        theme={themes.vsLight}
+        code={dropdownCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      {/* DROPDOWN WITH CHILDREN */}
+      <p className="text-gray-700 mb-4">
+        Instead of using the <code>trigger</code> prop, you can pass the trigger element as <code>children</code>. 
+        This is useful when you want the trigger to be inline with your JSX:
+      </p>
+
+      <Dropdown
+        options={[
+          { render: <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Profile</button> },
+          { render: <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Settings</button> },
+          { render: <hr className="my-1" /> },
+          { render: <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600">Logout</button> }
+        ]}
+        closeOnSelect={true}
+        className="mb-8"
+      >
+        <IconButton icon={<BiDotsVerticalRounded size={24} />} title="More options" />
+      </Dropdown>
+
+      <Highlight
+        theme={themes.vsLight}
+        code={dropdownWithChildrenCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      {/* DROPDOWN IMPERATIVE HANDLE */}
+      <h2 className="mb-4 text-2xl uppercase font-semibold">Dropdown with Ref (Imperative Handle)</h2>
+      <p className="text-gray-700 mb-4">
+        Like <code>Select</code> and <code>MultiSelect</code>, the <code>Dropdown</code> component exposes methods through a ref for programmatic control.
+      </p>
+      
+      <Card className="mb-8 p-4">
+        <Dropdown
+          ref={dropdownRef}
+          trigger={<Button variant="outline">Open Menu</Button>}
+          options={[
+            { render: <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Edit</button> },
+            { render: <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Delete</button> },
+            { render: <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Share</button> }
+          ]}
+          closeOnSelect={true}
+        />
+
+        <div className="flex flex-wrap gap-2 mt-4">
+          <Button 
+            onClick={() => dropdownRef.current?.open()}
+            variant="dark"
+            size="sm"
+          >
+            Open Dropdown
+          </Button>
+          
+          <Button 
+            onClick={() => dropdownRef.current?.close()}
+            variant="dark"
+            size="sm"
+          >
+            Close Dropdown
+          </Button>
+
+          <Button 
+            onClick={() => dropdownRef.current?.toggle()}
+            variant="dark"
+            size="sm"
+          >
+            Toggle Dropdown
+          </Button>
+
+          <Button 
+            onClick={() => {
+              const open = dropdownRef.current?.isOpen();
+              alert(`Dropdown is ${open ? 'open' : 'closed'}`);
+            }}
+            variant="dark"
+            size="sm"
+          >
+            Check Status
+          </Button>
+        </div>
+      </Card>
+
+      <Highlight
+        theme={themes.vsLight}
+        code={dropdownWithRefCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+
+      <Card className="bg-gray-50 border border-gray-200 rounded p-4 mb-12 mt-8">
+        <h3 className="text-lg font-semibold mb-2">Dropdown Props</h3>
+        <ul className="space-y-2">
+          <li><code>options</code> (required): Array of objects with <code>render</code> property (any React element)</li>
+          <li><code>trigger</code> (optional): React element to use as the dropdown trigger</li>
+          <li><code>children</code> (optional): Alternative to <code>trigger</code> prop (children takes precedence)</li>
+          <li><code>closeOnSelect</code> (optional, default: true): Whether to close dropdown when an option is clicked</li>
+          <li><code>disabled</code> (optional): Disables the dropdown</li>
+          <li><code>className</code> (optional): Additional CSS classes for the wrapper element</li>
+          <li><code>style</code> (optional): Inline styles for the wrapper element</li>
+          <li><code>optionsClassName</code> (optional): Additional CSS classes for the dropdown menu</li>
+          <li><code>optionsStyle</code> (optional): Inline styles for the dropdown menu</li>
+          <li><code>id</code> (optional): HTML id attribute</li>
+        </ul>
+      </Card>
 
 
 

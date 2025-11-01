@@ -14,6 +14,8 @@ export interface MultiSelectProps {
   id?: string;
   style?: React.CSSProperties;
   className?: string;
+  optionsClassName?: string;
+  optionsStyle?: React.CSSProperties;
   trigger?: React.ReactNode;
   disabled?: boolean;
   title?: string;
@@ -40,6 +42,8 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
     id,
     style,
     className,
+    optionsClassName,
+    optionsStyle,
     trigger,
     disabled,
     title = "Select Options",
@@ -204,8 +208,8 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
       {/* Dropdown Body */}
       {open && (
         <div
-          className={`absolute ${hasSpaceBelow() ? 'top-full' : 'bottom-full'} ${hasSpaceOnRight() ? 'left-0' : 'right-0'} mt-1 bg-white border border-gray-300 rounded shadow-lg z-50`}
-          style={{ zIndex: 9999, width: `${effectiveMinWidth}px` }}
+          className={`absolute ${hasSpaceBelow() ? 'top-full' : 'bottom-full'} ${hasSpaceOnRight() ? 'left-0' : 'right-0'} mt-1 bg-white border border-gray-300 rounded shadow-lg z-50 ${optionsClassName || ''}`}
+          style={{ zIndex: 9999, width: `${effectiveMinWidth}px`, ...optionsStyle }}
           role="listbox"
           aria-label={title}
           aria-multiselectable="true"

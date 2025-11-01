@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, forwardRef, useImperativeHandle } from "react";
 
 
 
@@ -11,6 +11,8 @@ export interface DropdownProps {
   options: DropdownOption[];
   className?: string;
   style?: React.CSSProperties;
+  optionsClassName?: string;
+  optionsStyle?: React.CSSProperties;
   id?: string;
   disabled?: boolean;
   trigger?: React.ReactNode;
@@ -18,9 +20,19 @@ export interface DropdownProps {
   closeOnSelect?: boolean;
 }
 
+export interface DropdownHandle {
+  open: () => void;
+  close: () => void;
+  toggle: () => void;
+  isOpen: () => boolean;
+}
 
 
-export default function Dropdown({ options, className, style, id, disabled, trigger, children, closeOnSelect = true }: DropdownProps) {
+
+const Dropdown = forwardRef<DropdownHandle, DropdownProps>(function Dropdown(
+  { options, className, style, optionsClassName, optionsStyle, id, disabled, trigger, children, closeOnSelect = true },
+  ref
+) {
   
   // Refs & state & values
   const measureRef = useRef<HTMLUListElement>(null);
@@ -77,6 +89,14 @@ export default function Dropdown({ options, className, style, id, disabled, trig
     return spaceRight >= dropdownWidth;
   }
 
+  // Imperative handle methods exposed to parent via ref
+  useImperativeHandle(ref, () => ({
+    open: () => setIsOpen(true),
+    close: () => setIsOpen(false),
+    toggle: () => setIsOpen(prev => !prev),
+    isOpen: () => isOpen,
+  }), [isOpen]);
+
 
   // Render 
   return (
@@ -101,7 +121,10 @@ export default function Dropdown({ options, className, style, id, disabled, trig
         //options
         isOpen
         &&
-        <ul className={`dropdown-options absolute bg-white border border-gray-300 rounded-md shadow-lg mt-2 z-10 max-h-[${maxHeight}px] overflow-auto ${hasSpaceBelow() ? 'top-full' : 'bottom-full'} ${hasSpaceRight() ? 'left-0' : 'right-0'} min-w-[200px] ${className}`} >
+        <ul 
+          className={`dropdown-options absolute bg-white border border-gray-300 rounded-md shadow-lg mt-2 z-10 max-h-[${maxHeight}px] overflow-auto ${hasSpaceBelow() ? 'top-full' : 'bottom-full'} ${hasSpaceRight() ? 'left-0' : 'right-0'} min-w-[200px] ${optionsClassName || ''}`}
+          style={optionsStyle}
+        >
           {options.map((opt, index) => (
             <li 
               key={index} 
@@ -130,5 +153,6 @@ export default function Dropdown({ options, className, style, id, disabled, trig
       </ul>
     </div>
   );
-}
-    
+});
+
+export default Dropdown;
