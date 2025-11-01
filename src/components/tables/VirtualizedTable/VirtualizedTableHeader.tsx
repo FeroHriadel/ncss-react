@@ -171,9 +171,12 @@ const VirtualizedTableHeader: React.FC<VirtualizedTableHeaderProps> = ({
                   aria-colindex={index + 1}
                   aria-sort={sortColumn === col.column ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}
                 >
-                  <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-1">
                     <span>{col.displayValue}</span>
                     <span
+                      onMouseDown={(e) => {
+                        e.stopPropagation(); // Prevent drag from starting
+                      }}
                       onClick={(e) => {
                         e.stopPropagation();
                         setSortColumn(col.column);

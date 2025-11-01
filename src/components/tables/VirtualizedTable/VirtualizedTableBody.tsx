@@ -278,7 +278,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
                 return (
                   <td
                     key={col.column}
-                    className={verticalSepClass}
+                    className={`text-gray-700 ${verticalSepClass}`}
                     style={{
                       ...getColumnStyle(col),
                       padding: '0.375rem 0.75rem',

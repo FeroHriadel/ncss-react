@@ -2,7 +2,7 @@ import Break from "../components/spacers/Break";
 import VirtualizedTable, { type FilterPreset } from "../components/tables/VirtualizedTable/VirtualizedTable";
 import Container from "../components/wrappers/Container";
 import { Highlight, themes } from 'prism-react-renderer';
-import { basicUse, columnsConfig, filterPresetsCode } from "./VirtualizedTablePageCode";
+import { basicUse, columnsConfig, filterPresetsCode } from "../utils/VirtualizedTablePageCode";
 
 
 
@@ -88,8 +88,8 @@ export default function VirtualizedTablePage() {
   return (
     /* INTRO  */
     <Container className="px-2 pt-24">
-      <h1 className="mb-8 uppercase font-bold text-3xl">Virtualized Table</h1>
-      <p className="text-gray-700 mb-8">Table for rendering 1000s of rows of data efficiently using virtualization.</p>
+      <h1 className="mb-4 uppercase font-bold text-3xl">Virtualized Table</h1>
+      <p className="text-gray-800 text-lg mb-8">Table for rendering 1000s of rows of data efficiently using virtualization.</p>
       <p className="text-gray-700">Features:</p>
       <ul className="text-gray-700 list-disc mb-16">
         <li className="ml-8">Virtualized rendering for performance</li>
@@ -104,7 +104,10 @@ export default function VirtualizedTablePage() {
         <li className="ml-8">Customizable table height</li>
         <li className="ml-8">Mouse wheel & mouse drag scrolling, keyboard controlls: home, pgup, pgdn, home, end, arrow keys</li>
         <li className="ml-8">Adjustability for developers (passing props to customize behavior & styles)</li>
+        <li className="ml-8">Copying cell text to clipboard (double-click to copy)</li>
       </ul>
+
+
 
       {/* TABLE EXAMPLE */}
       <VirtualizedTable
@@ -131,6 +134,8 @@ export default function VirtualizedTablePage() {
         headerClassName=""
         headerStyle={{}}
       />
+
+
 
       {/* BASIC USE */}
       <h2 className="mb-4 text-2xl uppercase font-semibold">Basic use</h2>
