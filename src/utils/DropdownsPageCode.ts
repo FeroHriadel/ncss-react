@@ -89,3 +89,102 @@ export const selectWithRefCode = `
     );
   }
 `;
+
+export const multiSelectCode = `
+  import MultiSelect from "../components/dropdowns/MultiSelect";
+
+  <MultiSelect
+    title="Select Options"
+    headerTitle="Choose multiple:"
+    options={[
+      { value: 'option1', displayValue: 'Option 1' },
+      { value: 'option2', displayValue: 'Option 2' },
+      { value: 'option3', displayValue: 'Option 3' },
+      { value: 'option4', displayValue: 'Option 4' }
+    ]}
+    onChange={(selectedOptions) => console.log(selectedOptions)}
+    openX="right"
+    openY="down"
+    className="mb-8"
+    style={{ width: '220px' }}
+    // preselectedOptions={['option1', 'option2']}
+    // trigger={<IconButton icon={<CiViewColumn />} title="Select options" />}
+  />
+`;
+
+export const multiSelectWithTriggerCode = `
+  import MultiSelect from "../components/dropdowns/MultiSelect";
+  import IconButton from "../components/buttons/IconButton";
+  import { CiViewColumn } from "react-icons/ci";
+
+  <MultiSelect
+    title="Select Options"
+    headerTitle="Choose multiple:"
+    options={[
+      { value: 'option1', displayValue: 'Option 1' },
+      { value: 'option2', displayValue: 'Option 2' },
+      { value: 'option3', displayValue: 'Option 3' },
+      { value: 'option4', displayValue: 'Option 4' }
+    ]}
+    trigger={<IconButton icon={<CiViewColumn />} title="Select options" />}
+    onChange={(selectedOptions) => console.log(selectedOptions)}
+    openX="right"
+    openY="down"
+  />
+`;
+
+export const multiSelectWithRefCode = `
+  import MultiSelect from "../components/dropdowns/MultiSelect";
+  import type { MultiSelectHandle } from "../components/dropdowns/MultiSelect";
+  import IconButton from "../components/buttons/IconButton";
+  import { CiViewColumn } from "react-icons/ci";
+  import { useRef } from "react";
+
+  export default function MyComponent() {
+    const multiSelectRef = useRef<MultiSelectHandle>(null);
+
+    const handleGetSelected = () => {
+      const selected = multiSelectRef.current?.getSelectedOptions();
+      alert(\`Selected: \${selected?.join(', ') || 'None'}\`);
+    };
+
+    const handleSetOptions = () => {
+      multiSelectRef.current?.setSelectedOptions(['option1', 'option3']);
+    };
+
+    const handleClear = () => {
+      multiSelectRef.current?.clear();
+    };
+
+    const handleOpen = () => {
+      multiSelectRef.current?.open();
+    };
+
+    const handleClose = () => {
+      multiSelectRef.current?.close();
+    };
+
+    return (
+      <>
+        <MultiSelect
+          ref={multiSelectRef}
+          title="Select Options"
+          options={[
+            { value: 'option1', displayValue: 'Option 1' },
+            { value: 'option2', displayValue: 'Option 2' },
+            { value: 'option3', displayValue: 'Option 3' },
+            { value: 'option4', displayValue: 'Option 4' }
+          ]}
+          trigger={<IconButton icon={<CiViewColumn />} title="Select options" />}
+          onChange={(selectedOptions) => console.log(selectedOptions)}
+        />
+        
+        <button onClick={handleGetSelected}>Get Selected</button>
+        <button onClick={handleSetOptions}>Set Options 1 & 3</button>
+        <button onClick={handleClear}>Clear All</button>
+        <button onClick={handleOpen}>Open Dropdown</button>
+        <button onClick={handleClose}>Close Dropdown</button>
+      </>
+    );
+  }
+`;

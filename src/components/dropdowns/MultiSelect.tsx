@@ -1,5 +1,7 @@
 import React from "react";
 import { FaCheck as FaTick } from 'react-icons/fa';
+import { FaChevronDown } from 'react-icons/fa';
+import Button from '../buttons/Button';
 
 
 
@@ -12,9 +14,10 @@ export interface MultiSelectProps {
   id?: string;
   style?: React.CSSProperties;
   className?: string;
-  trigger: React.ReactNode;
+  trigger?: React.ReactNode;
   disabled?: boolean;
   title?: string;
+  headerTitle?: string; // Optional custom header text, if not provided uses title
   options: DropdownOption[];
   preselectedOptions?: string[];
   onChange?: (selectedOptions: string[]) => void;
@@ -38,7 +41,9 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
     style,
     className,
     trigger,
+    disabled,
     title = "Select Options",
+    headerTitle,
     options,
     preselectedOptions = [],
     onChange,
@@ -54,37 +59,21 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
   const [selectedOptions, setSelectedOptions] = React.useState<string[]>([...preselectedOptions]);
 
   // Trigger width: ensure dropdown is at least as wide as the trigger (or 200px)
-  const triggerRef = React.useRef<HTMLButtonElement | null>(null);
+  const triggerRef = React.useRef<HTMLSpanElement | null>(null);
   const [triggerWidth, setTriggerWidth] = React.useState<number>(0);
 
-  // Measurer for actual menu width (may exceed the CSS min-width)
-  const measurerRef = React.useRef<HTMLDivElement | null>(null);
-  const [measuredMenuWidth, setMeasuredMenuWidth] = React.useState<number | null>(null);
-
-  // Measure the offscreen menu width (safe to call repeatedly)
-  function measureMenuWidth(): void {
-    const node = measurerRef.current;
-    if (!node) return;
-    // offsetWidth includes padding/border; ensure a sensible minimum matching CSS min-w
-    const w = Math.max(node.offsetWidth || 0, 200);
-    setMeasuredMenuWidth(w);
-  }
-
-  // Measure on mount, when options / preselectedOptions change, and on resize
+  // Measure trigger width on mount, when options / preselectedOptions change, and on resize
   React.useEffect(() => {
-    // measure both trigger and menu content
-    function measureAll() {
-      // measure trigger
+    function measureTrigger() {
       const btn = triggerRef.current;
       if (btn) {
         const tw = Math.round(btn.getBoundingClientRect().width) || 0;
         setTriggerWidth(tw);
       }
-      measureMenuWidth();
     }
 
-    measureAll();
-    const handleResize = () => window.requestAnimationFrame(measureAll);
+    measureTrigger();
+    const handleResize = () => window.requestAnimationFrame(measureTrigger);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [options, preselectedOptions]);
@@ -107,13 +96,11 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
   // Should options open to the right or left
   function hasSpaceOnRight() {
     if (openX === "left") return false;
-    if (!dropdownRef.current) return false;
-    const { right: dropdownRight } = dropdownRef.current.getBoundingClientRect();
-    const menuWidth = (measuredMenuWidth && measuredMenuWidth > triggerWidth)
-      ? measuredMenuWidth
-      : Math.max(triggerWidth || 0, 200);
+    if (!triggerRef.current) return false;
+    const { right: triggerRight } = triggerRef.current.getBoundingClientRect();
+    const menuWidth = Math.max(triggerWidth || 0, 200);
     const margin = 8; // small gap from viewport edge
-    return dropdownRight + menuWidth + margin <= window.innerWidth;
+    return triggerRight + menuWidth + margin <= window.innerWidth;
   }
 
   // Handle option selection
@@ -148,45 +135,77 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
     close: () => setOpen(false),
   }), [selectedOptions, onChange]);
 
-  // Determine effective min width for visible dropdown: prefer measuredMenuWidth when
-  // it exceeds the trigger width; otherwise fall back to max(triggerWidth, 200)
-  const effectiveMinWidth = (measuredMenuWidth && measuredMenuWidth > triggerWidth)
-    ? measuredMenuWidth
-    : Math.max(triggerWidth || 0, 200);
+  // Determine effective width for dropdown: use trigger width with a minimum of 200px
+  const effectiveMinWidth = Math.max(triggerWidth || 0, 200);
+
+  // Get display text for default trigger
+  const getDisplayText = () => {
+    if (selectedOptions.length === 0) return title;
+    if (selectedOptions.length === 1) {
+      const opt = options.find(o => o.value === selectedOptions[0]);
+      return opt?.displayValue || title;
+    }
+    return `${selectedOptions.length} selected`;
+  };
 
 
   // Render
   return (
     <div className={className ? `${className} relative` : 'relative'} style={style} ref={dropdownRef} id={id}>
       
-      {/* Trigger Icon Button */}
-      <span
-        ref={triggerRef}
-        onClick={toggleDropdownOpen}
-        title={title}
-        role="button"
-        aria-haspopup="listbox"
-        aria-expanded={open}
-        aria-label={title}
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            toggleDropdownOpen();
-          }
-          if (e.key === 'Escape' && open) {
-            setOpen(false);
-          }
-        }}
-      >
-        {trigger}
-      </span>
+      {/* Trigger */}
+      {trigger ? (
+        <span
+          ref={triggerRef}
+          onClick={toggleDropdownOpen}
+          title={title}
+          role="button"
+          aria-haspopup="listbox"
+          aria-expanded={open}
+          aria-label={title}
+          tabIndex={0}
+          style={{ display: 'inline-block' }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              toggleDropdownOpen();
+            }
+            if (e.key === 'Escape' && open) {
+              setOpen(false);
+            }
+          }}
+        >
+          {trigger}
+        </span>
+      ) : (
+        <span ref={triggerRef} className="relative block">
+          <Button
+            onClick={toggleDropdownOpen}
+            disabled={disabled}
+            title={title}
+            variant="outline"
+            className="!justify-start active:scale-[1] w-full overflow-hidden"
+            style={{ width: '100%' }}
+          >
+            {/* Invisible placeholder to maintain button height */}
+            <span className="opacity-0">-</span>
+          </Button>
+          {/* Text overlay */}
+          <span 
+            className="absolute left-4 top-1/2 -translate-y-1/2 truncate text-left text-gray-700 text-md pointer-events-none"
+            style={{ maxWidth: 'calc(100% - 64px)' }}
+          >
+            {getDisplayText()}
+          </span>
+          <FaChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700 text-xs pointer-events-none" aria-hidden="true" />
+        </span>
+      )}
 
       {/* Dropdown Body */}
       {open && (
         <div
           className={`absolute ${hasSpaceBelow() ? 'top-full' : 'bottom-full'} ${hasSpaceOnRight() ? 'left-0' : 'right-0'} mt-1 bg-white border border-gray-300 rounded shadow-lg z-50`}
-          style={{ zIndex: 9999, minWidth: `${effectiveMinWidth}px` }}
+          style={{ zIndex: 9999, width: `${effectiveMinWidth}px` }}
           role="listbox"
           aria-label={title}
           aria-multiselectable="true"
@@ -194,7 +213,7 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
 
           {/* Dropdown Header */}
           <div className="p-2 border-b border-gray-200" role="presentation">
-            <span className="text-sm font-medium text-gray-700">{title}</span>
+            <span className="text-sm font-medium text-gray-700">{headerTitle || title}</span>
           </div>
 
           {/* Dropdown Options */}
@@ -234,40 +253,6 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
         </div>
       )}
 
-      {/* Offscreen measurer: mirrors the menu markup/styles so we can compute real width even when closed */}
-      <div
-        ref={measurerRef}
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          top: -99999,
-          left: -99999,
-          visibility: 'hidden',
-          pointerEvents: 'none',
-        }}
-      >
-        <div className="bg-white border border-gray-300 rounded shadow-lg min-w-[200px]">
-          <div className="p-2 border-b border-gray-200">
-            <span className="text-sm font-medium text-gray-700">{title}</span>
-          </div>
-          <div className="options-wrap max-h-60">
-            <ul className="list-none m-0 p-0">
-              {options.map(opt => (
-                <li key={opt.value}>
-                  <div className="w-full text-left p-2 flex items-center justify-between text-sm text-gray-700">
-                    <span className="truncate">{opt.displayValue}</span>
-                    {selectedOptions.includes(opt.value) ? (
-                      <FaTick className="ml-3 text-black text-xs flex-shrink-0" aria-hidden="true" />
-                    ) : (
-                      <span className="w-3" />
-                    )}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </div>
     </div>
   );
 });

@@ -123,7 +123,7 @@ const Button: React.FC<ButtonProps> = ({
       aria-haspopup={ariaHaspopup}
       aria-disabled={disabled}
     >
-      <span className="leading-none p-0 m-0 flex justify-center items-center -translate-y-[1px]">
+      <span className="leading-none p-0 m-0 flex justify-center items-center">
         {children}
       </span>
     </button>
