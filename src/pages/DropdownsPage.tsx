@@ -30,7 +30,7 @@ export default function DropdownsPage() {
       <Card className="mb-12 p-4 bg-gray-100 flex flex-col gap-4">
         <a href="#select"><div><code>Select</code> is a more customizable html select element <br /></div></a>
         <a href="#multiselect"><div><code>MultiSelect</code> is like <code>Select</code> but allows multiple selections <br /></div></a>
-        <a href="#dropdown"><div><code>Dropdown</code> is intended to be a highly-adjustable "Select" container for custom content.</div></a>
+        <a href="#dropdown"><div><code>Dropdown</code> is intended to be a highly-adjustable "Select" container for custom content. It doesn't handle option click for you - you pass the custom onClick() handler to the option that suits your needs. E.g.: redirectTo, myFunction(), location.reload()...</div></a>
       </Card>
       <hr />
       <Break amount={3} />
