@@ -27,20 +27,22 @@ export default function DropdownsPage() {
       {/* INTRO */}
       <h1 className="mb-4 uppercase font-bold text-3xl">Dropdowns</h1>
       <p className="text-gray-800 text-lg mb-12">Dropdown components: <code>Select</code>, <code>Multiselect</code>, and <code>Dropdown</code>.</p>
-      <Card className="mb-12 p-4 bg-gray-50 flex flex-col gap-4">
-        <div><code>Select</code> is a more customizable html select element <br /></div>
-        <div><code>MultiSelect</code> is like <code>Select</code> but allows multiple selections <br /></div>
-        <div><code>Dropdown</code> is a a highly-adjustable dropdown container for custom content.</div>
+      <Card className="mb-12 p-4 bg-gray-100 flex flex-col gap-4">
+        <a href="#select"><div><code>Select</code> is a more customizable html select element <br /></div></a>
+        <a href="#multiselect"><div><code>MultiSelect</code> is like <code>Select</code> but allows multiple selections <br /></div></a>
+        <a href="#dropdown"><div><code>Dropdown</code> is intended to be a highly-adjustable "Select" container for custom content.</div></a>
       </Card>
+      <hr />
+      <Break amount={3} />
 
 
       {/* SELECT - BASIC USE */}
-      <h2 className="mb-4 text-2xl uppercase font-semibold">Select</h2>
+      <h2 className="mb-4 text-2xl uppercase font-semibold" id="select">Select</h2>
       <p className="text-gray-700 mb-4">The <code>Select</code> component mimics the HTML <code>select</code> element but offers more customization options. Basic use would look like this (only the options prop is required) :</p>
 
       <Select
         title="Select an Option"
-        headerTitle="Please choose one:"
+        headerTitle="Please choose one"
         options={[
           { value: 'option1', displayValue: 'Option 1' },
           { value: 'option2', displayValue: 'Option 2' },
@@ -111,7 +113,7 @@ export default function DropdownsPage() {
       </Highlight>
       <Break amount={3} />
 
-      {/* REF & IMPERATIVE HANDLING */}
+      {/* SELECT - REF & IMPERATIVE HANDLING */}
       <h2 className="mb-4 text-2xl uppercase font-semibold">Using Ref (Imperative Handle)</h2>
       <p className="text-gray-700 mb-4">
         The <code>Select</code> component exposes methods through a ref that allow you to control it programmatically. 
@@ -128,7 +130,7 @@ export default function DropdownsPage() {
         <li className="ml-8 pb-1"><code>close()</code> - Closes the dropdown menu</li>
       </ul>
 
-      <Card className="mb-8 p-4 bg-gray-50">
+      <Card className="mb-8 p-4 bg-gray-100">
         <Select
           ref={selectRef}
           title="Select an Option"
@@ -207,7 +209,7 @@ export default function DropdownsPage() {
       </Highlight>
       <Break amount={3} />
 
-      <Card className="bg-gray-50 border border-gray-200 rounded p-4 mb-12">
+      <Card className="bg-gray-100 border border-gray-200 rounded p-4 mb-12">
         <h3 className="text-lg font-semibold mb-2">Select Props</h3>
         <ul className="space-y-2">
           <li><code>options</code> (required): Array of objects with <code>value</code> and <code>displayValue</code> properties</li>
@@ -227,11 +229,13 @@ export default function DropdownsPage() {
           <li><code>id</code> (optional): HTML id attribute</li>
         </ul>
       </Card>
+      <hr />
+      <Break amount={3} />
 
 
 
       { /* MULTISELECT - BASIC USE */ }
-      <h2 className="mb-4 text-2xl uppercase font-semibold">MultiSelect</h2>
+      <h2 className="mb-4 text-2xl uppercase font-semibold" id="multiselect">MultiSelect</h2>
       <p className="text-gray-700 mb-4">
         The <code>MultiSelect</code> component allows users to select multiple options from a dropdown list. 
         Like <code>Select</code>, it can render with a default button-style trigger or accept a custom trigger element. 
@@ -326,7 +330,7 @@ export default function DropdownsPage() {
         <li className="ml-8 pb-1"><code>close()</code> - Closes the dropdown menu</li>
       </ul>
 
-      <Card className="mb-8 p-4 bg-gray-50">
+      <Card className="mb-8 p-4 bg-gray-100">
         <MultiSelect
           ref={multiSelectRef}
           title="Select Options"
@@ -406,7 +410,7 @@ export default function DropdownsPage() {
       </Highlight>
       <Break amount={3} />
 
-      <Card className="bg-gray-50 border border-gray-200 rounded p-4 mb-12">
+      <Card className="bg-gray-100 border border-gray-200 rounded p-4 mb-12">
         <h3 className="text-lg font-semibold mb-2">MultiSelect Props</h3>
         <ul className="space-y-2">
           <li><code>options</code> (required): Array of objects with <code>value</code> and <code>displayValue</code> properties</li>
@@ -425,12 +429,13 @@ export default function DropdownsPage() {
           <li><code>id</code> (optional): HTML id attribute</li>
         </ul>
       </Card>
+      <hr />
       <Break amount={3} />
 
 
 
       {/* DROPDOWN - BASIC USE */}
-      <h2 className="mb-4 text-2xl uppercase font-semibold">Dropdown</h2>
+      <h2 className="mb-4 text-2xl uppercase font-semibold" id="dropdown">Dropdown</h2>
       <p className="text-gray-700 mb-4">
         The <code>Dropdown</code> component is a more flexible alternative to <code>Select</code> and <code>MultiSelect</code>. 
         Unlike those components, <code>Dropdown</code> does not manage state internally - it simply renders custom content in a dropdown menu. 
@@ -444,9 +449,11 @@ export default function DropdownsPage() {
           { render: <button className="flex justify-between items-center w-full bg-gray-50 text-left px-4 py-2">Edit <CiViewColumn className="" /></button> },
           { render: <button className="flex gap-2 items-center w-full bg-gray-100 text-left px-4 py-2">Delete <a className="font-thin text-gray-100" href="#">link</a></button> },
           { render: <button className="w-full bg-gray-200 text-left px-4 py-2">
-            <span className="rounded-full w-4 h-4 bg-gray-300 p-2 text-xs">OK</span>
+            Customizable content
             {' '}
-            I agree
+            ===
+            {' '}
+            <span className="rounded-full w-4 h-4 bg-gray-300 p-2 text-xs">OK</span>
           </button> }
         ]}
         closeOnSelect={true}
@@ -516,7 +523,7 @@ export default function DropdownsPage() {
         Like <code>Select</code> and <code>MultiSelect</code>, the <code>Dropdown</code> component exposes methods through a ref for programmatic control.
       </p>
       
-      <Card className="mb-8 p-4">
+      <Card className="mb-8 p-4 bg-gray-100">
         <Dropdown
           ref={dropdownRef}
           trigger={<Button variant="outline">Open Menu</Button>}
@@ -584,7 +591,7 @@ export default function DropdownsPage() {
         )}
       </Highlight>
 
-      <Card className="bg-gray-50 border border-gray-200 rounded p-4 mb-12 mt-8">
+      <Card className="bg-gray-100 border border-gray-200 rounded p-4 mb-12 mt-8">
         <h3 className="text-lg font-semibold mb-2">Dropdown Props</h3>
         <ul className="space-y-2">
           <li><code>options</code> (required): Array of objects with <code>render</code> property (any React element)</li>
