@@ -188,3 +188,54 @@ export const textareaHeightCode = `import Textarea from '../components/inputs/Te
   onChange={(e) => setDescription(e.target.value)}
   height="200px"
 />`;
+
+export const checkboxCode = `import Checkbox from '../components/inputs/Checkbox';
+
+<Checkbox
+  label="Accept terms and conditions"
+  checked={accepted}
+  onChange={(checked) => setAccepted(checked)}
+/>`;
+
+export const checkboxControlledCode = `import { useState } from 'react';
+import Checkbox from '../components/inputs/Checkbox';
+
+const [isChecked, setIsChecked] = useState(false);
+
+<Checkbox
+  label="I agree"
+  checked={isChecked}
+  onChange={(checked) => setIsChecked(checked)}
+/>`;
+
+export const checkboxRefCode = `import { useRef } from 'react';
+import Checkbox, { CheckboxHandle } from '../components/inputs/Checkbox';
+
+const checkboxRef = useRef<CheckboxHandle>(null);
+
+<Checkbox
+  label="Subscribe to newsletter"
+  ref={checkboxRef}
+/>
+
+// Get checked status
+const isChecked = checkboxRef.current?.getChecked();
+
+// Programmatically check/uncheck
+checkboxRef.current?.setChecked(true);
+checkboxRef.current?.setChecked(false);`;
+
+export const checkboxDisabledCode = `import Checkbox from '../components/inputs/Checkbox';
+
+<Checkbox
+  label="Disabled unchecked"
+  checked={false}
+  disabled
+/>
+
+<Checkbox
+  label="Disabled checked"
+  checked={true}
+  disabled
+/>`;
+

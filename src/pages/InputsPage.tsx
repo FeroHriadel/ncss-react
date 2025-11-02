@@ -8,6 +8,8 @@ import type { EmailHandle } from "../components/inputs/Email";
 import Password from "../components/inputs/Password";
 import type { PasswordHandle } from "../components/inputs/Password";
 import Textarea from "../components/inputs/Textarea";
+import Checkbox from "../components/inputs/Checkbox";
+import type { CheckboxHandle } from "../components/inputs/Checkbox";
 import Button from "../components/buttons/Button";
 import { Highlight, themes } from "prism-react-renderer";
 import { 
@@ -22,12 +24,17 @@ import {
   passwordVisibilityCode,
   textareaCode,
   textareaWithErrorCode,
-  textareaHeightCode
+  textareaHeightCode,
+  checkboxCode,
+  checkboxControlledCode,
+  checkboxRefCode,
+  checkboxDisabledCode
 } from "../utils/InputsPageCode";
 
 export default function InputsPage() {
   const [username, setUsername] = useState('');
   const [description, setDescription] = useState('');
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -35,6 +42,7 @@ export default function InputsPage() {
   
   const emailRef = useRef<EmailHandle>(null);
   const passwordRef = useRef<PasswordHandle>(null);
+  const checkboxRef = useRef<CheckboxHandle>(null);
 
   const handleValidateEmail = () => {
     const errors = emailRef.current?.validate();
@@ -60,12 +68,13 @@ export default function InputsPage() {
     <Container className="px-2 pt-24">
       {/* INTRO */}
       <h1 className="mb-4 uppercase font-bold text-3xl">Input Components</h1>
-      <p className="text-gray-800 text-lg mb-12">Input components: <code>Input</code>, <code>Email</code>, <code>Password</code>, <code>Textarea</code></p>
+      <p className="text-gray-800 text-lg mb-12">Input components: <code>Input</code>, <code>Email</code>, <code>Password</code>, <code>Textarea</code>, <code>Checkbox</code></p>
       <Card className="mb-12 p-4 bg-gray-100 flex flex-col gap-4">
         <a href="#input"><div><code>Input</code> is a basic text input with label, error, and message support <br /></div></a>
         <a href="#email"><div><code>Email</code> is like Input but with email validation exposed via imperative handle <br /></div></a>
         <a href="#password"><div><code>Password</code> is like Input but with password visibility toggle and validation rules <br /></div></a>
         <a href="#textarea"><div><code>Textarea</code> is a multi-line text input with the same functionality as Input <br /></div></a>
+        <a href="#checkbox"><div><code>Checkbox</code> is a checkbox input with custom styling and imperative handle for programmatic control <br /></div></a>
       </Card>
       <hr />
       <Break amount={3} />
@@ -596,6 +605,185 @@ export default function InputsPage() {
           <li><code>name</code> (optional): Textarea name attribute</li>
           <li><code>id</code> (optional): Textarea id attribute</li>
           <li><code>title</code> (optional): Textarea title attribute</li>
+        </ul>
+      </Card>
+      <Break amount={3} />
+
+      {/* CHECKBOX */}
+      <hr />
+      <Break amount={3} />
+      <h2 className="mb-4 text-2xl uppercase font-semibold" id="checkbox">Checkbox</h2>
+      <p className="text-gray-700 mb-4">
+        The <code>Checkbox</code> component provides a custom-styled checkbox with label support and imperative handle for programmatic control.
+      </p>
+
+      <Checkbox
+        label="Subscribe to newsletter"
+        onChange={(e) => console.log('Checkbox changed:', e.target.checked)}
+        className="mb-8"
+      />
+
+      <Highlight
+        theme={themes.vsLight}
+        code={checkboxCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      {/* CHECKBOX CONTROLLED */}
+      <h3 className="mb-4 text-xl font-semibold">Controlled Checkbox</h3>
+      <p className="text-gray-700 mb-4">Control the checkbox state from parent component:</p>
+
+      <div className="mb-4">
+        <Checkbox
+          label="Accept terms and conditions"
+          checked={acceptTerms}
+          onChange={(e) => setAcceptTerms(e.target.checked)}
+          className="mb-2"
+        />
+        <p className="text-sm text-gray-600">Accepted: {acceptTerms ? 'Yes' : 'No'}</p>
+      </div>
+
+      <Highlight
+        theme={themes.vsLight}
+        code={checkboxControlledCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      {/* CHECKBOX WITH REF */}
+      <h3 className="mb-4 text-xl font-semibold">Checkbox with Imperative Handle</h3>
+      <p className="text-gray-700 mb-4">Use ref to programmatically get or set the checkbox state:</p>
+
+      <div className="mb-4">
+        <Checkbox
+          label="Enable notifications"
+          ref={checkboxRef}
+          className="mb-2"
+        />
+        <div className="flex gap-2">
+          <Button
+            onClick={() => {
+              const isChecked = checkboxRef.current?.getChecked();
+              alert(`Checkbox is ${isChecked ? 'checked' : 'unchecked'}`);
+            }}
+          >
+            Get State
+          </Button>
+          <Button
+            onClick={() => {
+              checkboxRef.current?.setChecked(true);
+            }}
+          >
+            Check
+          </Button>
+          <Button
+            onClick={() => {
+              checkboxRef.current?.setChecked(false);
+            }}
+          >
+            Uncheck
+          </Button>
+        </div>
+      </div>
+
+      <Highlight
+        theme={themes.vsLight}
+        code={checkboxRefCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      {/* CHECKBOX DISABLED */}
+      <h3 className="mb-4 text-xl font-semibold">Disabled Checkboxes</h3>
+      <p className="text-gray-700 mb-4">Disabled checkboxes cannot be interacted with:</p>
+
+      <div className="flex gap-4 mb-8">
+        <Checkbox
+          label="Disabled unchecked"
+          disabled
+        />
+        <Checkbox
+          label="Disabled checked"
+          checked={true}
+          disabled
+        />
+      </div>
+
+      <Highlight
+        theme={themes.vsLight}
+        code={checkboxDisabledCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      <Card className="bg-gray-100 border border-gray-200 rounded p-4 mb-4">
+        <h3 className="text-lg font-semibold mb-2">Checkbox Props</h3>
+        <ul className="space-y-2">
+          <li><code>checked</code> (optional): Controlled checked state</li>
+          <li><code>disabled</code> (optional): Disables the checkbox</li>
+          <li><code>label</code> (optional): Label text displayed next to checkbox</li>
+          <li><code>onChange</code> (optional): Change handler function</li>
+          <li><code>className</code> (optional): Additional CSS classes</li>
+          <li><code>id</code> (optional): Checkbox id attribute</li>
+          <li><code>name</code> (optional): Checkbox name attribute</li>
+        </ul>
+      </Card>
+
+      <Card className="bg-blue-50 border border-blue-200 rounded p-4 mb-12">
+        <h3 className="text-lg font-semibold mb-2">Checkbox Imperative Handle</h3>
+        <p className="text-gray-700 mb-2">Methods available via ref:</p>
+        <ul className="space-y-2">
+          <li><code>getChecked()</code>: Returns the current checked state (boolean)</li>
+          <li><code>setChecked(checked: boolean)</code>: Programmatically set the checked state</li>
         </ul>
       </Card>
       <Break amount={3} />
