@@ -239,3 +239,69 @@ export const checkboxDisabledCode = `import Checkbox from '../components/inputs/
   disabled
 />`;
 
+export const switchCode = `import Switch from '../components/inputs/Switch';
+
+<Switch
+  label="Enable notifications"
+  onChange={(e) => console.log('Switch changed:', e.target.checked)}
+/>`;
+
+export const switchControlledCode = `import { useState } from 'react';
+import Switch from '../components/inputs/Switch';
+
+const [isEnabled, setIsEnabled] = useState(false);
+
+<Switch
+  label="Dark mode"
+  checked={isEnabled}
+  onChange={(e) => setIsEnabled(e.target.checked)}
+/>`;
+
+export const switchRefCode = `import { useRef } from 'react';
+import Switch, { SwitchHandle } from '../components/inputs/Switch';
+
+const switchRef = useRef<SwitchHandle>(null);
+
+<Switch
+  label="Auto-save"
+  ref={switchRef}
+/>
+
+// Get checked status
+const isEnabled = switchRef.current?.getChecked();
+
+// Programmatically toggle
+switchRef.current?.setChecked(true);
+switchRef.current?.setChecked(false);`;
+
+export const switchDisabledCode = `import Switch from '../components/inputs/Switch';
+
+<Switch
+  label="Disabled off"
+  checked={false}
+  disabled
+/>
+
+<Switch
+  label="Disabled on"
+  checked={true}
+  disabled
+/>`;
+
+export const switchSizesCode = `import Switch from '../components/inputs/Switch';
+
+<Switch
+  label="Small"
+  width="36px"
+  height="20px"
+/>
+
+<Switch
+  label="Default"
+/>
+
+<Switch
+  label="Large"
+  width="60px"
+  height="32px"
+/>`;

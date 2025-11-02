@@ -10,6 +10,8 @@ import type { PasswordHandle } from "../components/inputs/Password";
 import Textarea from "../components/inputs/Textarea";
 import Checkbox from "../components/inputs/Checkbox";
 import type { CheckboxHandle } from "../components/inputs/Checkbox";
+import Switch from "../components/inputs/Switch";
+import type { SwitchHandle } from "../components/inputs/Switch";
 import Button from "../components/buttons/Button";
 import { Highlight, themes } from "prism-react-renderer";
 import { 
@@ -28,13 +30,20 @@ import {
   checkboxCode,
   checkboxControlledCode,
   checkboxRefCode,
-  checkboxDisabledCode
+  checkboxDisabledCode,
+  switchCode,
+  switchControlledCode,
+  switchRefCode,
+  switchDisabledCode,
+  switchSizesCode
 } from "../utils/InputsPageCode";
 
 export default function InputsPage() {
   const [username, setUsername] = useState('');
   const [description, setDescription] = useState('');
   const [acceptTerms, setAcceptTerms] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+  const [autoSave, setAutoSave] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -43,6 +52,7 @@ export default function InputsPage() {
   const emailRef = useRef<EmailHandle>(null);
   const passwordRef = useRef<PasswordHandle>(null);
   const checkboxRef = useRef<CheckboxHandle>(null);
+  const switchRef = useRef<SwitchHandle>(null);
 
   const handleValidateEmail = () => {
     const errors = emailRef.current?.validate();
@@ -68,13 +78,14 @@ export default function InputsPage() {
     <Container className="px-2 pt-24">
       {/* INTRO */}
       <h1 className="mb-4 uppercase font-bold text-3xl">Input Components</h1>
-      <p className="text-gray-800 text-lg mb-12">Input components: <code>Input</code>, <code>Email</code>, <code>Password</code>, <code>Textarea</code>, <code>Checkbox</code></p>
+      <p className="text-gray-800 text-lg mb-12">Input components: <code>Input</code>, <code>Email</code>, <code>Password</code>, <code>Textarea</code>, <code>Checkbox</code>, <code>Switch</code></p>
       <Card className="mb-12 p-4 bg-gray-100 flex flex-col gap-4">
         <a href="#input"><div><code>Input</code> is a basic text input with label, error, and message support <br /></div></a>
         <a href="#email"><div><code>Email</code> is like Input but with email validation exposed via imperative handle <br /></div></a>
         <a href="#password"><div><code>Password</code> is like Input but with password visibility toggle and validation rules <br /></div></a>
         <a href="#textarea"><div><code>Textarea</code> is a multi-line text input with the same functionality as Input <br /></div></a>
         <a href="#checkbox"><div><code>Checkbox</code> is a checkbox input with custom styling and imperative handle for programmatic control <br /></div></a>
+        <a href="#switch"><div><code>Switch</code> is a toggle switch with animated thumb and imperative handle for programmatic control <br /></div></a>
       </Card>
       <hr />
       <Break amount={3} />
@@ -780,6 +791,230 @@ export default function InputsPage() {
 
       <Card className="bg-blue-50 border border-blue-200 rounded p-4 mb-12">
         <h3 className="text-lg font-semibold mb-2">Checkbox Imperative Handle</h3>
+        <p className="text-gray-700 mb-2">Methods available via ref:</p>
+        <ul className="space-y-2">
+          <li><code>getChecked()</code>: Returns the current checked state (boolean)</li>
+          <li><code>setChecked(checked: boolean)</code>: Programmatically set the checked state</li>
+        </ul>
+      </Card>
+      <Break amount={3} />
+
+      {/* SWITCH */}
+      <hr />
+      <Break amount={3} />
+      <h2 className="mb-4 text-2xl uppercase font-semibold" id="switch">Switch</h2>
+      <p className="text-gray-700 mb-4">
+        The <code>Switch</code> component provides a toggle switch with an animated sliding thumb and imperative handle for programmatic control.
+      </p>
+
+      <Switch
+        label="Enable notifications"
+        onChange={(e) => console.log('Switch changed:', e.target.checked)}
+        className="mb-8"
+      />
+
+      <Highlight
+        theme={themes.vsLight}
+        code={switchCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      {/* SWITCH CONTROLLED */}
+      <h3 className="mb-4 text-xl font-semibold">Controlled Switch</h3>
+      <p className="text-gray-700 mb-4">Control the switch state from parent component:</p>
+
+      <div className="mb-4">
+        <Switch
+          label="Dark mode"
+          checked={darkMode}
+          onChange={(e) => setDarkMode(e.target.checked)}
+          className="mb-2"
+        />
+        <p className="text-sm text-gray-600">Dark mode is: {darkMode ? 'On' : 'Off'}</p>
+      </div>
+
+      <Highlight
+        theme={themes.vsLight}
+        code={switchControlledCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      {/* SWITCH WITH REF */}
+      <h3 className="mb-4 text-xl font-semibold">Switch with Imperative Handle</h3>
+      <p className="text-gray-700 mb-4">Use ref to programmatically get or set the switch state:</p>
+
+      <div className="mb-4">
+        <Switch
+          label="Auto-save"
+          checked={autoSave}
+          onChange={(e) => setAutoSave(e.target.checked)}
+          ref={switchRef}
+          className="mb-2"
+        />
+        <div className="flex gap-2">
+          <Button
+            onClick={() => {
+              const isEnabled = switchRef.current?.getChecked();
+              alert(`Auto-save is ${isEnabled ? 'enabled' : 'disabled'}`);
+            }}
+          >
+            Get State
+          </Button>
+          <Button
+            onClick={() => {
+              switchRef.current?.setChecked(true);
+              setAutoSave(true);
+            }}
+          >
+            Enable
+          </Button>
+          <Button
+            onClick={() => {
+              switchRef.current?.setChecked(false);
+              setAutoSave(false);
+            }}
+          >
+            Disable
+          </Button>
+        </div>
+      </div>
+
+      <Highlight
+        theme={themes.vsLight}
+        code={switchRefCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      {/* SWITCH DISABLED */}
+      <h3 className="mb-4 text-xl font-semibold">Disabled Switches</h3>
+      <p className="text-gray-700 mb-4">Disabled switches cannot be interacted with:</p>
+
+      <div className="flex gap-4 mb-8">
+        <Switch
+          label="Disabled off"
+          disabled
+        />
+        <Switch
+          label="Disabled on"
+          checked={true}
+          disabled
+        />
+      </div>
+
+      <Highlight
+        theme={themes.vsLight}
+        code={switchDisabledCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      {/* SWITCH SIZES */}
+      <h3 className="mb-4 text-xl font-semibold">Switch Sizes</h3>
+      <p className="text-gray-700 mb-4">Control switch size with width and height props:</p>
+
+      <div className="flex gap-4 items-center mb-8">
+        <Switch
+          label="Small"
+          width="36px"
+          height="20px"
+        />
+        <Switch
+          label="Default"
+        />
+        <Switch
+          label="Large"
+          width="60px"
+          height="32px"
+        />
+      </div>
+
+      <Highlight
+        theme={themes.vsLight}
+        code={switchSizesCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      <Card className="bg-gray-100 border border-gray-200 rounded p-4 mb-4">
+        <h3 className="text-lg font-semibold mb-2">Switch Props</h3>
+        <ul className="space-y-2">
+          <li><code>checked</code> (optional): Controlled checked state</li>
+          <li><code>disabled</code> (optional): Disables the switch</li>
+          <li><code>label</code> (optional): Label text displayed next to switch</li>
+          <li><code>onChange</code> (optional): Change handler function</li>
+          <li><code>width</code> (optional, default: "44px"): Switch width</li>
+          <li><code>height</code> (optional, default: "24px"): Switch height (thumb scales automatically)</li>
+          <li><code>className</code> (optional): Additional CSS classes</li>
+          <li><code>id</code> (optional): Switch id attribute</li>
+          <li><code>name</code> (optional): Switch name attribute</li>
+        </ul>
+      </Card>
+
+      <Card className="bg-blue-50 border border-blue-200 rounded p-4 mb-12">
+        <h3 className="text-lg font-semibold mb-2">Switch Imperative Handle</h3>
         <p className="text-gray-700 mb-2">Methods available via ref:</p>
         <ul className="space-y-2">
           <li><code>getChecked()</code>: Returns the current checked state (boolean)</li>
