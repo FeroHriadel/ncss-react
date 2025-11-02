@@ -125,8 +125,20 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 		function handleClickOutside(event: MouseEvent) {
 			if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) setOpen(false);
 		}
-		if (open) document.addEventListener("mousedown", handleClickOutside);
-		return () => document.removeEventListener("mousedown", handleClickOutside);
+		
+		function handleEscapeKey(event: KeyboardEvent) {
+			if (event.key === 'Escape') setOpen(false);
+		}
+		
+		if (open) {
+			document.addEventListener("mousedown", handleClickOutside);
+			document.addEventListener("keydown", handleEscapeKey);
+		}
+		
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+			document.removeEventListener("keydown", handleEscapeKey);
+		};
 	}, [open]);
 
 	React.useImperativeHandle(ref, () => ({
@@ -142,7 +154,12 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 		: Math.max(triggerWidth || 0, 200);
 
 		return (
-			<div className={className ? `${className} relative` : 'relative'} style={{ width, ...style }} ref={dropdownRef} id={id}>
+			<div 
+				className={className ? `${className} relative` : 'relative'} 
+				style={{ width, opacity: disabled ? 0.5 : 1, pointerEvents: disabled ? 'none' : 'auto', ...style }} 
+				ref={dropdownRef} 
+				id={id}
+			>
 				{trigger ? (
 					<span ref={triggerRef} onClick={disabled ? undefined : toggleDropdownOpen} className="cursor-pointer inline-block">
 						{trigger}

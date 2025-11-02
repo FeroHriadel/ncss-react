@@ -124,9 +124,21 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
   React.useEffect(() => {
     function handleClickOutside (event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) setOpen(false);
+    }
+    
+    function handleEscapeKey(event: KeyboardEvent) {
+      if (event.key === 'Escape') setOpen(false);
+    }
+    
+    if (open) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleEscapeKey);
+    }
+    
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscapeKey);
     };
-    if (open) document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open]);
 
 
@@ -155,7 +167,12 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
 
   // Render
   return (
-    <div className={className ? `${className} relative` : 'relative'} style={style} ref={dropdownRef} id={id}>
+    <div 
+      className={className ? `${className} relative` : 'relative'} 
+      style={{ opacity: disabled ? 0.5 : 1, pointerEvents: disabled ? 'none' : 'auto', ...style }} 
+      ref={dropdownRef} 
+      id={id}
+    >
       
       {/* Trigger */}
       {trigger ? (

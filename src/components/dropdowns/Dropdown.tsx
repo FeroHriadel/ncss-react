@@ -103,9 +103,9 @@ const Dropdown = forwardRef<DropdownHandle, DropdownProps>(function Dropdown(
     /* Wrapper */
     <div 
       ref={wrapperRef}
-      className={`dropdown-wrap relative inline-block ` + (disabled ? 'opacity-50 pointer-events-none ' : 'group ') + (className ? className : '')} 
+      className={`dropdown-wrap relative inline-block ${disabled ? '' : 'group '}${className ? className : ''}`}
       id={id} 
-      style={style}
+      style={{ opacity: disabled ? 0.5 : 1, pointerEvents: disabled ? 'none' : 'auto', ...style }}
     >
 
       {/* trigger button - render trigger or children (children has precedence) */}
