@@ -1,0 +1,466 @@
+import { useRef, useState } from 'react';
+import Card from "../components/cards/Card";
+import Break from "../components/spacers/Break";
+import Container from "../components/wrappers/Container";
+import Input from "../components/inputs/Input";
+import Email from "../components/inputs/Email";
+import type { EmailHandle } from "../components/inputs/Email";
+import Password from "../components/inputs/Password";
+import type { PasswordHandle } from "../components/inputs/Password";
+import Button from "../components/buttons/Button";
+import { Highlight, themes } from "prism-react-renderer";
+import { 
+  inputCode, 
+  inputWithErrorCode, 
+  inputWithMessageCode, 
+  inputDisabledCode,
+  emailCode,
+  emailValidationCode,
+  passwordCode,
+  passwordValidationCode,
+  passwordVisibilityCode
+} from "../utils/InputsPageCode";
+
+export default function InputsPage() {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  
+  const emailRef = useRef<EmailHandle>(null);
+  const passwordRef = useRef<PasswordHandle>(null);
+
+  const handleValidateEmail = () => {
+    const errors = emailRef.current?.validate();
+    if (errors && errors.length > 0) {
+      setEmailError(errors[0]);
+    } else {
+      setEmailError('');
+      alert('Email is valid!');
+    }
+  };
+
+  const handleValidatePassword = () => {
+    const errors = passwordRef.current?.validate();
+    if (errors && errors.length > 0) {
+      setPasswordError(errors.join(', '));
+    } else {
+      setPasswordError('');
+      alert('Password is valid!');
+    }
+  };
+
+  return (
+    <Container className="px-2 pt-24">
+      {/* INTRO */}
+      <h1 className="mb-4 uppercase font-bold text-3xl">Input Components</h1>
+      <p className="text-gray-800 text-lg mb-12">Input components: <code>Input</code>, <code>Email</code>, <code>Password</code></p>
+      <Card className="mb-12 p-4 bg-gray-100 flex flex-col gap-4">
+        <a href="#input"><div><code>Input</code> is a basic text input with label, error, and message support <br /></div></a>
+        <a href="#email"><div><code>Email</code> is like Input but with email validation exposed via imperative handle <br /></div></a>
+        <a href="#password"><div><code>Password</code> is like Input but with password visibility toggle and validation rules <br /></div></a>
+      </Card>
+      <hr />
+      <Break amount={3} />
+
+      {/* INPUT */}
+      <h2 className="mb-4 text-2xl uppercase font-semibold" id="input">Input</h2>
+      <p className="text-gray-700 mb-4">
+        The <code>Input</code> component provides a styled text input with label, error message, and helper message support.
+      </p>
+
+      <Input
+        label="Username"
+        placeholder="Enter your username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        width="260px"
+        className="mb-8"
+      />
+
+      <Highlight
+        theme={themes.vsLight}
+        code={inputCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      {/* INPUT WITH ERROR */}
+      <h3 className="mb-4 text-xl font-semibold">Input with Error Message</h3>
+      <p className="text-gray-700 mb-4">Display validation errors below the input:</p>
+
+      <Input
+        label="Username"
+        placeholder="Enter your username"
+        value=""
+        onChange={() => {}}
+        errorMessage="Username is required"
+        width="260px"
+        className="mb-8"
+      />
+
+      <Highlight
+        theme={themes.vsLight}
+        code={inputWithErrorCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      {/* INPUT WITH MESSAGE */}
+      <h3 className="mb-4 text-xl font-semibold">Input with Helper Message</h3>
+      <p className="text-gray-700 mb-4">Display helper text below the input:</p>
+
+      <Input
+        label="Username"
+        placeholder="Enter your username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        message="Choose a unique username"
+        width="260px"
+        className="mb-8"
+      />
+
+      <Highlight
+        theme={themes.vsLight}
+        code={inputWithMessageCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      {/* INPUT DISABLED */}
+      <h3 className="mb-4 text-xl font-semibold">Disabled Input</h3>
+      <p className="text-gray-700 mb-4">Inputs can be disabled:</p>
+
+      <Input
+        label="Username"
+        placeholder="Enter your username"
+        value="disabled-user"
+        disabled
+        width="260px"
+        className="mb-8"
+      />
+
+      <Highlight
+        theme={themes.vsLight}
+        code={inputDisabledCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      <Card className="bg-gray-100 border border-gray-200 rounded p-4 mb-12">
+        <h3 className="text-lg font-semibold mb-2">Input Props</h3>
+        <ul className="space-y-2">
+          <li><code>type</code> (optional, default: 'text'): Input type</li>
+          <li><code>label</code> (optional): Label text displayed above the input</li>
+          <li><code>value</code> (optional): Input value (string or number)</li>
+          <li><code>onChange</code> (optional): Change handler function</li>
+          <li><code>placeholder</code> (optional): Placeholder text</li>
+          <li><code>errorMessage</code> (optional): Error message displayed below input in red</li>
+          <li><code>message</code> (optional): Helper message displayed below input in gray</li>
+          <li><code>width</code> (optional): Custom width (e.g., "300px", "100%")</li>
+          <li><code>required</code> (optional): Marks field as required (adds * to label)</li>
+          <li><code>disabled</code> (optional): Disables the input</li>
+          <li><code>className</code> (optional): Additional CSS classes</li>
+          <li><code>style</code> (optional): Inline styles</li>
+          <li><code>name</code> (optional): Input name attribute</li>
+          <li><code>id</code> (optional): Input id attribute</li>
+          <li><code>title</code> (optional): Input title attribute</li>
+        </ul>
+      </Card>
+      <hr />
+      <Break amount={3} />
+
+      {/* EMAIL */}
+      <h2 className="mb-4 text-2xl uppercase font-semibold" id="email">Email</h2>
+      <p className="text-gray-700 mb-4">
+        The <code>Email</code> component is similar to Input but includes email validation accessible via ref. 
+        It exposes a <code>validate()</code> method that returns an array of error messages.
+      </p>
+
+      <div className="mb-8">
+        <Email
+          label="Email Address"
+          placeholder="your@email.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          errorMessage={emailError}
+          required
+          width="260px"
+          ref={emailRef}
+        />
+        <Button onClick={handleValidateEmail} className="mt-6">Validate Email</Button>
+      </div>
+
+      <Highlight
+        theme={themes.vsLight}
+        code={emailCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      {/* EMAIL VALIDATION */}
+      <h3 className="mb-4 text-xl font-semibold">Email Validation</h3>
+      <p className="text-gray-700 mb-4">
+        The validation method checks if the email is in valid format. If <code>required</code> is true, 
+        it also checks if the field is empty.
+      </p>
+
+      <Highlight
+        theme={themes.vsLight}
+        code={emailValidationCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      <Card className="bg-gray-100 border border-gray-200 rounded p-4 mb-12">
+        <h3 className="text-lg font-semibold mb-2">Email Props</h3>
+        <ul className="space-y-2">
+          <li><code>label</code> (optional): Label text with required indicator (*) if required prop is true</li>
+          <li><code>value</code> (optional): Input value</li>
+          <li><code>onChange</code> (optional): Change handler function</li>
+          <li><code>placeholder</code> (optional): Placeholder text</li>
+          <li><code>errorMessage</code> (optional): Error message displayed below input</li>
+          <li><code>message</code> (optional): Helper message displayed below input</li>
+          <li><code>width</code> (optional, default: "300px"): Input width</li>
+          <li><code>required</code> (optional): Marks field as required (adds * to label and validates emptiness)</li>
+          <li><code>disabled</code> (optional): Disables the input</li>
+          <li><code>autoComplete</code> (optional): Autocomplete attribute</li>
+          <li><code>className</code> (optional): Additional CSS classes</li>
+          <li><code>style</code> (optional): Inline styles</li>
+          <li><code>name</code> (optional): Input name attribute</li>
+          <li><code>id</code> (optional): Input id attribute</li>
+          <li><code>ref</code>: Forward ref to access the validate() method</li>
+        </ul>
+        <h3 className="text-lg font-semibold mb-2 mt-4">Email Imperative Handle</h3>
+        <ul className="space-y-2">
+          <li><code>validate()</code>: Returns string[] of validation errors (empty array if valid)</li>
+        </ul>
+      </Card>
+      <hr />
+      <Break amount={3} />
+
+      {/* PASSWORD */}
+      <h2 className="mb-4 text-2xl uppercase font-semibold" id="password">Password</h2>
+      <p className="text-gray-700 mb-4">
+        The <code>Password</code> component is similar to Input but for passwords. It supports visibility toggle 
+        (eye icon) and advanced validation rules accessible via ref.
+      </p>
+
+      <div className={`${passwordError ? "mb-20" : "mb-8"} flex gap-2`}>
+        <Password
+          label="Password"
+          placeholder="Enter your password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          errorMessage={passwordError}
+          canShowPassword
+          minLength={8}
+          requireNumber
+          requireSpecialCharacter
+          requireUpperCase
+          width="260px"
+          ref={passwordRef}
+        />
+        <Button onClick={handleValidatePassword} className="mt-6">Validate Password</Button>
+      </div>
+
+      <Highlight
+        theme={themes.vsLight}
+        code={passwordCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      {/* PASSWORD VALIDATION */}
+      <h3 className="mb-4 text-xl font-semibold">Password Validation</h3>
+      <p className="text-gray-700 mb-4">
+        The Password component supports multiple validation rules. Use the validation props to enforce 
+        password requirements, and call the <code>validate()</code> method to check them.
+      </p>
+
+      <Highlight
+        theme={themes.vsLight}
+        code={passwordValidationCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      {/* PASSWORD VISIBILITY */}
+      <h3 className="mb-4 text-xl font-semibold">Password Visibility Toggle</h3>
+      <p className="text-gray-700 mb-4">
+        When <code>canShowPassword</code> is true, an eye icon appears that allows users to toggle 
+        between showing and hiding the password.
+      </p>
+
+      <div className="flex gap-4 mb-8">
+        <Password
+          label="With Eye Icon"
+          value="secret123"
+          canShowPassword={true}
+          width="250px"
+        />
+        <Password
+          label="Without Eye Icon"
+          value="secret123"
+          canShowPassword={false}
+          width="250px"
+        />
+      </div>
+
+      <Highlight
+        theme={themes.vsLight}
+        code={passwordVisibilityCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      <Card className="bg-gray-100 border border-gray-200 rounded p-4 mb-12">
+        <h3 className="text-lg font-semibold mb-2">Password Props</h3>
+        <ul className="space-y-2">
+          <li><code>label</code> (optional): Label text displayed above the input</li>
+          <li><code>value</code> (optional): Input value</li>
+          <li><code>onChange</code> (optional): Change handler function</li>
+          <li><code>placeholder</code> (optional): Placeholder text</li>
+          <li><code>errorMessage</code> (optional): Error message displayed below input</li>
+          <li><code>message</code> (optional): Helper message displayed below input</li>
+          <li><code>width</code> (optional, default: "300px"): Input width</li>
+          <li><code>required</code> (optional): Marks field as required (adds * to label)</li>
+          <li><code>canShowPassword</code> (optional): Shows eye icon to toggle password visibility</li>
+          <li><code>minLength</code> (optional): Minimum password length requirement</li>
+          <li><code>requireNumber</code> (optional): Password must contain at least one number</li>
+          <li><code>requireSpecialCharacter</code> (optional): Password must contain special character</li>
+          <li><code>requireUpperCase</code> (optional): Password must contain uppercase letter</li>
+          <li><code>disabled</code> (optional): Disables the input</li>
+          <li><code>className</code> (optional): Additional CSS classes</li>
+          <li><code>style</code> (optional): Inline styles</li>
+          <li><code>name</code> (optional): Input name attribute</li>
+          <li><code>id</code> (optional): Input id attribute</li>
+          <li><code>title</code> (optional): Input title attribute</li>
+          <li><code>ref</code>: Forward ref to access the validate() method</li>
+        </ul>
+        <h3 className="text-lg font-semibold mb-2 mt-4">Password Imperative Handle</h3>
+        <ul className="space-y-2">
+          <li><code>validate()</code>: Returns string[] of validation errors based on the validation props (empty array if valid)</li>
+        </ul>
+        <h3 className="text-lg font-semibold mb-2 mt-4">Validation Error Messages</h3>
+        <ul className="space-y-2">
+          <li>"Password must be at least {'{minLength}'} characters long"</li>
+          <li>"Password must contain at least one number"</li>
+          <li>"Password must contain at least one special character"</li>
+          <li>"Password must contain at least one uppercase letter"</li>
+        </ul>
+      </Card>
+      <Break amount={3} />
+
+    </Container>
+  );
+}

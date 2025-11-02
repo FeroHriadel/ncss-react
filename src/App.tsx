@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import ButtonsPage from './pages/ButtonsPage';
 import DropdownsPage from './pages/DropdownsPage';
+import InputsPage from './pages/InputsPage';
 import VirtualizedTablePage from './pages/VirtualizedTablePage'
 import TopNav from './components/navs/TopNav';
 import logo from './assets/logo.png'
@@ -17,13 +18,17 @@ function App() {
       linkName: 'Home', 
       linkUrl: '/' 
     },
+    {
+      linkName: 'Buttons',
+      linkUrl: '/buttons'
+    },
     { 
       linkName: 'Dropdowns', 
       linkUrl: '/dropdowns'
     },
     {
-      linkName: 'Buttons',
-      linkUrl: '/buttons'
+      linkName: 'Inputs',
+      linkUrl: '/inputs'
     },
     { 
       linkName: 'Tables', 
@@ -50,6 +55,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/buttons" element={<ButtonsPage />} />
           <Route path="/dropdowns" element={<DropdownsPage />} />
+          <Route path="/inputs" element={<InputsPage />} />
           <Route path="/tables/virtualizedtable" element={<VirtualizedTablePage />} />
         </Routes>
       </div>
