@@ -73,19 +73,13 @@ const Email = forwardRef<EmailHandle, EmailProps>((props, ref) => {
       {label && (
         <label
           htmlFor={id}
-          style={{
-            display: 'block',
-            marginBottom: '0.5rem',
-            fontSize: '0.875rem',
-            fontWeight: '500',
-            color: '#374151',
-          }}
+          className="block mb-2 text-sm font-medium text-gray-700"
         >
           {label}
-          {required && <span style={{ marginLeft: '0.25rem' }}>*</span>}
+          {required && <span className="ml-1">*</span>}
         </label>
       )}
-      <div style={{ position: 'relative' }}>
+      <div className="relative">
         <input
           type="email"
           name={name}
@@ -96,38 +90,18 @@ const Email = forwardRef<EmailHandle, EmailProps>((props, ref) => {
           disabled={disabled}
           required={required}
           autoComplete={autoComplete}
-          style={{
-            width: width,
-            padding: '0.5rem 0.75rem',
-            fontSize: '1rem',
-            border: '1px solid #d1d5db',
-            borderRadius: '0.375rem',
-            outline: 'none',
-            transition: 'border-color 0.2s',
-            backgroundColor: disabled ? '#f3f4f6' : '#fff',
-            cursor: disabled ? 'not-allowed' : 'text',
-            opacity: disabled ? 0.5 : 1,
-          }}
-          onFocus={(e) => {
-            if (!disabled) {
-              e.target.style.borderColor = '#3b82f6';
-            }
-          }}
-          onBlur={(e) => {
-            e.target.style.borderColor = '#d1d5db';
-          }}
+          className={`outline-none border border-gray-300 rounded-md text-base bg-white px-3 py-2 w-full transition-colors placeholder:text-gray-600 placeholder:font-light placeholder:italic ${
+            disabled ? 'opacity-50 cursor-not-allowed bg-gray-50' : 'hover:bg-gray-50 focus:bg-gray-50 focus:border-blue-500'
+          }`}
+          style={width ? { width } : undefined}
         />
         {errorMessage && (
-          <p
-            className='absolute left-0 top-full translate-y-1 text-xs text-red-900'
-          >
+          <p className='absolute left-0 top-full translate-y-1 text-xs text-red-900'>
             {errorMessage}
           </p>
         )}
         {message && !errorMessage && (
-          <p
-            className='absolute left-0 top-full translate-y-1 text-xs text-gray-600'
-          >
+          <p className='absolute left-0 top-full translate-y-1 text-xs text-gray-600'>
             {message}
           </p>
         )}

@@ -143,3 +143,48 @@ export const passwordVisibilityCode = `import Password from '../components/input
   onChange={(e) => setPassword(e.target.value)}
   canShowPassword={false}  // No eye icon, always hidden
 />`;
+
+export const textareaCode = `import Textarea from '../components/inputs/Textarea';
+
+<Textarea
+  label="Description"
+  placeholder="Enter description"
+  value={description}
+  onChange={(e) => setDescription(e.target.value)}
+  rows={4}
+/>`;
+
+export const textareaWithErrorCode = `import Textarea from '../components/inputs/Textarea';
+
+<Textarea
+  label="Description"
+  placeholder="Enter description"
+  value={description}
+  onChange={(e) => setDescription(e.target.value)}
+  errorMessage="Description is required"
+  rows={4}
+/>`;
+
+export const textareaHeightCode = `import Textarea from '../components/inputs/Textarea';
+
+<Textarea
+  label="Short Description"
+  value={description}
+  onChange={(e) => setDescription(e.target.value)}
+  rows={2}
+/>
+
+<Textarea
+  label="Long Description"
+  value={description}
+  onChange={(e) => setDescription(e.target.value)}
+  rows={8}
+/>
+
+// Or use custom height
+<Textarea
+  label="Custom Height"
+  value={description}
+  onChange={(e) => setDescription(e.target.value)}
+  height="200px"
+/>`;

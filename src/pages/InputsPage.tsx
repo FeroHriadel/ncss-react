@@ -7,6 +7,7 @@ import Email from "../components/inputs/Email";
 import type { EmailHandle } from "../components/inputs/Email";
 import Password from "../components/inputs/Password";
 import type { PasswordHandle } from "../components/inputs/Password";
+import Textarea from "../components/inputs/Textarea";
 import Button from "../components/buttons/Button";
 import { Highlight, themes } from "prism-react-renderer";
 import { 
@@ -18,11 +19,15 @@ import {
   emailValidationCode,
   passwordCode,
   passwordValidationCode,
-  passwordVisibilityCode
+  passwordVisibilityCode,
+  textareaCode,
+  textareaWithErrorCode,
+  textareaHeightCode
 } from "../utils/InputsPageCode";
 
 export default function InputsPage() {
   const [username, setUsername] = useState('');
+  const [description, setDescription] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -55,11 +60,12 @@ export default function InputsPage() {
     <Container className="px-2 pt-24">
       {/* INTRO */}
       <h1 className="mb-4 uppercase font-bold text-3xl">Input Components</h1>
-      <p className="text-gray-800 text-lg mb-12">Input components: <code>Input</code>, <code>Email</code>, <code>Password</code></p>
+      <p className="text-gray-800 text-lg mb-12">Input components: <code>Input</code>, <code>Email</code>, <code>Password</code>, <code>Textarea</code></p>
       <Card className="mb-12 p-4 bg-gray-100 flex flex-col gap-4">
         <a href="#input"><div><code>Input</code> is a basic text input with label, error, and message support <br /></div></a>
         <a href="#email"><div><code>Email</code> is like Input but with email validation exposed via imperative handle <br /></div></a>
         <a href="#password"><div><code>Password</code> is like Input but with password visibility toggle and validation rules <br /></div></a>
+        <a href="#textarea"><div><code>Textarea</code> is a multi-line text input with the same functionality as Input <br /></div></a>
       </Card>
       <hr />
       <Break amount={3} />
@@ -457,6 +463,139 @@ export default function InputsPage() {
           <li>"Password must contain at least one number"</li>
           <li>"Password must contain at least one special character"</li>
           <li>"Password must contain at least one uppercase letter"</li>
+        </ul>
+      </Card>
+      <hr />
+      <Break amount={3} />
+
+      {/* TEXTAREA */}
+      <h2 className="mb-4 text-2xl uppercase font-semibold" id="textarea">Textarea</h2>
+      <p className="text-gray-700 mb-4">
+        The <code>Textarea</code> component is a multi-line text input with the same styling and functionality as Input.
+      </p>
+
+      <Textarea
+        label="Description"
+        placeholder="Enter description"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        width="300px"
+        rows={4}
+        className="mb-8"
+      />
+
+      <Highlight
+        theme={themes.vsLight}
+        code={textareaCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      {/* TEXTAREA WITH ERROR */}
+      <h3 className="mb-4 text-xl font-semibold">Textarea with Error Message</h3>
+      <p className="text-gray-700 mb-4">Display validation errors below the textarea:</p>
+
+      <Textarea
+        label="Description"
+        placeholder="Enter description"
+        value=""
+        onChange={() => {}}
+        errorMessage="Description is required"
+        width="300px"
+        rows={4}
+        className="mb-8"
+      />
+
+      <Highlight
+        theme={themes.vsLight}
+        code={textareaWithErrorCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      {/* TEXTAREA HEIGHTS */}
+      <h3 className="mb-4 text-xl font-semibold">Textarea Heights</h3>
+      <p className="text-gray-700 mb-4">Control textarea height with rows or custom height:</p>
+
+      <div className="flex gap-4 mb-8">
+        <Textarea
+          label="Short (2 rows)"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          rows={2}
+          width="250px"
+        />
+        <Textarea
+          label="Tall (8 rows)"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          rows={8}
+          width="250px"
+        />
+      </div>
+
+      <Highlight
+        theme={themes.vsLight}
+        code={textareaHeightCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      <Card className="bg-gray-100 border border-gray-200 rounded p-4 mb-12">
+        <h3 className="text-lg font-semibold mb-2">Textarea Props</h3>
+        <ul className="space-y-2">
+          <li><code>label</code> (optional): Label text displayed above the textarea</li>
+          <li><code>value</code> (optional): Textarea value</li>
+          <li><code>onChange</code> (optional): Change handler function</li>
+          <li><code>placeholder</code> (optional): Placeholder text</li>
+          <li><code>errorMessage</code> (optional): Error message displayed below textarea in red</li>
+          <li><code>message</code> (optional): Helper message displayed below textarea in gray</li>
+          <li><code>width</code> (optional): Custom width (e.g., "300px", "100%")</li>
+          <li><code>height</code> (optional): Custom height (e.g., "200px")</li>
+          <li><code>rows</code> (optional, default: 4): Number of visible text rows</li>
+          <li><code>required</code> (optional): Marks field as required (adds * to label)</li>
+          <li><code>disabled</code> (optional): Disables the textarea</li>
+          <li><code>className</code> (optional): Additional CSS classes</li>
+          <li><code>style</code> (optional): Inline styles</li>
+          <li><code>name</code> (optional): Textarea name attribute</li>
+          <li><code>id</code> (optional): Textarea id attribute</li>
+          <li><code>title</code> (optional): Textarea title attribute</li>
         </ul>
       </Card>
       <Break amount={3} />
