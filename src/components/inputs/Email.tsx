@@ -73,7 +73,7 @@ const Email = forwardRef<EmailHandle, EmailProps>((props, ref) => {
       {label && (
         <label
           htmlFor={id}
-          className="block mb-2 text-sm font-medium text-gray-700"
+          className="mb-2 text-sm text-gray-600"
         >
           {label}
           {required && <span className="ml-1">*</span>}
