@@ -90,8 +90,8 @@ const Email = forwardRef<EmailHandle, EmailProps>((props, ref) => {
           disabled={disabled}
           required={required}
           autoComplete={autoComplete}
-          className={`outline-none border border-gray-300 rounded-md text-base bg-white px-3 py-2 w-full transition-colors placeholder:text-gray-600 placeholder:font-light placeholder:italic ${
-            disabled ? 'opacity-50 cursor-not-allowed bg-gray-50' : 'hover:bg-gray-50 focus:bg-gray-50 focus:border-blue-500'
+          className={`outline-none border border-gray-300 rounded-md text-base bg-gray-100 text-gray-700 hover:bg-gray-200 focus:bg-gray-200 px-3 py-2 w-full transition-colors placeholder:text-gray-600 placeholder:font-light placeholder:italic ${
+            disabled ? 'opacity-50 cursor-not-allowed' : ''
           }`}
           style={width ? { width } : undefined}
         />
