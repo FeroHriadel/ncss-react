@@ -12,6 +12,8 @@ import Checkbox from "../components/inputs/Checkbox";
 import type { CheckboxHandle } from "../components/inputs/Checkbox";
 import Switch from "../components/inputs/Switch";
 import type { SwitchHandle } from "../components/inputs/Switch";
+import FileUpload from "../components/inputs/FileUpload";
+import type { FileUploadHandle } from "../components/inputs/FileUpload";
 import Button from "../components/buttons/Button";
 import { Highlight, themes } from "prism-react-renderer";
 import { 
@@ -35,7 +37,11 @@ import {
   switchControlledCode,
   switchRefCode,
   switchDisabledCode,
-  switchSizesCode
+  switchSizesCode,
+  fileUploadCode,
+  fileUploadWithOptionsCode,
+  fileUploadRefCode,
+  fileUploadDisabledCode
 } from "../utils/InputsPageCode";
 
 export default function InputsPage() {
@@ -44,6 +50,7 @@ export default function InputsPage() {
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [autoSave, setAutoSave] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -53,6 +60,7 @@ export default function InputsPage() {
   const passwordRef = useRef<PasswordHandle>(null);
   const checkboxRef = useRef<CheckboxHandle>(null);
   const switchRef = useRef<SwitchHandle>(null);
+  const fileUploadRef = useRef<FileUploadHandle>(null);
 
   const handleValidateEmail = () => {
     const errors = emailRef.current?.validate();
@@ -78,7 +86,7 @@ export default function InputsPage() {
     <Container className="px-2 pt-24">
       {/* INTRO */}
       <h1 className="mb-4 uppercase font-bold text-3xl">Input Components</h1>
-      <p className="text-gray-800 text-lg mb-12">Input components: <code>Input</code>, <code>Email</code>, <code>Password</code>, <code>Textarea</code>, <code>Checkbox</code>, <code>Switch</code></p>
+      <p className="text-gray-800 text-lg mb-12">Input components: <code>Input</code>, <code>Email</code>, <code>Password</code>, <code>Textarea</code>, <code>Checkbox</code>, <code>Switch</code>, <code>FileUpload</code></p>
       <Card className="mb-12 p-4 bg-gray-100 flex flex-col gap-4">
         <a href="#input"><div><code>Input</code> is a basic text input with label, error, and message support <br /></div></a>
         <a href="#email"><div><code>Email</code> is like Input but with email validation exposed via imperative handle <br /></div></a>
@@ -86,6 +94,7 @@ export default function InputsPage() {
         <a href="#textarea"><div><code>Textarea</code> is a multi-line text input with the same functionality as Input <br /></div></a>
         <a href="#checkbox"><div><code>Checkbox</code> is a checkbox input with custom styling and imperative handle for programmatic control <br /></div></a>
         <a href="#switch"><div><code>Switch</code> is a toggle switch with animated thumb and imperative handle for programmatic control <br /></div></a>
+        <a href="#fileupload"><div><code>FileUpload</code> is a file upload input with drag & drop support and imperative handle <br /></div></a>
       </Card>
       <hr />
       <Break amount={3} />
@@ -1019,6 +1028,181 @@ export default function InputsPage() {
         <ul className="space-y-2">
           <li><code>getChecked()</code>: Returns the current checked state (boolean)</li>
           <li><code>setChecked(checked: boolean)</code>: Programmatically set the checked state</li>
+        </ul>
+      </Card>
+      <Break amount={3} />
+
+      {/* FILEUPLOAD */}
+      <hr />
+      <Break amount={3} />
+      <h2 className="mb-4 text-2xl uppercase font-semibold" id="fileupload">FileUpload</h2>
+      <p className="text-gray-700 mb-4">
+        The <code>FileUpload</code> component provides a file upload input with an upload button, file counter, and clear functionality.
+      </p>
+
+      <FileUpload
+        label="Upload Documents"
+        onChange={(files) => console.log('Files:', files)}
+        width="400px"
+        className="mb-8"
+      />
+
+      <Highlight
+        theme={themes.vsLight}
+        code={fileUploadCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      {/* FILEUPLOAD WITH OPTIONS */}
+      <h3 className="mb-4 text-xl font-semibold">FileUpload with Accept and Max</h3>
+      <p className="text-gray-700 mb-4">Restrict file types and limit the number of files:</p>
+
+      <FileUpload
+        label="Upload Images"
+        accept={['.jpg', '.jpeg', '.png', '.gif']}
+        max={5}
+        message="Maximum 5 images allowed"
+        onChange={(files) => setUploadedFiles(files)}
+        width="400px"
+        className="mb-6"
+      />
+      <p className="text-sm text-gray-600 mb-8">Uploaded: {uploadedFiles.length} files</p>
+
+      <Highlight
+        theme={themes.vsLight}
+        code={fileUploadWithOptionsCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      {/* FILEUPLOAD WITH REF */}
+      <h3 className="mb-4 text-xl font-semibold">FileUpload with Imperative Handle</h3>
+      <p className="text-gray-700 mb-4">Use ref to programmatically get or clear files:</p>
+
+      <div className="mb-4">
+        <FileUpload
+          label="Upload Files"
+          ref={fileUploadRef}
+          width="400px"
+          className="mb-4"
+        />
+        <div className="flex gap-2">
+          <Button
+            onClick={() => {
+              const files = fileUploadRef.current?.getFiles();
+              console.log('Uploaded files:', files);
+              alert('Files logged in console (check developer tools)');
+            }}
+          >
+            Get Files
+          </Button>
+          <Button
+            onClick={() => {
+              fileUploadRef.current?.clear();
+            }}
+          >
+            Clear Files
+          </Button>
+        </div>
+      </div>
+
+      <Highlight
+        theme={themes.vsLight}
+        code={fileUploadRefCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      {/* FILEUPLOAD DISABLED */}
+      <h3 className="mb-4 text-xl font-semibold">Disabled FileUpload</h3>
+      <p className="text-gray-700 mb-4">Disabled file upload cannot be interacted with:</p>
+
+      <FileUpload
+        label="Disabled Upload"
+        disabled
+        width="400px"
+        className="mb-8"
+      />
+
+      <Highlight
+        theme={themes.vsLight}
+        code={fileUploadDisabledCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      <Card className="bg-gray-100 border border-gray-200 rounded p-4 mb-4">
+        <h3 className="text-lg font-semibold mb-2">FileUpload Props</h3>
+        <ul className="space-y-2">
+          <li><code>disabled</code> (optional): Disables the file upload (adds 0.5 opacity)</li>
+          <li><code>onChange</code> (optional): Callback function that receives the uploaded files array</li>
+          <li><code>className</code> (optional): Additional CSS classes</li>
+          <li><code>style</code> (optional): Inline styles</li>
+          <li><code>id</code> (optional): FileUpload id attribute</li>
+          <li><code>label</code> (optional): Label text displayed above the upload input</li>
+          <li><code>message</code> (optional): Helper message displayed below the input</li>
+          <li><code>errorMessage</code> (optional): Error message displayed below the input in red</li>
+          <li><code>accept</code> (optional, default: ['*']): Array of accepted file types (e.g., ['.jpg', '.png'])</li>
+          <li><code>max</code> (optional): Maximum number of files allowed</li>
+          <li><code>width</code> (optional): Custom width (e.g., "400px", "100%")</li>
+        </ul>
+      </Card>
+
+      <Card className="bg-blue-50 border border-blue-200 rounded p-4 mb-12">
+        <h3 className="text-lg font-semibold mb-2">FileUpload Imperative Handle</h3>
+        <p className="text-gray-700 mb-2">Methods available via ref:</p>
+        <ul className="space-y-2">
+          <li><code>clear()</code>: Clears all uploaded files</li>
+          <li><code>getFiles()</code>: Returns the array of currently uploaded File objects</li>
         </ul>
       </Card>
       <Break amount={3} />

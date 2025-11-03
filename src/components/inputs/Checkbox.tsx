@@ -77,7 +77,7 @@ const Checkbox = forwardRef<CheckboxHandle, CheckboxProps>(function Checkbox(
           } ${
             isChecked 
               ? 'bg-gray-800 border-gray-800 hover:bg-gray-950 focus:bg-gray-950' 
-              : 'bg-gray-500 border-gray-500'
+              : 'border-gray-800'
           }`}
         >
           {isChecked && (

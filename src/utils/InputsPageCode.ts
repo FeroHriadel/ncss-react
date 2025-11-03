@@ -305,3 +305,43 @@ export const switchSizesCode = `import Switch from '../components/inputs/Switch'
   width="60px"
   height="32px"
 />`;
+
+export const fileUploadCode = `import FileUpload from '../components/inputs/FileUpload';
+
+<FileUpload
+  label="Upload Documents"
+  onChange={(files) => console.log('Files:', files)}
+/>`;
+
+export const fileUploadWithOptionsCode = `import FileUpload from '../components/inputs/FileUpload';
+
+<FileUpload
+  label="Upload Images"
+  accept={['.jpg', '.jpeg', '.png', '.gif']}
+  max={5}
+  message="Maximum 5 images allowed"
+  onChange={(files) => console.log('Selected files:', files)}
+/>`;
+
+export const fileUploadRefCode = `import { useRef } from 'react';
+import FileUpload, { FileUploadHandle } from '../components/inputs/FileUpload';
+
+const fileUploadRef = useRef<FileUploadHandle>(null);
+
+<FileUpload
+  label="Upload Files"
+  ref={fileUploadRef}
+/>
+
+// Get uploaded files
+const files = fileUploadRef.current?.getFiles();
+
+// Clear files programmatically
+fileUploadRef.current?.clear();`;
+
+export const fileUploadDisabledCode = `import FileUpload from '../components/inputs/FileUpload';
+
+<FileUpload
+  label="Disabled Upload"
+  disabled
+/>`;
