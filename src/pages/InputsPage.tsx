@@ -83,7 +83,7 @@ export default function InputsPage() {
   };
 
   return (
-    <Container className="px-2 pt-24">
+    <Container className="px-4 pt-24">
       {/* INTRO */}
       <h1 className="mb-4 uppercase font-bold text-3xl">Input Components</h1>
       <p className="text-gray-800 text-lg mb-12">Input components: <code>Input</code>, <code>Email</code>, <code>Password</code>, <code>Textarea</code>, <code>Checkbox</code>, <code>Switch</code>, <code>FileUpload</code></p>

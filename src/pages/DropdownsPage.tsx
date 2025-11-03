@@ -23,7 +23,7 @@ export default function DropdownsPage() {
   const dropdownRef = useRef<DropdownHandle>(null);
 
   return (
-    <Container className="px-2 pt-24">
+    <Container className="px-4 pt-24">
       {/* INTRO */}
       <h1 className="mb-4 uppercase font-bold text-3xl">Dropdowns</h1>
       <p className="text-gray-800 text-lg mb-12">Dropdown components: <code>Select</code>, <code>Multiselect</code>, and <code>Dropdown</code>.</p>

@@ -87,7 +87,7 @@ const filterPresets: FilterPreset[] = [
 export default function VirtualizedTablePage() {
   return (
     /* INTRO  */
-    <Container className="px-2 pt-24">
+    <Container className="px-4 pt-24">
       <h1 className="mb-4 uppercase font-bold text-3xl">Virtualized Table</h1>
       <p className="text-gray-800 text-lg mb-8">Table for rendering 1000s of rows of data efficiently using virtualization.</p>
       <p className="text-gray-700 mb-4">Features:</p>
