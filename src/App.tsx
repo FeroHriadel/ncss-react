@@ -5,6 +5,7 @@ import DropdownsPage from './pages/DropdownsPage';
 import InputsPage from './pages/InputsPage';
 import VirtualizedTablePage from './pages/VirtualizedTablePage'
 import TopNav from './components/navs/TopNav';
+import LeftNav from './components/navs/LeftNav';
 
 
 
@@ -48,6 +49,12 @@ function App() {
           links={links}
           height="96px"
           className='shadow-md bg-gray-200'
+        />
+        <LeftNav 
+          width="200px" 
+          top="96px" 
+          className='shadow-md bg-gray-200'
+          links={links}
         />
         <Routes>
           <Route path="/" element={<HomePage />} />
