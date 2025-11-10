@@ -5,8 +5,6 @@ import DropdownsPage from './pages/DropdownsPage';
 import InputsPage from './pages/InputsPage';
 import VirtualizedTablePage from './pages/VirtualizedTablePage'
 import TopNav from './components/navs/TopNav';
-import logo from './assets/logo.png'
-
 
 
 
@@ -45,11 +43,11 @@ function App() {
     <Router>
       <div className="min-h-screen bg-gray-50">
         <TopNav
-          logo={<img src={logo} alt="NCSS Logo" className="h-8 translate-y-1" />}
+          logo={<span className='font-extrabold text-gray-500 text-2xl' style={{filter: 'drop-shadow(2px 2px 2px rgba(0,0,0,0.2))'}}>NCSS</span>}
           logoUrl="/"
           links={links}
           height="96px"
-          className='shadow-md bg-gray-200 mb-12'
+          className='shadow-md bg-gray-200'
         />
         <Routes>
           <Route path="/" element={<HomePage />} />
