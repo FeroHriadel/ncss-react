@@ -1,0 +1,11 @@
+@media (max-width: 1000px) {
+  .left-nav {
+    transform: translateX(-1000px);
+  }
+}
+
+@media (min-width: 1001px) {
+  .left-nav-close-button {
+    display: none;
+  }
+}

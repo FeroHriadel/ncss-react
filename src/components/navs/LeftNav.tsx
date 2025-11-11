@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 import Collapsible from "../collapsible/Collapsible";
-import { FaChevronDown } from "react-icons/fa";
+import { FaChevronDown, FaChevronRight } from "react-icons/fa";
+import "./LeftNav.css";
+import IconButton from "../buttons/IconButton";
+import CloseButton from "../buttons/CloseButton";
 
 
 
@@ -37,59 +40,132 @@ export default function LeftNav({
   links,
 }: LeftNavProps) {
 
-  return (
-    <nav
-      className={`left-nav z-[4] overflow-x-hidden overflow-y-auto ${className}`}
-      style={{
-        ...style,
-        width,
-        top,
-        position: 'fixed',
-        left: '0px',
-        height: `calc(100vh - ${top})`,
-      }}
-      id={id}
-    >
-      {links.map((link, index) => {
-        // If link has options, render as Collapsible
-        if (link.options && link.options.length > 0) {
-          return (
-            <Collapsible
-              key={'collapsible-' + link.linkName}
-              trigger={
-                <span className={`flex items-center w-full font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-4 py-4 border border-gray-300 border-r-0 ${index > 0 ? 'border-t-0' : ''} cursor-pointer`}>
-                  {link.linkName}
-                  <FaChevronDown size={10} className="ml-2" />
-                </span>
-              }
-            >
-              {link.options.map((opt) => (
-                <Link 
-                  key={'option-' + opt.optionName} 
-                  to={opt.optionUrl || '/'} 
-                  className="block w-full text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-8 py-4 border border-gray-300 border-r-0 border-t-0"
-                >
-                  {opt.optionName}
-                </Link>
-              ))}
-            </Collapsible>
-          );
-        }
+  // Show/Hide LeftNav functions
+  function showLeftNav() {
+    const leftNav = document.querySelector('.left-nav') as HTMLElement;
+    if (leftNav) {
+      leftNav.style.transform = 'translateX(0px)';
+    }
+  }
 
-        // If link is a simple link, render as Link
-        else {
-          return (
-            <Link 
-              key={'link-' + link.linkName} 
-              to={link.linkUrl || '/'} 
-              className={`block w-full font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-4 py-4 border border-gray-300 border-r-0 ${index > 0 ? 'border-t-0' : ''}`}
-            >
-              {link.linkName}
-            </Link>
-          );
-        }
-      })}
-      {children}
-    </nav>
+  function hideLeftNav() {
+    const leftNav = document.querySelector('.left-nav') as HTMLElement;
+    if (leftNav) {
+      leftNav.style.transform = 'translateX(-1000px)';
+    }
+  }
+
+  // Render
+  return (
+    <>
+      { /* LeftNav show button (for small screens) */}
+      <IconButton 
+        className={`left-nav-open-button z-[4] top-[100px] left-0 fixed`}
+        icon={<FaChevronRight className="text-gray-700" />}
+        onClick={showLeftNav}
+      />
+
+      { /* LeftNav component */}
+      <nav
+        className={`left-nav z-[4] overflow-x-hidden overflow-y-auto ${className}`}
+        style={{
+          ...style,
+          width,
+          top,
+          position: 'fixed',
+          left: '0px',
+          height: `calc(100vh - ${top})`,
+        }}
+        id={id}
+      >
+        { /* LeftNav hide button (for small screens) */}
+        <CloseButton 
+          className="left-nav-close-button absolute top-1 right-1"
+          onClick={hideLeftNav}
+          aria-label="Close left navigation"
+        />
+
+        {links.map((link, index) => {
+          // If link has options, render as Collapsible
+          if (link.options && link.options.length > 0) {
+            return (
+              <Collapsible
+                key={'collapsible-' + link.linkName}
+                trigger={
+                  <span className={`flex items-center w-full font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-4 py-4 border border-gray-300 border-r-0 ${index > 0 ? 'border-t-0' : ''} cursor-pointer`}>
+                    {link.linkName}
+                    <FaChevronDown size={10} className="ml-2" />
+                  </span>
+                }
+              >
+                {link.options.map((opt) => (
+                  <Link 
+                    key={'option-' + opt.optionName} 
+                    to={opt.optionUrl || '/'} 
+                    className="block w-full text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-8 py-4 border border-gray-300 border-r-0 border-t-0"
+                  >
+                    {opt.optionName}
+                  </Link>
+                ))}
+              </Collapsible>
+            );
+          }
+
+          // If link is a simple link, render as Link
+          else {
+            return (
+              <Link 
+                key={'link-' + link.linkName} 
+                to={link.linkUrl || '/'} 
+                className={`block w-full font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-4 py-4 border border-gray-300 border-r-0 ${index > 0 ? 'border-t-0' : ''}`}
+              >
+                {link.linkName}
+              </Link>
+            );
+          }
+        })}
+        {children}
+      </nav>
+    </>
+  );
+}
+
+
+
+
+export interface LeftNavPageProps {
+  top?: string;
+  left?: string;
+  children?: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+  id?: string;
+}
+
+export function LeftNavPage({ top = '96px', left = '200px', children, className, style, id }: LeftNavPageProps) {
+  return (
+    <>
+      <style>
+        {`
+          @media (max-width: 1000px) {
+            .left-nav-page {
+              margin-left: 0px !important;
+            }
+          }
+          
+          @media (min-width: 1001px) {
+            .left-nav-page {
+              margin-left: ${left} !important;
+        `}
+      </style>
+
+      <div
+        className={`left-nav-page min-h-screen pt-8 px-4 ${className ? className : ''}`}
+        style={{ top, ...style }}
+        id={id}
+      >
+        {children}
+      </div>
+    </>
   );
 }

@@ -5,7 +5,7 @@ import DropdownsPage from './pages/DropdownsPage';
 import InputsPage from './pages/InputsPage';
 import VirtualizedTablePage from './pages/VirtualizedTablePage'
 import TopNav from './components/navs/TopNav';
-import LeftNav from './components/navs/LeftNav';
+import LeftNav, { LeftNavPage } from './components/navs/LeftNav';
 
 
 
@@ -56,16 +56,18 @@ function App() {
           className='shadow-md bg-gray-200'
           links={links}
         />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/buttons" element={<ButtonsPage />} />
-          <Route path="/dropdowns" element={<DropdownsPage />} />
-          <Route path="/inputs" element={<InputsPage />} />
+        <LeftNavPage top="96px" left="200px">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/buttons" element={<ButtonsPage />} />
+            <Route path="/dropdowns" element={<DropdownsPage />} />
+            <Route path="/inputs" element={<InputsPage />} />
           <Route path="/tables/virtualizedtable" element={<VirtualizedTablePage />} />
         </Routes>
-      </div>
-    </Router>
-  )
+      </LeftNavPage>
+    </div>
+  </Router>
+)
 }
 
 export default App
