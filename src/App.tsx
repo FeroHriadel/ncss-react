@@ -3,6 +3,7 @@ import HomePage from './pages/HomePage'
 import ButtonsPage from './pages/ButtonsPage';
 import DropdownsPage from './pages/DropdownsPage';
 import InputsPage from './pages/InputsPage';
+import NavsPage from './pages/NavsPage';
 import VirtualizedTablePage from './pages/VirtualizedTablePage'
 import TopNav from './components/navs/TopNav';
 import LeftNav, { LeftNavPage } from './components/navs/LeftNav';
@@ -28,6 +29,10 @@ function App() {
     {
       linkName: 'Inputs',
       linkUrl: '/inputs'
+    },
+    {
+      linkName: 'Navs',
+      linkUrl: '/navs'
     },
     { 
       linkName: 'Tables', 
@@ -62,6 +67,7 @@ function App() {
             <Route path="/buttons" element={<ButtonsPage />} />
             <Route path="/dropdowns" element={<DropdownsPage />} />
             <Route path="/inputs" element={<InputsPage />} />
+            <Route path="/navs" element={<NavsPage />} />
           <Route path="/tables/virtualizedtable" element={<VirtualizedTablePage />} />
         </Routes>
       </LeftNavPage>

@@ -26,6 +26,7 @@ export interface LeftNavProps {
   width: string;
   top: string;
   links: LeftNavLink[];
+  fixed?: boolean;
 }
 
 
@@ -38,6 +39,7 @@ export default function LeftNav({
   width = '280px',
   top = '0px',
   links,
+  fixed = true,
 }: LeftNavProps) {
 
   // Show/Hide LeftNav functions
@@ -69,12 +71,12 @@ export default function LeftNav({
       <nav
         className={`left-nav z-10 overflow-x-hidden overflow-y-auto ${className}`}
         style={{
-          ...style,
           width,
           top,
-          position: 'fixed',
-          left: '0px',
-          height: `calc(100vh - ${top})`,
+          position: fixed ? 'fixed' : 'relative',
+          left: fixed ? '0px' : undefined,
+          height: fixed ? `calc(100vh - ${top})` : '100%',
+          ...style,
         }}
         id={id}
       >
