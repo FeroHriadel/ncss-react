@@ -225,7 +225,7 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
       {/* Dropdown Body */}
       {open && (
         <div
-          className={`absolute ${hasSpaceBelow() ? 'top-full' : 'bottom-full'} ${hasSpaceOnRight() ? 'left-0' : 'right-0'} mt-1 bg-white border border-gray-300 rounded shadow-lg z-50 ${optionsClassName || ''}`}
+          className={`absolute ${hasSpaceBelow() ? 'top-full' : 'bottom-full'} ${hasSpaceOnRight() ? 'left-0' : 'right-0'} mt-1 bg-white border border-gray-300 rounded shadow-lg z-20 ${optionsClassName || ''}`}
           style={{ zIndex: 9999, width: `${effectiveMinWidth}px`, ...optionsStyle }}
           role="listbox"
           aria-label={title}

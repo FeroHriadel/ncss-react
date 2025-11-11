@@ -194,7 +194,7 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 				{/* Options Menu */}
 				{open && (
 					<div
-						className={`absolute ${hasSpaceBelow() ? 'top-full mt-1' : 'bottom-full mb-1'} ${hasSpaceOnRight() ? 'left-0' : 'right-0'} bg-white border border-gray-300 rounded shadow-lg z-50 ${optionsClassName || ''}`}
+						className={`absolute ${hasSpaceBelow() ? 'top-full mt-1' : 'bottom-full mb-1'} ${hasSpaceOnRight() ? 'left-0' : 'right-0'} bg-white border border-gray-300 rounded shadow-lg z-20 ${optionsClassName || ''}`}
 						style={{ zIndex: 50, minWidth: `${effectiveMinWidth}px`, ...optionsStyle }}
 					>
 						{/* Header title */}

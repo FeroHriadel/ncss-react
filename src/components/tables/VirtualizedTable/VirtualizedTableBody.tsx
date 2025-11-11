@@ -464,7 +464,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
     {/* Copy notification popup */}
     {copyNotification && (
       <div
-        className="fixed pointer-events-none z-[9999]"
+        className="fixed pointer-events-none z-20"
         style={{
           left: copyNotification.x + 10,
           top: copyNotification.y - 30,

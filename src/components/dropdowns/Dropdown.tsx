@@ -122,7 +122,7 @@ const Dropdown = forwardRef<DropdownHandle, DropdownProps>(function Dropdown(
         isOpen
         &&
         <ul 
-          className={`dropdown-options absolute bg-white border border-gray-300 rounded-md shadow-lg mt-2 z-10 max-h-[${maxHeight}px] overflow-auto ${hasSpaceBelow() ? 'top-full' : 'bottom-full'} ${hasSpaceRight() ? 'left-0' : 'right-0'} min-w-[200px] ${optionsClassName || ''}`}
+          className={`dropdown-options absolute bg-white border border-gray-300 rounded-md shadow-lg mt-2 z-20 max-h-[${maxHeight}px] overflow-auto ${hasSpaceBelow() ? 'top-full' : 'bottom-full'} ${hasSpaceRight() ? 'left-0' : 'right-0'} min-w-[200px] ${optionsClassName || ''}`}
           style={optionsStyle}
         >
           {options.map((opt, index) => (

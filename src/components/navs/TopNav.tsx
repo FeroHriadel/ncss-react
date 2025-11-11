@@ -62,7 +62,7 @@ export default function TopNav({
   return (
     /* Top Navigation Bar wrap */
     <nav 
-      className={`top-nav w-full px-4 py-2 flex justify-between items-center ${fixed ? 'fixed top-0 left-0 z-[3]' : ''} ${className ? className : ''}`} 
+      className={`top-nav w-full px-4 py-2 flex justify-between items-center ${fixed ? 'fixed top-0 left-0 z-10' : ''} ${className ? className : ''}`} 
       style={{...style, height: height || '96px', boxSizing: 'border-box'}} 
     >
 

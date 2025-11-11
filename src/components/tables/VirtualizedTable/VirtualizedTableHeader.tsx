@@ -210,7 +210,7 @@ const VirtualizedTableHeader: React.FC<VirtualizedTableHeaderProps> = ({
       {/* Ghost element that follows cursor - rendered in a portal to avoid positioning issues */}
       {ghostElement && createPortal(
         <div
-          className="fixed pointer-events-none z-50 bg-gray-200 border border-gray-300 rounded shadow-lg text-sm text-left text-gray-600 break-words"
+          className="fixed pointer-events-none z-20 bg-gray-200 border border-gray-300 rounded shadow-lg text-sm text-left text-gray-600 break-words"
           role="presentation"
           aria-hidden="true"
           style={{

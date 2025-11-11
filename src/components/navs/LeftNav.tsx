@@ -60,14 +60,14 @@ export default function LeftNav({
     <>
       { /* LeftNav show button (for small screens) */}
       <IconButton 
-        className={`left-nav-open-button z-[4] top-[100px] left-0 fixed`}
+        className={`left-nav-open-button z-10 top-[100px] left-0 fixed`}
         icon={<FaChevronRight className="text-gray-700" />}
         onClick={showLeftNav}
       />
 
       { /* LeftNav component */}
       <nav
-        className={`left-nav z-[4] overflow-x-hidden overflow-y-auto ${className}`}
+        className={`left-nav z-10 overflow-x-hidden overflow-y-auto ${className}`}
         style={{
           ...style,
           width,
