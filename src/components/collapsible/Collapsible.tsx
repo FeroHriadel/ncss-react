@@ -1,6 +1,5 @@
 import { useState } from "react";
-
-
+import './Collapsible.css';
 
 export interface CollapsibleProps {
   className?: string;
@@ -38,7 +37,7 @@ export default function Collapsible({
       {
         isOpen 
         && 
-        <div className={'collapsible body' + className} id={id} style={style}>
+        <div className={`collapsible-body ${className || ''}`} id={id} style={style}>
           {children}
         </div>
       }

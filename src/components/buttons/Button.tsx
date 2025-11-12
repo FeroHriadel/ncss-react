@@ -1,6 +1,8 @@
 
 
 
+import './Button.css';
+
 export interface ButtonProps {
   className?: string;
   id?: string;
@@ -41,39 +43,39 @@ const Button: React.FC<ButtonProps> = ({
   function getButtonHeight() {
     switch (size) {
       case 'sm':
-        return 'h-6';
+        return 'button-height-sm';
       case 'md':
-        return 'h-10';
+        return 'button-height-md';
       case 'lg':
-        return 'h-12';
+        return 'button-height-lg';
       default:
-        return 'h-10';
+        return 'button-height-md';
     }
   }
 
   function getTextSize() {
     switch (size) {
       case 'sm':
-        return 'text-sm';
+        return 'button-text-sm';
       case 'md':
-        return 'text-md';
+        return 'button-text-md';
       case 'lg':
-        return 'text-lg';
+        return 'button-text-lg';
       default:
-        return 'text-md';
+        return 'button-text-md';
     }
   }
 
   function getVariantClass() {
     switch (variant) {
       case 'dark': 
-        return 'bg-gray-800 text-white border border-black hover:bg-gray-950 active:bg-gray-950 focus:bg-gray-950';
+        return 'button-variant-dark';
       case 'outline': 
-        return 'bg-transparent text-gray-700 border border-gray-500 hover:bg-gray-100 active:bg-gray-200 focus:bg-gray-100';
+        return 'button-variant-outline';
       case 'red':
-        return 'bg-red-900 hover:bg-red-800 focus:bg-red-800 active:bg-red-800 text-white'
+        return 'button-variant-red'
       case 'transparent': 
-        return 'bg-transparent text-gray-700 hover:bg-gray-100 active:bg-gray-200 focus:bg-gray-100';
+        return 'button-variant-transparent';
       default: 
         return '';
     }
@@ -83,17 +85,9 @@ const Button: React.FC<ButtonProps> = ({
   function filterVariantClass(variantClass: string, className?: string) {
     if (!className) return variantClass;
     let filtered = variantClass;
-    if (/\bbg-\S+/.test(className)) {
-      filtered = filtered.replace(/bg-\S+/g, '');
-      filtered = filtered.replace(/hover:bg-\S+/g, '');
-      filtered = filtered.replace(/active:bg-\S+/g, '');
-      filtered = filtered.replace(/focus:bg-\S+/g, '');
-    }
-    if (/\btext-\S+/.test(className)) {
-      filtered = filtered.replace(/text-\S+/g, '');
-    }
-    if (/\bborder-\S+/.test(className)) {
-      filtered = filtered.replace(/border-\S+/g, '');
+    // Remove variant class if custom background is provided
+    if (/\bbg-\S+/.test(className) || /background/.test(className)) {
+      filtered = '';
     }
     return filtered;
   }
@@ -104,8 +98,8 @@ const Button: React.FC<ButtonProps> = ({
       type={type}
       className={
         [
-          'appearance-none rounded p-0 px-4 m-0 shadow-none outline-none min-h-8 flex justify-center items-center font-medium active:scale-[0.99] transition-all',
-          disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
+          'button-base',
+          disabled ? 'button-cursor-not-allowed' : 'button-cursor-pointer',
           getButtonHeight(),
           getTextSize(),
           filterVariantClass(getVariantClass(), className),
@@ -123,7 +117,7 @@ const Button: React.FC<ButtonProps> = ({
       aria-haspopup={ariaHaspopup}
       aria-disabled={disabled}
     >
-      <span className="leading-none p-0 m-0 flex justify-center items-center">
+      <span className="button-content">
         {children}
       </span>
     </button>

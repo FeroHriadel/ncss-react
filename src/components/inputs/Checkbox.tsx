@@ -1,5 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import { FaCheck } from 'react-icons/fa';
+import './Checkbox.css';
 
 export interface CheckboxProps {
   checked?: boolean;
@@ -60,8 +61,8 @@ const Checkbox = forwardRef<CheckboxHandle, CheckboxProps>(function Checkbox(
   };
 
   return (
-    <div className={`flex items-center ${className}`}>
-      <span className="relative inline-block">
+    <div className={`checkbox-container ${className}`}>
+      <span className="checkbox-wrapper">
         <input
           type="checkbox"
           id={id}
@@ -69,27 +70,27 @@ const Checkbox = forwardRef<CheckboxHandle, CheckboxProps>(function Checkbox(
           checked={isChecked}
           disabled={disabled}
           onChange={handleChange}
-          className="opacity-0 absolute w-5 h-5 cursor-pointer disabled:cursor-not-allowed"
+          className="checkbox-input"
         />
         <span
-          className={`flex items-center justify-center w-5 h-5 rounded border transition-colors ${
-            disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+          className={`checkbox-visual ${
+            disabled ? 'checkbox-visual-disabled' : 'checkbox-visual-cursor-pointer'
           } ${
             isChecked 
-              ? 'bg-gray-800 border-gray-800 hover:bg-gray-950 focus:bg-gray-950' 
-              : 'border-gray-800'
+              ? 'checkbox-visual-checked' 
+              : ''
           }`}
         >
           {isChecked && (
-            <FaCheck className="text-white" size={12} />
+            <FaCheck className="checkbox-check-icon" size={12} />
           )}
         </span>
       </span>
       {label && (
         <label
           htmlFor={id}
-          className={`ml-2 text-sm text-gray-700 select-none ${
-            disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+          className={`checkbox-label ${
+            disabled ? 'checkbox-label-disabled' : ''
           }`}
         >
           {label}

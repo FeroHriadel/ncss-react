@@ -1,0 +1,66 @@
+/* Textarea.css */
+
+.textarea-wrapper {
+  width: 100%;
+}
+
+.textarea-label {
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.textarea-required {
+  margin-left: 0.25rem;
+}
+
+.textarea-container {
+  position: relative;
+}
+
+.textarea-field {
+  outline: none;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  background-color: #f3f4f6;
+  color: #374151;
+  width: 100%;
+  padding: 0.75rem;
+  resize: vertical;
+}
+
+.textarea-field:hover {
+  background-color: #e5e7eb;
+}
+
+.textarea-field:focus {
+  background-color: #e5e7eb;
+}
+
+.textarea-field::placeholder {
+  color: #4b5563;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.textarea-field.textarea-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.textarea-error-message {
+  font-size: 0.75rem;
+  color: #7f1d1d;
+  position: absolute;
+  left: 0;
+  top: 100%;
+}
+
+.textarea-message {
+  font-size: 0.75rem;
+  color: #4b5563;
+  position: absolute;
+  left: 0;
+  top: 100%;
+}

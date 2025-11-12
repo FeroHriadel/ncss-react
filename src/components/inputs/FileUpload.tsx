@@ -1,5 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import CloseButton from '../buttons/CloseButton';
+import './FileUpload.css';
 
 export interface FileUploadProps {
   disabled?: boolean;
@@ -82,24 +83,22 @@ const FileUpload = forwardRef<FileUploadHandle, FileUploadProps>(function FileUp
   const acceptString = accept.join(',');
 
   return (
-    <div className={`w-full ${className}`} style={width ? { width } : {}}>
+    <div className={`fileupload-wrapper ${className}`} style={width ? { width } : {}}>
       {label && (
-        <label htmlFor={id} className="mb-2 text-sm text-gray-600">
+        <label htmlFor={id} className="fileupload-label">
           {label}
         </label>
       )}
-      <div className="relative">
+      <div className="fileupload-container">
         <div
-          className={`flex items-center border border-gray-300 rounded-md bg-gray-100 hover:bg-gray-200 focus-within:bg-gray-200 w-full h-10 overflow-hidden ${
-            disabled ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
+          className={`fileupload-inner ${disabled ? 'fileupload-disabled' : ''}`}
           style={style}
         >
           <input
             ref={inputRef}
             type="file"
             id={id}
-            className="hidden"
+            className="fileupload-input"
             onChange={handleFileChange}
             disabled={disabled}
             accept={acceptString}
@@ -109,28 +108,26 @@ const FileUpload = forwardRef<FileUploadHandle, FileUploadProps>(function FileUp
             type="button"
             onClick={handleButtonClick}
             disabled={disabled}
-            className={`h-full px-3 text-sm font-medium text-white bg-gray-800 hover:bg-gray-950 focus:bg-gray-950 border-r border-gray-300 transition-colors ${
-              disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-            }`}
+            className={`fileupload-button ${disabled ? 'fileupload-button-disabled' : ''}`}
           >
             Upload Files
           </button>
-          <span className="flex-1 px-3 text-sm text-gray-700 truncate">
+          <span className="fileupload-text">
             {getFileText()}
           </span>
           {files.length > 0 && !disabled && (
-            <div className="pr-2">
+            <div className="fileupload-clear">
               <CloseButton onClick={handleClear} title="Clear files" />
             </div>
           )}
         </div>
         {errorMessage && (
-          <span className="text-xs text-red-900 absolute left-0 top-full translate-y-1">
+          <span className="fileupload-error-message">
             {errorMessage}
           </span>
         )}
         {message && (
-          <span className="text-xs text-gray-600 absolute left-0 top-full translate-y-1">
+          <span className="fileupload-message">
             {message}
           </span>
         )}

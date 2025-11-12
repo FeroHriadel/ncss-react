@@ -1,0 +1,79 @@
+/* Switch.css */
+
+.switch-container {
+  display: flex;
+  align-items: center;
+}
+
+.switch-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.switch-input {
+  opacity: 0;
+  position: absolute;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.switch-input:disabled {
+  cursor: not-allowed;
+}
+
+.switch-track {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-radius: 9999px;
+  transition: background-color 0.2s;
+  pointer-events: none;
+}
+
+.switch-track.switch-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.switch-track:not(.switch-disabled) {
+  cursor: pointer;
+}
+
+.switch-track.switch-unchecked {
+  background-color: #6b7280;
+}
+
+.switch-track.switch-checked {
+  background-color: #1f2937;
+}
+
+.switch-track.switch-checked:hover {
+  background-color: #030712;
+}
+
+.switch-track.switch-checked:focus {
+  background-color: #030712;
+}
+
+.switch-thumb {
+  position: absolute;
+  background-color: #f3f4f6;
+  border-radius: 9999px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.switch-label {
+  margin-left: 0.5rem;
+  font-size: 0.875rem;
+  color: #374151;
+  user-select: none;
+}
+
+.switch-label.switch-label-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.switch-label:not(.switch-label-disabled) {
+  cursor: pointer;
+}

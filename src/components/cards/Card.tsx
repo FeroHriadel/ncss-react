@@ -1,6 +1,8 @@
 
 
 
+import './Card.css';
+
 export interface CardProps {
   children: React.ReactNode;
   className?: string;
@@ -23,7 +25,7 @@ export default function Card({
 }: CardProps) {
   return (
     <div 
-      className={`border border-gray-300 rounded-lg shadow-md ${className}`} 
+      className={`card ${className}`} 
       style={style} 
       id={id}
       role={role}

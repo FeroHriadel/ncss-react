@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect, forwardRef, useImperativeHandle } from "react";
+import './Dropdown.css';
 
 
 
@@ -103,14 +104,14 @@ const Dropdown = forwardRef<DropdownHandle, DropdownProps>(function Dropdown(
     /* Wrapper */
     <div 
       ref={wrapperRef}
-      className={`dropdown-wrap relative inline-block ${disabled ? '' : 'group '}${className ? className : ''}`}
+      className={`dropdown-wrapper ${disabled ? '' : 'dropdown-not-disabled '}${className || ''}`}
       id={id} 
       style={{ opacity: disabled ? 0.5 : 1, pointerEvents: disabled ? 'none' : 'auto', ...style }}
     >
 
       {/* trigger button - render trigger or children (children has precedence) */}
       <span 
-        className="w-full appearance-none outline-none border-none p-0 m-0 bg-transparent cursor-pointer" 
+        className="dropdown-trigger" 
         onClick={toggleDropdown}
       >
         {children && !trigger && children}
@@ -122,8 +123,8 @@ const Dropdown = forwardRef<DropdownHandle, DropdownProps>(function Dropdown(
         isOpen
         &&
         <ul 
-          className={`dropdown-options absolute bg-white border border-gray-300 rounded-md shadow-lg mt-2 z-20 max-h-[${maxHeight}px] overflow-auto ${hasSpaceBelow() ? 'top-full' : 'bottom-full'} ${hasSpaceRight() ? 'left-0' : 'right-0'} min-w-[200px] ${optionsClassName || ''}`}
-          style={optionsStyle}
+          className={`dropdown-options ${hasSpaceBelow() ? 'dropdown-options-bottom' : 'dropdown-options-top'} ${hasSpaceRight() ? 'dropdown-options-left' : 'dropdown-options-right'} ${optionsClassName || ''}`}
+          style={{ maxHeight: `${maxHeight}px`, ...optionsStyle }}
         >
           {options.map((opt, index) => (
             <li 
@@ -140,7 +141,7 @@ const Dropdown = forwardRef<DropdownHandle, DropdownProps>(function Dropdown(
       {/* Ghost options to measure height - positioned off-screen to avoid overflow */}
       <ul 
         ref={measureRef} 
-        className={`dropdown-options-ghost fixed invisible pointer-events-none bg-white border border-gray-300 rounded-md shadow-lg -left-[9999px] -top-[9999px] max-h-[400px] overflow-auto min-w-[200px]`}
+        className="dropdown-ghost"
       >
         {options.map((opt, index) => (
           <li 

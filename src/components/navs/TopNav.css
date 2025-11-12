@@ -1,3 +1,55 @@
+/* TopNav.css */
+
+.top-nav {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.top-nav.top-nav-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.top-nav-right-side {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.top-nav-link {
+  color: #374151;
+}
+
+.top-nav-link:hover {
+  color: #111827;
+}
+
+.top-nav-dropdown-trigger {
+  color: #374151;
+}
+
+.top-nav-dropdown-trigger:hover {
+  color: #111827;
+}
+
+.top-nav-dropdown-option {
+  display: block;
+  width: 100%;
+  color: #374151;
+  padding: 0.5rem 1rem;
+}
+
+.top-nav-dropdown-option:hover {
+  color: #111827;
+  background-color: #f3f4f6;
+}
+
 @media (max-width: 768px) {
   .top-nav-hamburger {
     display: block;

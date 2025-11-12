@@ -1,3 +1,5 @@
+import './Textarea.css';
+
 export interface TextareaProps {
   name?: string;
   className?: string;
@@ -39,14 +41,12 @@ export default function Textarea({
   if (!id) id=`ncss-textarea-${Math.random().toString(10)}`;
 
   return (
-    <div className={`w-full ${className || ''}`} style={width ? { width } : undefined}>
-      {label && <label htmlFor={id} className="block mb-2 text-sm text-gray-600">{label}{required && <span className="ml-1">*</span>}</label>}
-      <div className="relative">
+    <div className={`textarea-wrapper ${className || ''}`} style={width ? { width } : undefined}>
+      {label && <label htmlFor={id} className="textarea-label">{label}{required && <span className="textarea-required">*</span>}</label>}
+      <div className="textarea-container">
         <textarea
           name={name}
-          className={`outline-none border border-gray-300 rounded-md text-base bg-gray-100 text-gray-700 hover:bg-gray-200 focus:bg-gray-200 placeholder:text-gray-600 placeholder:font-light placeholder:italic w-full p-3 resize-y ${
-            disabled ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
+          className={`textarea-field ${disabled ? 'textarea-disabled' : ''}`}
           id={id}
           style={height ? { height, ...style } : style}
           value={value}
@@ -57,8 +57,8 @@ export default function Textarea({
           title={title}
           rows={rows}
         />
-        {errorMessage && <span className="text-xs text-red-900 absolute left-0 top-full">{errorMessage}</span>}
-        {message && <span className="text-xs text-gray-600 absolute left-0 top-full">{message}</span>}
+        {errorMessage && <span className="textarea-error-message">{errorMessage}</span>}
+        {message && <span className="textarea-message">{message}</span>}
       </div>
     </div>
   );

@@ -44,14 +44,14 @@ export default function TopNav({
     //if link has options, flatten them into individual Links
     if (link.options && link.options.length > 0) {
       return link.options.map((opt) => ({
-        render: <Link to={opt.optionUrl || '/'} className="block w-full text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-4 py-2">{opt.optionName}</Link>,
+        render: <Link to={opt.optionUrl || '/'} className="top-nav-dropdown-option">{opt.optionName}</Link>,
         value: opt.optionUrl || opt.optionName
       }));
     }
     //if link is a simple link, render it
     else {
       return [{
-        render: <Link to={link.linkUrl || '/'} className="block w-full text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-4 py-2">{link.linkName}</Link>,
+        render: <Link to={link.linkUrl || '/'} className="top-nav-dropdown-option">{link.linkName}</Link>,
         value: link.linkUrl || link.linkName
       }];
     }
@@ -62,19 +62,19 @@ export default function TopNav({
   return (
     /* Top Navigation Bar wrap */
     <nav 
-      className={`top-nav w-full px-4 py-2 flex justify-between items-center ${fixed ? 'fixed top-0 left-0 z-10' : ''} ${className ? className : ''}`} 
+      className={`top-nav ${fixed ? 'top-nav-fixed' : ''} ${className || ''}`}
       style={{...style, height: height || '96px', boxSizing: 'border-box'}} 
     >
 
       {/* Left side - Logo */}
-      <span className="top-nav-left-side top-nav-logo">
+      <span className="top-nav-logo">
         <Link to={logoUrl || '/' }>
           {logo}
         </Link>
       </span>
       
       {/* Right side - links & dropdowns - wider screens (no hamburger) */}
-      <div className="top-nav-right-side flex items-center gap-4">
+      <div className="top-nav-right-side">
         {
 
           /* render dropdowns on wider screens */
@@ -83,10 +83,10 @@ export default function TopNav({
               return (
                 <Dropdown
                   key={'dropdown-' + link.linkName}
-                  trigger={<span className="text-gray-700 hover:text-gray-900">{link.linkName}</span>}
+                  trigger={<span className="top-nav-dropdown-trigger">{link.linkName}</span>}
                   closeOnSelect={true}
                   options={link.options.map((opt) => ({
-                    render: <Link to={opt.optionUrl || '/'} className="block w-full text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-4 py-2">{opt.optionName}</Link>,
+                    render: <Link to={opt.optionUrl || '/'} className="top-nav-dropdown-option">{opt.optionName}</Link>,
                     value: opt.optionUrl || opt.optionName
                   }))}
                 />
@@ -95,7 +95,7 @@ export default function TopNav({
 
             /* render links on wider screens */
             else return (
-              <Link key={'link-' + link.linkName} to={link.linkUrl!} className="text-gray-700 hover:text-gray-900">
+              <Link key={'link-' + link.linkName} to={link.linkUrl!} className="top-nav-link">
                 {link.linkName}
               </Link>
             )

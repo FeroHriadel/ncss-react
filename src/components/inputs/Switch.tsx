@@ -1,4 +1,5 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import './Switch.css';
 
 export interface SwitchProps {
   checked?: boolean;
@@ -72,8 +73,8 @@ const Switch = forwardRef<SwitchHandle, SwitchProps>(function Switch(
     : 'calc(44px - 18px - 4px)'; // 22px for default
 
   return (
-    <div className={`flex items-center ${className}`}>
-      <span className="relative inline-block" style={{ width, height }}>
+    <div className={`switch-container ${className}`}>
+      <span className="switch-wrapper" style={{ width, height }}>
         <input
           type="checkbox"
           id={id}
@@ -81,21 +82,15 @@ const Switch = forwardRef<SwitchHandle, SwitchProps>(function Switch(
           checked={isChecked}
           disabled={disabled}
           onChange={handleChange}
-          className="opacity-0 absolute cursor-pointer disabled:cursor-not-allowed z-10"
+          className="switch-input"
           style={{ width: switchWidth, height: switchHeight }}
         />
         <span
-          className={`relative flex items-center rounded-full transition-colors pointer-events-none ${
-            disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-          } ${
-            isChecked 
-              ? 'bg-gray-800 hover:bg-gray-950 focus:bg-gray-950' 
-              : 'bg-gray-500'
-          }`}
+          className={`switch-track ${disabled ? 'switch-disabled' : ''} ${isChecked ? 'switch-checked' : 'switch-unchecked'}`}
           style={{ width: switchWidth, height: switchHeight }}
         >
           <span
-            className="absolute bg-gray-100 rounded-full transition-transform duration-200 ease-in-out"
+            className="switch-thumb"
             style={{ 
               width: thumbSize, 
               height: thumbSize,
@@ -107,9 +102,7 @@ const Switch = forwardRef<SwitchHandle, SwitchProps>(function Switch(
       {label && (
         <label
           htmlFor={id}
-          className={`ml-2 text-sm text-gray-700 select-none ${
-            disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-          }`}
+          className={`switch-label ${disabled ? 'switch-label-disabled' : ''}`}
         >
           {label}
         </label>

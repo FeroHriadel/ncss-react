@@ -1,4 +1,5 @@
 import { FaTimes } from 'react-icons/fa';
+import './Pill.css';
 
 
 
@@ -30,7 +31,7 @@ export default function Pill({
   
   return (
     <span 
-      className={`text-sm font-semibold text-gray-600 bg-gray-100 px-3 py-1 rounded inline-flex items-center ${isInteractive ? 'cursor-pointer' : ''} ${className}`} 
+      className={`pill ${isInteractive ? 'pill-interactive' : ''} ${className || ''}`}
       style={style}
       onClick={onClick}
       role={role || (isInteractive ? 'button' : undefined)}
@@ -47,7 +48,7 @@ export default function Pill({
     >
       {isCloseable && (
         <FaTimes 
-          className='mr-2 cursor-pointer' 
+          className="pill-close-icon"
           onClick={onClose}
           role="button"
           aria-label="Remove"

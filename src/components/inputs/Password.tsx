@@ -1,5 +1,6 @@
 import React, { useState, forwardRef, useImperativeHandle, useCallback } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import './Password.css';
 
 export interface PasswordProps {
   name?: string;
@@ -87,14 +88,14 @@ const Password = forwardRef<PasswordHandle, PasswordProps>(function Password(
   };
 
   return (
-    <div className={`w-full ${className || ''}`} style={width ? { width } : {}}>
-      {label && <label htmlFor={id} className="mb-2 text-sm text-gray-600">{label}{required && <span className="ml-1">*</span>}</label>}
+    <div className={`password-wrapper ${className || ''}`} style={width ? { width } : {}}>
+      {label && <label htmlFor={id} className="password-label">{label}{required && <span className="password-required">*</span>}</label>}
       
-      <div className="relative w-full">
+      <div className="password-input-container">
         <input
           type={showPassword ? 'text' : 'password'}
           name={name}
-          className={`outline-none border border-gray-300 rounded-md text-md bg-gray-100 text-gray-700 hover:bg-gray-200 focus:bg-gray-200 placeholder:text-gray-600 placeholder:font-light placeholder:italic w-full h-10 indent-3 ${canShowPassword ? 'pr-10' : ''}`}
+          className={`password-field ${canShowPassword ? 'password-with-toggle' : ''}`}
           id={id}
           style={width ? { width, opacity: disabled ? 0.5 : 1, cursor: disabled ? 'not-allowed' : 'text', ...style } : { opacity: disabled ? 0.5 : 1, cursor: disabled ? 'not-allowed' : 'text', ...style }}
           value={value}
@@ -109,7 +110,7 @@ const Password = forwardRef<PasswordHandle, PasswordProps>(function Password(
           <button
             type="button"
             onClick={togglePasswordVisibility}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-800 focus:outline-none"
+            className="password-toggle-button"
             aria-label={showPassword ? 'Hide password' : 'Show password'}
             disabled={disabled}
           >
@@ -117,8 +118,8 @@ const Password = forwardRef<PasswordHandle, PasswordProps>(function Password(
           </button>
         )}
 
-        {errorMessage && <span className="text-xs text-red-900 absolute left-0 top-full translate-y-1">{errorMessage}</span>}
-        {message && <span className="text-xs text-gray-600 absolute left-0 top-full translate-y-1">{message}</span>}
+        {errorMessage && <span className="password-error-message">{errorMessage}</span>}
+        {message && <span className="password-message">{message}</span>}
       </div>
     </div>
   );

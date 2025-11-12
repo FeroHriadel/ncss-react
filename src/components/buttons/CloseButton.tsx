@@ -1,7 +1,6 @@
 import IconButton from "./IconButton";
 import { FaTimes } from "react-icons/fa";
-
-
+import './CloseButton.css';
 
 export interface CloseButtonProps {
   className?: string;
@@ -27,7 +26,7 @@ const CloseButton: React.FC<CloseButtonProps> = ({
   ariaLabel,
 }) => (
   <IconButton
-    className={'text-red-900 ' + (className ? className : '')}
+    className={`close-button ${className || ''}`}
     id={id}
     style={style}
     onClick={onClick}

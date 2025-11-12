@@ -1,0 +1,123 @@
+/* MultiSelect.css */
+
+.multiselect-wrapper {
+  position: relative;
+}
+
+.multiselect-trigger-custom {
+  display: inline-block;
+}
+
+.multiselect-trigger-default {
+  position: relative;
+  display: block;
+}
+
+.multiselect-button-placeholder {
+  opacity: 0;
+}
+
+.multiselect-text-overlay {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  color: #374151;
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.multiselect-chevron {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #374151;
+  font-size: 0.75rem;
+  pointer-events: none;
+}
+
+.multiselect-options {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  z-index: 9999;
+}
+
+.multiselect-options.multiselect-options-top {
+  bottom: 100%;
+}
+
+.multiselect-options.multiselect-options-bottom {
+  top: 100%;
+  margin-top: 0.25rem;
+}
+
+.multiselect-options.multiselect-options-left {
+  left: 0;
+}
+
+.multiselect-options.multiselect-options-right {
+  right: 0;
+}
+
+.multiselect-header {
+  padding: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.multiselect-header-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.multiselect-options-wrap {
+  max-height: 15rem;
+  overflow-y: auto;
+}
+
+.multiselect-options-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.multiselect-option {
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.2s;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.multiselect-option:hover {
+  background-color: #f3f4f6;
+}
+
+.multiselect-option-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.multiselect-option-icon {
+  margin-left: 0.75rem;
+  color: #6b7280;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.multiselect-option-spacer {
+  margin-left: 1.5rem;
+}

@@ -1,6 +1,5 @@
 import React from "react";
-
-
+import './IconButton.css';
 
 export interface IconButtonProps {
   className?: string;
@@ -35,9 +34,9 @@ const IconButton: React.FC<IconButtonProps> = ({
 }) => (
   <button
     type="button"
-    className={`min-w-[${size}] min-h-[${size}] p-2 rounded flex items-center justify-center appearance-none outline-none border-none hover:bg-gray-100 active:bg-gray-200 focus:bg-gray-100 ${disabled ? 'opacity-50' : ''} ` + className}
+    className={`icon-button ${disabled ? 'icon-button-disabled' : ''} ${className || ''}`}
     id={id}
-    style={style}
+    style={{ minWidth: size, minHeight: size, ...style }}
     onClick={onClick}
     disabled={disabled}
     title={title}
@@ -47,7 +46,7 @@ const IconButton: React.FC<IconButtonProps> = ({
     aria-haspopup={ariaHaspopup}
     aria-disabled={disabled}
   >
-    <span aria-hidden="true">{icon}</span>
+    <span className="icon-button-icon" aria-hidden="true">{icon}</span>
   </button>
 );
 

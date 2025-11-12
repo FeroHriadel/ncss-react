@@ -1,0 +1,21 @@
+/* Pill.css */
+
+.pill {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #4b5563;
+  background-color: #f3f4f6;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.pill.pill-interactive {
+  cursor: pointer;
+}
+
+.pill-close-icon {
+  margin-right: 0.5rem;
+  cursor: pointer;
+}

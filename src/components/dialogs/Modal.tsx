@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { createPortal } from 'react-dom';
 import CloseButton from "../buttons/CloseButton";
-
-
+import './Modal.css';
 
 export interface ModalProps {
   isOpen?: boolean;
@@ -89,8 +88,7 @@ export default function Modal({
       return (
         /* Overlay */
         <div
-          className="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-60"
-          style={{ top: 0, left: 0, right: 0, bottom: 0, zIndex: 100 }}
+          className="modal-overlay"
           onClick={handleOverlayClick}
           role="presentation"
         >
@@ -98,10 +96,7 @@ export default function Modal({
           {/* Dialog */}
           <div
             ref={dialogRef}
-              className={
-                "modal-content relative p-5 sm:p-8 bg-white rounded min-w-[260px] sm:min-w-[320px] min-h-[180px] sm:min-h-[200px] shadow-lg max-w-[95%] max-h-[95%] overflow-auto z-[101] " +
-                (className || "")
-            }
+            className={`modal-content ${className || ''}`}
             id={id}
             style={style}
             onClick={e => e.stopPropagation()}
@@ -112,7 +107,7 @@ export default function Modal({
 
             {/* Close Button */}
             <CloseButton
-              className="absolute top-2 right-2 z-[102]"
+              className="modal-close-button"
               onClick={onClose}
               title="Close"
               aria-label="Close modal"
@@ -129,7 +124,7 @@ export default function Modal({
   if (trigger) {
     return (
       <>
-        <span style={{ display: "inline-block" }}onClick={() => setInternalOpen(true)}>
+        <span className="modal-trigger" onClick={() => setInternalOpen(true)}>
           {trigger}
         </span>
         {isOpen && createPortal(renderModal(), document.body)}

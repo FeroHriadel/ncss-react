@@ -62,14 +62,14 @@ export default function LeftNav({
     <>
       { /* LeftNav show button (for small screens) */}
       <IconButton 
-        className={`left-nav-open-button z-10 top-[100px] left-0 fixed`}
+        className="left-nav-open-button"
         icon={<FaChevronRight className="text-gray-700" />}
         onClick={showLeftNav}
       />
 
       { /* LeftNav component */}
       <nav
-        className={`left-nav z-10 overflow-x-hidden overflow-y-auto ${className}`}
+        className={`left-nav ${className || ''}`}
         style={{
           width,
           top,
@@ -82,7 +82,7 @@ export default function LeftNav({
       >
         { /* LeftNav hide button (for small screens) */}
         <CloseButton 
-          className="left-nav-close-button absolute top-1 right-1"
+          className="left-nav-close-button"
           onClick={hideLeftNav}
           aria-label="Close left navigation"
         />
@@ -94,9 +94,9 @@ export default function LeftNav({
               <Collapsible
                 key={'collapsible-' + link.linkName}
                 trigger={
-                  <span className={`flex items-center w-full font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-4 py-4 border border-gray-300 border-r-0 ${index > 0 ? 'border-t-0' : ''} cursor-pointer`}>
+                  <span className={`left-nav-link-trigger ${index > 0 ? 'left-nav-border-top-0' : ''}`}>
                     {link.linkName}
-                    <FaChevronDown size={10} className="ml-2" />
+                    <FaChevronDown size={10} className="left-nav-chevron" />
                   </span>
                 }
               >
@@ -104,7 +104,7 @@ export default function LeftNav({
                   <Link 
                     key={'option-' + opt.optionName} 
                     to={opt.optionUrl || '/'} 
-                    className="block w-full text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-8 py-4 border border-gray-300 border-r-0 border-t-0"
+                    className="left-nav-option-link"
                   >
                     {opt.optionName}
                   </Link>
@@ -119,7 +119,7 @@ export default function LeftNav({
               <Link 
                 key={'link-' + link.linkName} 
                 to={link.linkUrl || '/'} 
-                className={`block w-full font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-4 py-4 border border-gray-300 border-r-0 ${index > 0 ? 'border-t-0' : ''}`}
+                className={`left-nav-simple-link ${index > 0 ? 'left-nav-border-top-0' : ''}`}
               >
                 {link.linkName}
               </Link>
@@ -149,20 +149,16 @@ export function LeftNavPage({ top = '96px', left = '200px', children, className,
     <>
       <style>
         {`
-          @media (max-width: 1000px) {
-            .left-nav-page {
-              margin-left: 0px !important;
-            }
-          }
-          
           @media (min-width: 1001px) {
             .left-nav-page {
               margin-left: ${left} !important;
+            }
+          }
         `}
       </style>
 
       <div
-        className={`left-nav-page min-h-screen pt-8 px-4 ${className ? className : ''}`}
+        className={`left-nav-page ${className || ''}`}
         style={{ top, ...style }}
         id={id}
       >

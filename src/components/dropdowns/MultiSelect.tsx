@@ -2,6 +2,7 @@ import React from "react";
 import { FaCheck as FaTick } from 'react-icons/fa';
 import { FaChevronDown } from 'react-icons/fa';
 import Button from '../buttons/Button';
+import './MultiSelect.css';
 
 
 
@@ -168,7 +169,7 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
   // Render
   return (
     <div 
-      className={className ? `${className} relative` : 'relative'} 
+      className={`multiselect-wrapper ${className || ''}`}
       style={{ opacity: disabled ? 0.5 : 1, pointerEvents: disabled ? 'none' : 'auto', ...style }} 
       ref={dropdownRef} 
       id={id}
@@ -185,7 +186,7 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
           aria-expanded={open}
           aria-label={title}
           tabIndex={0}
-          style={{ display: 'inline-block' }}
+          className="multiselect-trigger-custom"
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault();
@@ -199,7 +200,7 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
           {trigger}
         </span>
       ) : (
-        <span ref={triggerRef} className="relative block">
+        <span ref={triggerRef} className="multiselect-trigger-default">
           <Button
             onClick={toggleDropdownOpen}
             disabled={disabled}
@@ -209,23 +210,23 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
             style={{ width: '100%' }}
           >
             {/* Invisible placeholder to maintain button height */}
-            <span className="opacity-0">-</span>
+            <span className="multiselect-button-placeholder">-</span>
           </Button>
           {/* Text overlay */}
           <span 
-            className="absolute left-4 top-1/2 -translate-y-1/2 truncate text-left text-gray-700 text-md pointer-events-none"
+            className="multiselect-text-overlay"
             style={{ maxWidth: 'calc(100% - 64px)' }}
           >
             {getDisplayText()}
           </span>
-          <FaChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700 text-xs pointer-events-none" aria-hidden="true" />
+          <FaChevronDown className="multiselect-chevron" aria-hidden="true" />
         </span>
       )}
 
       {/* Dropdown Body */}
       {open && (
         <div
-          className={`absolute ${hasSpaceBelow() ? 'top-full' : 'bottom-full'} ${hasSpaceOnRight() ? 'left-0' : 'right-0'} mt-1 bg-white border border-gray-300 rounded shadow-lg z-20 ${optionsClassName || ''}`}
+          className={`multiselect-options ${hasSpaceBelow() ? 'multiselect-options-bottom' : 'multiselect-options-top'} ${hasSpaceOnRight() ? 'multiselect-options-left' : 'multiselect-options-right'} ${optionsClassName || ''}`}
           style={{ zIndex: 9999, width: `${effectiveMinWidth}px`, ...optionsStyle }}
           role="listbox"
           aria-label={title}
@@ -233,13 +234,13 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
         >
 
           {/* Dropdown Header */}
-          <div className="p-2 border-b border-gray-200" role="presentation">
-            <span className="text-sm font-medium text-gray-700">{headerTitle || title}</span>
+          <div className="multiselect-header" role="presentation">
+            <span className="multiselect-header-text">{headerTitle || title}</span>
           </div>
 
           {/* Dropdown Options */}
-          <div className="options-wrap max-h-60 overflow-y-auto">
-            <ul className="list-none m-0 p-0" role="presentation">
+          <div className="multiselect-options-wrap">
+            <ul className="multiselect-options-list" role="presentation">
               {options.map(opt => {
                 const isSelected = selectedOptions.includes(opt.value);
                 return (
@@ -256,13 +257,13 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
                       }
                     }}
                   >
-                    <span className="w-full text-left p-2 flex items-center justify-between hover:bg-gray-100 transition-colors text-sm text-gray-700"                    >
-                      <span className="truncate">{opt.displayValue}</span>
+                    <span className="multiselect-option">
+                      <span className="multiselect-option-text">{opt.displayValue}</span>
                       {isSelected 
                         ? 
-                        <FaTick className="ml-3 text-gray-500 text-xs flex-shrink-0" aria-hidden="true" />
+                        <FaTick className="multiselect-option-icon" aria-hidden="true" />
                         : 
-                        <span className="ml-6" aria-hidden="true"></span>
+                        <span className="multiselect-option-spacer" aria-hidden="true"></span>
                       }
                     </span>
                   </li>

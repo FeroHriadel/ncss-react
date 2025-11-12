@@ -1,0 +1,169 @@
+/* Select.css */
+
+.select-wrapper {
+  position: relative;
+}
+
+.select-trigger-custom {
+  cursor: pointer;
+  display: inline-block;
+}
+
+.select-trigger-default {
+  position: relative;
+  display: block;
+}
+
+.select-button-placeholder {
+  opacity: 0;
+}
+
+.select-text-overlay {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  color: #374151;
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.select-chevron {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #374151;
+  font-size: 0.75rem;
+  pointer-events: none;
+}
+
+.select-options {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  z-index: 50;
+}
+
+.select-options.select-options-top {
+  bottom: 100%;
+  margin-bottom: 0.25rem;
+}
+
+.select-options.select-options-bottom {
+  top: 100%;
+  margin-top: 0.25rem;
+}
+
+.select-options.select-options-left {
+  left: 0;
+}
+
+.select-options.select-options-right {
+  right: 0;
+}
+
+.select-header {
+  padding: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.select-header-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.select-options-wrap {
+  max-height: 15rem;
+  overflow-y: auto;
+}
+
+.select-options-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.select-option {
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.2s;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.select-option:hover {
+  background-color: #f3f4f6;
+}
+
+.select-option-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.select-option-icon {
+  margin-left: 0.75rem;
+  color: #6b7280;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.select-option-spacer {
+  margin-left: 1.5rem;
+}
+
+.select-measurer {
+  position: absolute;
+  top: -99999px;
+  left: -99999px;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.select-measurer-content {
+  background-color: white;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  min-width: 200px;
+}
+
+.select-measurer-option {
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.select-measurer-option-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.select-measurer-icon {
+  margin-left: 0.75rem;
+  color: black;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.select-measurer-spacer {
+  width: 0.75rem;
+}

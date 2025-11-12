@@ -1,0 +1,75 @@
+/* VirtualizedTableHeader.css */
+
+.vt-header {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.vt-header::-webkit-scrollbar {
+  display: none;
+}
+
+.vt-header-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.vt-header-thead {
+  background-color: #e5e7eb;
+}
+
+.vt-header-th {
+  position: relative;
+  text-align: left;
+  font-weight: 600;
+  user-select: none;
+  cursor: grab;
+  transition: background-color 0.2s;
+  color: #374151;
+}
+
+.vt-header-th:active {
+  cursor: grabbing;
+}
+
+.vt-header-th.vt-header-dragged {
+  background-color: #d1d5db;
+  opacity: 0.5;
+}
+
+.vt-header-th.vt-header-drag-over {
+  background-color: #d1d5db;
+}
+
+.vt-header-th.vt-header-vertical-separator {
+  border-right: 1px solid #d1d5db;
+}
+
+.vt-header-content {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.vt-header-sort-icon {
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.vt-header-sort-icon.vt-header-sort-desc {
+  transform: rotate(180deg);
+}
+
+.vt-header-ghost {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  background-color: #e5e7eb;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  font-weight: 600;
+  color: #374151;
+  cursor: grabbing;
+  opacity: 0.9;
+}

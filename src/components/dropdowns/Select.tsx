@@ -2,6 +2,7 @@ import React from "react";
 import { FaCheck as FaTick } from 'react-icons/fa';
 import { FaChevronDown } from 'react-icons/fa';
 import Button from '../buttons/Button';
+import './Select.css';
 
 export interface DropdownOption {
 	value: string;
@@ -155,17 +156,17 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 
 		return (
 			<div 
-				className={className ? `${className} relative` : 'relative'} 
+				className={`select-wrapper ${className || ''}`}
 				style={{ width, opacity: disabled ? 0.5 : 1, pointerEvents: disabled ? 'none' : 'auto', ...style }} 
 				ref={dropdownRef} 
 				id={id}
 			>
 				{trigger ? (
-					<span ref={triggerRef} onClick={disabled ? undefined : toggleDropdownOpen} className="cursor-pointer inline-block">
+					<span ref={triggerRef} onClick={disabled ? undefined : toggleDropdownOpen} className="select-trigger-custom">
 						{trigger}
 					</span>
 				) : (
-					<span ref={triggerRef} className="relative block">
+					<span ref={triggerRef} className="select-trigger-default">
 						<Button
 							onClick={toggleDropdownOpen}
 							disabled={disabled}
@@ -175,11 +176,11 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
               style={{ width: '100%' }}
 						>
 							{/* Invisible placeholder to maintain button height */}
-							<span className="opacity-0">-</span>
+							<span className="select-button-placeholder">-</span>
 						</Button>
 						{/* Text overlay */}
 						<span 
-							className="absolute left-4 top-1/2 -translate-y-1/2 truncate text-left text-gray-700 text-md pointer-events-none"
+							className="select-text-overlay"
 							style={{ maxWidth: 'calc(100% - 64px)' }}
 						>
 							{selectedOption
@@ -187,31 +188,31 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 								: title
 							}
 						</span>
-						<FaChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700 text-xs pointer-events-none" aria-hidden="true" />
+						<FaChevronDown className="select-chevron" aria-hidden="true" />
 					</span>
 				)}
 
 				{/* Options Menu */}
 				{open && (
 					<div
-						className={`absolute ${hasSpaceBelow() ? 'top-full mt-1' : 'bottom-full mb-1'} ${hasSpaceOnRight() ? 'left-0' : 'right-0'} bg-white border border-gray-300 rounded shadow-lg z-20 ${optionsClassName || ''}`}
+						className={`select-options ${hasSpaceBelow() ? 'select-options-bottom' : 'select-options-top'} ${hasSpaceOnRight() ? 'select-options-left' : 'select-options-right'} ${optionsClassName || ''}`}
 						style={{ zIndex: 50, minWidth: `${effectiveMinWidth}px`, ...optionsStyle }}
 					>
 						{/* Header title */}
-						<div className="p-2 border-b border-gray-200">
-							<span className="text-sm font-medium text-gray-700">{headerTitle || title}</span>
+						<div className="select-header">
+							<span className="select-header-text">{headerTitle || title}</span>
 						</div>
 
 						{/* Options List */}
-						<div className="options-wrap max-h-60 overflow-y-auto">
-							<ul className="list-none m-0 p-0">
+						<div className="select-options-wrap">
+							<ul className="select-options-list">
 								{options.map(opt => (
 									<li key={opt.value} onClick={() => handleOptionClick(opt.value)}>
-										<span className="w-full text-left p-2 flex items-center justify-between hover:bg-gray-100 transition-colors text-sm text-gray-700">
-											<span className="truncate">{opt.displayValue}</span>
+										<span className="select-option">
+											<span className="select-option-text">{opt.displayValue}</span>
 											{selectedOption === opt.value
-												? <FaTick className="ml-3 text-gray-500 text-xs flex-shrink-0" aria-hidden="true" />
-												: <span className="ml-6"></span>
+												? <FaTick className="select-option-icon" aria-hidden="true" />
+												: <span className="select-option-spacer"></span>
 											}
 										</span>
 									</li>
@@ -223,28 +224,22 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 				<div
 					ref={measurerRef}
 					aria-hidden="true"
-					style={{
-						position: 'absolute',
-						top: -99999,
-						left: -99999,
-						visibility: 'hidden',
-						pointerEvents: 'none',
-					}}
+					className="select-measurer"
 				>
-					<div className="bg-white border border-gray-300 rounded shadow-lg min-w-[200px]">
-						<div className="p-2 border-b border-gray-200">
-							<span className="text-sm font-medium text-gray-700">{title}</span>
+					<div className="select-measurer-content">
+						<div className="select-header">
+							<span className="select-header-text">{title}</span>
 						</div>
-						<div className="options-wrap max-h-60">
-							<ul className="list-none m-0 p-0">
+						<div className="select-options-wrap">
+							<ul className="select-options-list">
 								{options.map(opt => (
 									<li key={opt.value}>
-										<div className="w-full text-left p-2 flex items-center justify-between text-sm text-gray-700">
-											<span className="truncate">{opt.displayValue}</span>
+										<div className="select-measurer-option">
+											<span className="select-measurer-option-text">{opt.displayValue}</span>
 											{selectedOption === opt.value ? (
-												<FaTick className="ml-3 text-black text-xs flex-shrink-0" aria-hidden="true" />
+												<FaTick className="select-measurer-icon" aria-hidden="true" />
 											) : (
-												<span className="w-3" />
+												<span className="select-measurer-spacer" />
 											)}
 										</div>
 									</li>

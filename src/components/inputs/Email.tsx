@@ -1,4 +1,5 @@
 import React, { forwardRef, useImperativeHandle, useCallback } from 'react';
+import './Email.css';
 
 export interface EmailProps {
   name?: string;
@@ -73,13 +74,13 @@ const Email = forwardRef<EmailHandle, EmailProps>((props, ref) => {
       {label && (
         <label
           htmlFor={id}
-          className="mb-2 text-sm text-gray-600"
+          className="email-label"
         >
           {label}
-          {required && <span className="ml-1">*</span>}
+          {required && <span className="email-required-mark">*</span>}
         </label>
       )}
-      <div className="relative">
+      <div className="email-field-wrapper">
         <input
           type="email"
           name={name}
@@ -90,18 +91,16 @@ const Email = forwardRef<EmailHandle, EmailProps>((props, ref) => {
           disabled={disabled}
           required={required}
           autoComplete={autoComplete}
-          className={`outline-none border border-gray-300 rounded-md text-base bg-gray-100 text-gray-700 hover:bg-gray-200 focus:bg-gray-200 px-3 py-2 w-full transition-colors placeholder:text-gray-600 placeholder:font-light placeholder:italic ${
-            disabled ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
+          className={`email-field ${disabled ? 'email-field-disabled' : ''}`}
           style={width ? { width } : undefined}
         />
         {errorMessage && (
-          <p className='absolute left-0 top-full translate-y-1 text-xs text-red-900'>
+          <p className='email-error-message'>
             {errorMessage}
           </p>
         )}
         {message && !errorMessage && (
-          <p className='absolute left-0 top-full translate-y-1 text-xs text-gray-600'>
+          <p className='email-message'>
             {message}
           </p>
         )}

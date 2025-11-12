@@ -1,0 +1,38 @@
+/* VirtualizedTable.css */
+
+.virtualized-table-wrap {
+  border-radius: 0.375rem;
+  will-change: contents;
+  overflow: hidden !important;
+}
+
+.virtualized-table-wrapper {
+  border-radius: 0.375rem;
+}
+
+.virtualized-table-wrapper:focus {
+  outline: none;
+}
+
+.virtualized-table-header-body-wrapper {
+  display: flex;
+}
+
+.virtualized-table-header-container {
+  border-top: 1px solid #d1d5db;
+  border-left: 1px solid #d1d5db;
+  border-bottom: 1px solid #d1d5db;
+  border-top-left-radius: 0.375rem;
+  overflow: hidden;
+  flex: 1;
+}
+
+.virtualized-table-scrollbar-spacer {
+  width: 0.75rem;
+  border-top: 1px solid #d1d5db;
+  border-right: 1px solid #d1d5db;
+  border-bottom: 1px solid #d1d5db;
+  border-left: 0;
+  background-color: #e5e7eb;
+  border-top-right-radius: 0.375rem;
+}
