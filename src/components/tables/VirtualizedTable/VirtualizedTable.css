@@ -25,6 +25,7 @@
   border-top-left-radius: 0.375rem;
   overflow: hidden;
   flex: 1;
+  background-color: #e5e7eb;
 }
 
 .virtualized-table-scrollbar-spacer {

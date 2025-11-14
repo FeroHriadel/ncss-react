@@ -162,7 +162,7 @@ const VirtualizedTableHeader: React.FC<VirtualizedTableHeaderProps> = ({
                   `}
                   style={{
                     ...getColumnStyle(col),
-                    padding: `${zoomLevel * 0.5}rem ${zoomLevel * 1}rem`,
+                    padding: '0.5rem 1rem',
                   }}
                   onMouseDown={(e) => handleMouseDown(e, col.column, col.displayValue, col)}
                   onMouseEnter={() => handleMouseEnter(col.column)}
