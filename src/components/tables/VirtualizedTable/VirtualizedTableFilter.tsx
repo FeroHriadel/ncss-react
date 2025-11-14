@@ -6,6 +6,7 @@ import Select, { type SelectHandle } from "../../dropdowns/Select";
 import Input from "../../inputs/Input";
 import Pill from "../../pills/Pill";
 import CloseButton from "../../buttons/CloseButton";
+import './VirtualizedTableFilter.css';
 
 
 
@@ -336,15 +337,15 @@ export default function VirtualizedTableFilter({ columns, closeModal, filterCond
 
   // RENDER
   return (
-    <div className="w-full h-full" role="form" aria-label="Table filters">
+    <div className="vt-filter-wrapper" role="form" aria-label="Table filters">
       {/* Clear and Presets */}
-      <h2 className="text-2xl font-bold mb-6">DATA FILTER</h2>
-      <h3 className="text-lg font-semibold">Filter Options</h3>
-      <p className="text-sm text-gray-700 mb-4">Add filter conditions to refine your data. Clear Filters or use Filter Presets (if available) below.</p>
-      <section className="flex flex-wrap mb-12">
+      <h2 className="vt-filter-title">DATA FILTER</h2>
+      <h3 className="vt-filter-section-title">Filter Options</h3>
+      <p className="vt-filter-description">Add filter conditions to refine your data. Clear Filters or use Filter Presets (if available) below.</p>
+      <section className="vt-filter-buttons-section">
         <Button 
           width="160px" 
-          className="m-1 mt-0 ml-0"
+          className="vt-filter-button"
           onClick={handleClearFilters}
         >
           Clear Filters
@@ -352,7 +353,7 @@ export default function VirtualizedTableFilter({ columns, closeModal, filterCond
         <Select 
           ref={presetSelectRef}
           width="160px" 
-          className="m-1 mt-0 ml-0" 
+          className="vt-filter-button" 
           title="Filter Presets"
           headerTitle={presetHeaderTitle}
           options={presetOptions}
@@ -362,17 +363,16 @@ export default function VirtualizedTableFilter({ columns, closeModal, filterCond
       </section>
 
       {/* Filters */}
-      <h3 className="text-lg font-semibold">Filters to Apply</h3>
-      <p className="text-sm text-gray-700 mb-4">Review and adjust your active filters. Click 'Apply Filters' to save changes.</p>
+      <h3 className="vt-filter-section-title">Filters to Apply</h3>
+      <p className="vt-filter-description">Review and adjust your active filters. Click 'Apply Filters' to save changes.</p>
       <section>
         {filterRows.map((row, index) => (
           <div key={row.id}>
-            <div className="w-full flex gap-1 items-center flex-wrap mb-2">
+            <div className="vt-filter-row">
               <Select 
                 options={columnsSelectOptions} 
                 title="Column" 
                 width="200px" 
-                className="" 
                 preselectedOption={row.column || undefined}
                 onChange={(value) => updateRow(row.id, 'column', value)}
                 openY="up"
@@ -381,7 +381,6 @@ export default function VirtualizedTableFilter({ columns, closeModal, filterCond
                 options={getConditionsForColumn(row.column)} 
                 title="Condition" 
                 width="200px" 
-                className="" 
                 preselectedOption={row.condition || undefined}
                 onChange={(value) => updateRow(row.id, 'condition', value)}
                 openY="up"
@@ -389,7 +388,7 @@ export default function VirtualizedTableFilter({ columns, closeModal, filterCond
               />
               <Input 
                 width="200px" 
-                className="border border-gray-300" 
+                className="vt-filter-input-border" 
                 placeholder={getPlaceholderForCondition(row.column, row.condition)} 
                 value={row.value}
                 onChange={(e) => updateRow(row.id, 'value', e.target.value)}
@@ -400,28 +399,27 @@ export default function VirtualizedTableFilter({ columns, closeModal, filterCond
                   options={operatorSelectOptions} 
                   title="Operator" 
                   width="200px" 
-                  className="" 
                   preselectedOption={row.operator || undefined}
                   onChange={(value) => updateRow(row.id, 'operator', value)}
                   openY="up"
                 />
               )}
-              <CloseButton className="min-w-[40px] h-[40px]" title="Remove condition" onClick={() => removeRow(row.id)} />
+              <CloseButton className="vt-filter-close-button" title="Remove condition" onClick={() => removeRow(row.id)} />
             </div>
             {row.operator && index < filterRows.length - 1 && (
-              <div className="mb-4 flex">
+              <div className="vt-filter-operator-section">
                 <Pill>{row.operator.toUpperCase()}</Pill>
               </div>
             )}
             {!row.operator && index < filterRows.length - 1 && (
-              <div className="mb-4"></div>
+              <div className="vt-filter-spacer"></div>
             )}
           </div>
         ))}
       </section>
 
       {/* Close & Apply */}
-      <section className="w-full flex gap-1 justify-end">
+      <section className="vt-filter-actions">
         <Button variant="red" onClick={closeModal}>Cancel</Button>
         <Button onClick={handleApplyFilters}>Apply Filters</Button>
       </section>

@@ -1,4 +1,5 @@
 import React from "react";
+import './VirtualizedTableBody.css';
 import type { VirtualizedTableProps } from "./VirtualizedTable";
 
 
@@ -229,11 +230,11 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
   
   // RENDER
   return (
-  <div className="flex">
+  <div className="vt-body-wrapper">
     {/* Main scrollable container */}
     <div
       ref={bodyRef}
-      className="overflow-auto border-l border-r border-b border-gray-300 rounded-bl [&::-webkit-scrollbar]:hidden flex-1 focus:outline-none"
+      className="vt-body"
       style={{
         height: totalSize > 0 && totalSize < (parseInt(height) || 400) 
           ? `${totalSize}px` 
@@ -260,7 +261,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
         {/* Table with absolutely positioned rows */}
         <table
           ref={tableRef}
-          className="w-full border-collapse"
+          className="vt-body-table"
           style={{
             tableLayout: 'fixed',
             fontSize: `${zoomLevel}rem`,
@@ -285,7 +286,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
                 <tr 
                   key={virtualRow.key}
                   ref={(node) => measureElement(node, rowIndex)}
-                  className="group"
+                  className="vt-body-row"
                   style={{
                     position: 'absolute',
                     top: 0,
@@ -306,13 +307,13 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
 
                 // Apply vertical separator to all columns except last
                 const verticalSepClass = verticalSeparators && colIndex < columns.length - 1
-                  ? 'border-r border-gray-200'
+                  ? 'vt-body-vertical-separator'
                   : '';
                 
                 return (
                   <td
                     key={col.column}
-                    className={`text-gray-700 ${verticalSepClass}`}
+                    className={`vt-body-cell ${verticalSepClass}`}
                     style={{
                       ...getColumnStyle(col),
                       padding: '0.375rem 0.75rem',
@@ -416,7 +417,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
     {/* Custom Scrollbar */}
     <div
       ref={scrollbarRef}
-      className="w-3 bg-gray-50 border-r border-b border-gray-300 rounded-br relative cursor-pointer select-none"
+      className="vt-scrollbar"
       style={{ 
         height: totalSize > 0 && totalSize < (parseInt(height) || 400) 
           ? `${totalSize}px` 
@@ -425,7 +426,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
       onMouseDown={handleScrollbarMouseDown}
     >
       {/* Scrollbar track */}
-      <div className="absolute inset-x-0 top-1 bottom-1 bg-gray-200 rounded-full mx-0.5"></div>
+      <div className="vt-scrollbar-track"></div>
       
       {/* Scrollbar thumb - reflects actual scroll position */}
       {(() => {
@@ -449,7 +450,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
         
         return (
           <div
-            className="absolute bg-gray-400 rounded-full transition-all duration-100 ease-out mx-0.5"
+            className="vt-scrollbar-thumb"
             style={{
               height: `${thumbHeightPercent}%`,
               top: `${topPosition}%`,
@@ -464,7 +465,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
     {/* Copy notification popup */}
     {copyNotification && (
       <div
-        className="fixed pointer-events-none z-20"
+        className="vt-copy-notification"
         style={{
           left: copyNotification.x + 10,
           top: copyNotification.y - 30,
@@ -472,7 +473,7 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
         role="status"
         aria-live="polite"
       >
-        <span className="inline-flex items-center px-3 py-1 rounded text-sm font-semibold text-white bg-gray-800 bg-opacity-90 shadow-lg">
+        <span className="vt-copy-notification-content">
           {copyNotification.text}
         </span>
       </div>

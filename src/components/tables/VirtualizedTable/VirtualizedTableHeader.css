@@ -21,6 +21,8 @@
 .vt-header-th {
   position: relative;
   text-align: left;
+  font-size: 0.875rem;
+  word-wrap: break-word;
   font-weight: 600;
   user-select: none;
   cursor: grab;

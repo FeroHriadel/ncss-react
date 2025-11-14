@@ -1,4 +1,5 @@
 import React from "react";
+import './VirtualizedTableControlBar.css';
 import IconButton from "../../buttons/IconButton";
 import MultiSelect, { type MultiSelectHandle } from "../../dropdowns/MultiSelect";
 import { CiZoomIn, CiZoomOut, CiViewColumn, CiFilter } from "react-icons/ci";
@@ -117,15 +118,15 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
     <>
       {/* Row number (left side) and controls (right side) Container */}
       <div 
-        className={`w-full flex justify-between items-center p-2 border border-gray-300 bg-gray-200 rounded mb-1 ${controlBarClassName}`} 
+        className={`vt-control-bar ${controlBarClassName || ''}`} 
         role="toolbar"
         aria-label="Table controls"
         style={controlBarStyle}
       >
 
         {/*Left Side */}
-        <div className="flex items-center flex-shrink-0">
-          <span className="text-sm text-gray-600" role="status" aria-live="polite">
+        <div className="vt-control-bar-left">
+          <span className="vt-control-bar-result-count" role="status" aria-live="polite">
             {isSorting ? 'Loading...' : `${resultCount} ${resultCount === 1 ? 'result' : 'results'}`}
           </span>
         </div>
@@ -133,7 +134,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
 
         {/** Right Side */}
         <div 
-          className="flex items-center gap-2 flex-shrink-0 overflow-x-auto [&::-webkit-scrollbar]:hidden" 
+          className="vt-control-bar-right" 
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', overflow: 'visible' }}
           role="group" 
           aria-label="Table actions"
@@ -141,7 +142,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
 
           {/* Filter Modal */}
           <Modal
-            trigger={<IconButton title="Filter" icon={<CiFilter size={20} />} onClick={openModal} className="ml-5" />}
+            trigger={<IconButton title="Filter" icon={<CiFilter size={20} />} onClick={openModal} className="vt-control-bar-filter-button" />}
             className="w-[95%] sm:w-[75%]"
             isOpen={modalOpen}
             onClose={closeModal}
@@ -176,7 +177,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
             disabled={zoomLevel <= minZoom}
           />
 
-          <span className="text-xs text-gray-500 min-w-[40px] text-center">
+          <span className="vt-control-bar-zoom-level">
             {Math.round(zoomLevel * 100)}%
           </span>
 
@@ -199,9 +200,9 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
 
       {/* Applied filters info bar */}
       {filterState.conditions.length > 0 && (
-        <div className="applied-filters-wrap w-full p-2 rounded border border-gray-300 bg-gray-100 mb-1">
-          <span className="text-xs text-gray-600 font-light block mb-1">Active Filters:</span>
-          <div className="flex gap-2 flex-wrap items-center">
+        <div className="vt-applied-filters-wrap">
+          <span className="vt-applied-filters-title">Active Filters:</span>
+          <div className="vt-applied-filters-list">
             {filterState.conditions.map((filter, index) => {
               const isLastPill = index === filterState.conditions.length - 1;
               return (
@@ -209,7 +210,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
                   <Pill onClose={() => removeFilterCondition(filter.id)}>
                     {formatFilterCondition(filter)}
                     {!isLastPill && filter.operator && (
-                      <span className="ml-2 font-bold">
+                      <span className="vt-applied-filter-operator">
                         {filter.operator.toUpperCase()}
                       </span>
                     )}

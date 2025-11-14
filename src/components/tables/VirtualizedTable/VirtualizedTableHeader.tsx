@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { BiSolidUpArrow } from "react-icons/bi";
+import './VirtualizedTableHeader.css';
 
 
 
@@ -134,32 +135,26 @@ const VirtualizedTableHeader: React.FC<VirtualizedTableHeaderProps> = ({
     <>
       <div
         ref={headerRef}
+        className={`vt-header${headerClassName ? ` ${headerClassName}` : ""}`}
         style={{
           overflow: "auto",
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
           ...headerStyle,
         }}
-        className={"[&::-webkit-scrollbar]:hidden " + (headerClassName ? ` ${headerClassName}` : "")}
         onScroll={handleHeaderScroll}
         role="rowgroup"
       >
         <table
-          className="w-full border-collapse"
+          className="vt-header-table"
           style={{
             tableLayout: "fixed",
           }}
         >
-          <thead className="bg-gray-200">
+          <thead className="vt-header-thead">
             <tr role="row">
               {visibleColumns.map((col, index) => (
                 <th
                   key={col.column}
-                  className={`
-                    text-left text-gray-600 text-sm break-words cursor-move select-none transition-colors ${draggedColumn === col.column ? "opacity-50" : ""} 
-                    ${dragOverColumn === col.column ? "bg-blue-100" : ""} 
-                    ${verticalSeparators && col.column !== visibleColumns[visibleColumns.length - 1].column ? "border-r border-gray-300" : ""}    
-                  `}
+                  className={`vt-header-th ${draggedColumn === col.column ? "vt-header-dragged" : ""} ${dragOverColumn === col.column ? "vt-header-drag-over" : ""} ${verticalSeparators && col.column !== visibleColumns[visibleColumns.length - 1].column ? "vt-header-vertical-separator" : ""}`}
                   style={{
                     ...getColumnStyle(col),
                     padding: '0.5rem 1rem',
@@ -171,7 +166,7 @@ const VirtualizedTableHeader: React.FC<VirtualizedTableHeaderProps> = ({
                   aria-colindex={index + 1}
                   aria-sort={sortColumn === col.column ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}
                 >
-                  <div className="flex items-center gap-1">
+                  <div className="vt-header-content">
                     <span>{col.displayValue}</span>
                     <span
                       onMouseDown={(e) => {
@@ -184,10 +179,9 @@ const VirtualizedTableHeader: React.FC<VirtualizedTableHeaderProps> = ({
                       role="button"
                       aria-label={`Sort by ${col.displayValue}`}
                       tabIndex={0}
-                      className="cursor-pointer hover:text-gray-800 transition-colors flex-shrink-0"
+                      className={`vt-header-sort-icon ${sortColumn === col.column && sortDirection === 'desc' ? 'vt-header-sort-desc' : ''}`}
                       style={{
-                        transform: sortColumn === col.column && sortDirection === 'desc' ? 'rotate(180deg)' : 'rotate(0deg)',
-                        transition: 'transform 0.2s',
+                        cursor: 'pointer',
                         opacity: sortColumn === col.column ? 1 : 0.4,
                       }}
                       onKeyDown={(e) => {
@@ -210,7 +204,7 @@ const VirtualizedTableHeader: React.FC<VirtualizedTableHeaderProps> = ({
       {/* Ghost element that follows cursor - rendered in a portal to avoid positioning issues */}
       {ghostElement && createPortal(
         <div
-          className="fixed pointer-events-none z-20 bg-gray-200 border border-gray-300 rounded shadow-lg text-sm text-left text-gray-600 break-words"
+          className="vt-header-ghost"
           role="presentation"
           aria-hidden="true"
           style={{
