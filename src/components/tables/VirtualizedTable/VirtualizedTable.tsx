@@ -6,6 +6,7 @@ import { useVirtualizedTableRendering } from "./useVirtualizedTableRendering"
 import { useVirtualizedTableZoom } from "./useVirtualizedTableZoom"
 import { useVirtualizedTableFilter } from "./useVirtualizedTableFilter"
 import type { FilterPreset } from "./VirtualizedTableFilter";
+import './VirtualizedTable.css';
 
 // Re-export FilterPreset for easy importing
 export type { FilterPreset } from "./VirtualizedTableFilter";
@@ -116,6 +117,17 @@ function VirtualizedTable({
         }
       }, [lockedHeight]);
 
+      // Lock header height to prevent body height changes during zoom
+      const [lockedHeaderHeight, setLockedHeaderHeight] = React.useState<string | null>(null);
+      
+      React.useEffect(() => {
+        // Measure and lock header height on first render
+        if (headerRef.current && !lockedHeaderHeight) {
+          const measuredHeaderHeight = headerRef.current.getBoundingClientRect().height;
+          setLockedHeaderHeight(`${measuredHeaderHeight}px`);
+        }
+      }, [lockedHeaderHeight]);
+
       // Preserve scroll position during zoom changes
       const previousZoomRef = React.useRef(zoomLevel);
       React.useEffect(() => {
@@ -167,12 +179,13 @@ function VirtualizedTable({
       /* MAIN WRAPPER - WRAPS EVERYTHING */
       <section 
         ref={sectionRef}
-        className={'virtualized-table-wrap rounded ' + (className || '')}
+        className={`virtualized-table-wrap ${className || ''}`}
         style={{
           willChange: 'contents',
           height: lockedHeight || 'auto',
           minHeight: lockedHeight || 'auto',
           maxHeight: lockedHeight || 'auto',
+          overflow: 'hidden',
           ...style
         }}
         role="region"
@@ -205,7 +218,7 @@ function VirtualizedTable({
         {/* Header and Body wrapper */}
         <div 
           ref={wrapperRef}
-          className="focus:outline-none rounded"
+          className="virtualized-table-wrapper"
           tabIndex={0}
           onKeyDown={handleKeyDown}
           onClick={() => wrapperRef.current?.focus()}
@@ -215,8 +228,8 @@ function VirtualizedTable({
         >
           
           {/* Fixed Header */}
-          <div className="flex">
-            <div className="border-t border-l border-b border-gray-300 rounded-tl overflow-hidden flex-1">
+          <div className="virtualized-table-header-body-wrapper">
+            <div className="virtualized-table-header-container">
               <VirtualizedTableHeader
                 headerRef={headerRef as React.RefObject<HTMLDivElement>}
                 visibleColumns={filteredColumns}
@@ -229,11 +242,16 @@ function VirtualizedTable({
                 sortDirection={filterState.sortDirection}
                 setSortColumn={setSortColumn}
                 headerClassName={headerClassName}
-                headerStyle={headerStyle}
+                headerStyle={{
+                  height: lockedHeaderHeight || undefined,
+                  minHeight: lockedHeaderHeight || undefined,
+                  maxHeight: lockedHeaderHeight || undefined,
+                  ...headerStyle
+                }}
               />
             </div>
             {/* Spacer to account for custom scrollbar */}
-            <div className="w-3 border-t border-r border-b border-l-0 border-gray-300 bg-gray-200 rounded-tr"></div>
+            <div className="virtualized-table-scrollbar-spacer"></div>
           </div>
 
           {/* Table Body */}
