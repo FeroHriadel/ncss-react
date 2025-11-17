@@ -50,22 +50,16 @@
   background-color: #f3f4f6;
 }
 
-@media (max-width: 768px) {
-  .top-nav-hamburger {
-    display: block;
-  }
-
-  .top-nav-right-side {
-    display: none;
-  }
+.top-nav-hamburger {
+  display: none !important;
 }
 
-@media (min-width: 769px) {
+@media (max-width: 1000px) {
   .top-nav-hamburger {
-    display: none;
+    display: block !important;
   }
 
   .top-nav-right-side {
-    display: flex;
+    display: none !important;
   }
 }

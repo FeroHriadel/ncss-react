@@ -12,7 +12,31 @@ import LeftNav, { LeftNavPage } from './components/navs/LeftNav';
 
 function App() {
 
-  // Navigation links
+  // TopNav links
+  const topNavLinks = [
+    { 
+      linkName: 'Home', 
+      linkUrl: '/'
+    },
+    {
+      linkName: 'Components',
+      options: [ 
+        { optionName: 'Buttons', optionUrl: '/buttons' }, 
+        { optionName: 'Dropdowns', optionUrl: '/dropdowns' },
+        { optionName: 'Inputs', optionUrl: '/inputs' },
+      ]
+    },
+    {
+      linkName: 'Constructs',
+      options: [ 
+        { optionName: 'Navs', optionUrl: '/navs' },
+        { optionName: 'Tables', optionUrl: '/tables/table' },
+        { optionName: 'Virtualized Table', optionUrl: '/tables/virtualizedtable' }
+      ]
+    }
+  ];
+
+  // LeftNav links
   const links = [
     { 
       linkName: 'Home', 
@@ -51,7 +75,7 @@ function App() {
         <TopNav
           logo={<span className='font-extrabold text-gray-500 text-2xl' style={{filter: 'drop-shadow(2px 2px 2px rgba(0,0,0,0.2))'}}>NCSS</span>}
           logoUrl="/"
-          links={links}
+          links={topNavLinks}
           height="96px"
           className='shadow-md bg-gray-200'
         />
