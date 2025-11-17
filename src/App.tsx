@@ -1,8 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import ButtonsPage from './pages/ButtonsPage';
+import CollapsiblePage from './pages/CollapsiblePage';
+import DialogsPage from './pages/DialogsPage';
 import DropdownsPage from './pages/DropdownsPage';
 import InputsPage from './pages/InputsPage';
+import PillsPage from './pages/PillsPage';
 import NavsPage from './pages/NavsPage';
 import VirtualizedTablePage from './pages/VirtualizedTablePage'
 import TopNav from './components/navs/TopNav';
@@ -22,9 +25,12 @@ function App() {
     {
       linkName: 'Components',
       options: [ 
-        { optionName: 'Buttons', optionUrl: '/buttons' }, 
+        { optionName: 'Buttons', optionUrl: '/buttons' },
+        { optionName: 'Collapsible', optionUrl: '/collapsible' },
+        { optionName: 'Dialogs', optionUrl: '/dialogs' },
         { optionName: 'Dropdowns', optionUrl: '/dropdowns' },
         { optionName: 'Inputs', optionUrl: '/inputs' },
+        { optionName: 'Pills', optionUrl: '/pills' }
       ]
     },
     {
@@ -44,8 +50,16 @@ function App() {
       linkUrl: '/' 
     },
     {
+      linkName: 'Collapsible',
+      linkUrl: '/collapsible'
+    },
+    {
       linkName: 'Buttons',
       linkUrl: '/buttons'
+    },
+    {
+      linkName: 'Dialogs',
+      linkUrl: '/dialogs'
     },
     { 
       linkName: 'Dropdowns', 
@@ -54,6 +68,10 @@ function App() {
     {
       linkName: 'Inputs',
       linkUrl: '/inputs'
+    },
+    {
+      linkName: 'Pills',
+      linkUrl: '/pills'
     },
     {
       linkName: 'Navs',
@@ -92,8 +110,11 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/buttons" element={<ButtonsPage />} />
+            <Route path="/collapsible" element={<CollapsiblePage />} />
+            <Route path="/dialogs" element={<DialogsPage />} />
             <Route path="/dropdowns" element={<DropdownsPage />} />
             <Route path="/inputs" element={<InputsPage />} />
+            <Route path="/pills" element={<PillsPage />} />
             <Route path="/navs" element={<NavsPage />} />
           <Route path="/tables/virtualizedtable" element={<VirtualizedTablePage />} />
         </Routes>
