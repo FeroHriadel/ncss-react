@@ -69,3 +69,19 @@ export const closeButtonCustomIconCode = `
     onClick={() => console.log('Custom close icon')}
   />
 `;
+
+export const themeSwitchCode = `
+  import ThemeSwitch from "../components/buttons/ThemeSwitch";
+
+  <ThemeSwitch />
+`;
+
+export const themeSwitchWithCallbackCode = `
+  import ThemeSwitch from "../components/buttons/ThemeSwitch";
+
+  <ThemeSwitch 
+    onChange={(newTheme) => console.log('Theme changed to:', newTheme)}
+    defaultTheme="light"
+    iconSize={18}
+  />
+`;

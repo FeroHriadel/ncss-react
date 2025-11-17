@@ -4,12 +4,11 @@ import Container from "../components/wrappers/Container";
 import Button from "../components/buttons/Button";
 import IconButton from "../components/buttons/IconButton";
 import CloseButton from "../components/buttons/CloseButton";
+import ThemeSwitch from "../components/buttons/ThemeSwitch";
 import { Highlight, themes } from "prism-react-renderer";
-import { buttonCode, buttonVariantsCode, buttonSizesCode, buttonDisabledCode, iconButtonCode, iconButtonSizesCode, closeButtonCode, closeButtonCustomIconCode } from "../utils/ButtonsPageCode";
+import { buttonCode, buttonVariantsCode, buttonSizesCode, buttonDisabledCode, iconButtonCode, iconButtonSizesCode, closeButtonCode, closeButtonCustomIconCode, themeSwitchCode, themeSwitchWithCallbackCode } from "../utils/ButtonsPageCode";
 import { FaUser, FaHeart, FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
-
-
 
 
 
@@ -18,11 +17,12 @@ export default function ButtonsPage() {
     <Container className="px-4 pt-24">
       {/* INTRO */}
       <h1 className="mb-4 uppercase font-bold text-3xl">Buttons</h1>
-      <p className="text-gray-800 text-lg mb-12">Button components: <code>Button</code>, <code>IconButton</code> <code>CloseButton</code></p>
+      <p className="text-gray-800 text-lg mb-12">Button components: <code>Button</code>, <code>IconButton</code> <code>CloseButton</code> <code>ThemeSwitch</code></p>
       <Card className="mb-12 p-4 bg-gray-100 flex flex-col gap-4">
         <a href="#button"><div><code>Button</code> is not like html button but offers a few more customization options <br /></div></a>
         <a href="#icon-button"><div><code>IconButton</code> is intended to save time when you just need a clickable icon but don't want to waste time wrapping the icon in button and make it aria compliant <br /></div></a>
         <a href="#close-button"><div><code>CloseButton</code> is a styled button intended for closing actions. I noticed I use close buttons frequently in my applications, so having a dedicated component helps maintain consistency and saves time. <br /></div></a>
+        <a href="#theme-switch"><div><code>ThemeSwitch</code> is a specialized toggle button for switching between light and dark themes. It displays a moon icon in light mode and a sun icon in dark mode. <br /></div></a>
       </Card>
       <hr />
       <Break amount={3} />
@@ -326,6 +326,77 @@ export default function ButtonsPage() {
       <Break amount={3} />
 
 
+
+      {/* THEME SWITCH */}
+      <hr />
+      <Break amount={3} />
+      <h2 className="mb-4 text-2xl uppercase font-semibold" id="theme-switch">ThemeSwitch</h2>
+      <p className="text-gray-700 mb-4">
+        The <code>ThemeSwitch</code> component provides a toggle button for switching between light and dark themes. 
+        It displays a moon icon in light mode and a sun icon in dark mode, and can notify parent components when the theme changes.
+      </p>
+
+      <ThemeSwitch className="mb-8" />
+
+      <Highlight
+        theme={themes.vsLight}
+        code={themeSwitchCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      <h3 className="text-xl font-semibold mb-4">With Callback</h3>
+      <p className="text-gray-700 mb-4">
+        Use the <code>onChange</code> prop to handle theme changes:
+      </p>
+
+      <ThemeSwitch 
+        onChange={(newTheme) => console.log('Theme changed to:', newTheme)}
+        className="mb-8"
+      />
+
+      <Highlight
+        theme={themes.vsLight}
+        code={themeSwitchWithCallbackCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      <Card className="bg-gray-100 border border-gray-200 rounded p-4 mb-12">
+        <h3 className="text-lg font-semibold mb-2">ThemeSwitch Props</h3>
+        <ul className="space-y-2">
+          <li><code>defaultTheme</code> (optional, default: "light"): Initial theme - "light" or "dark"</li>
+          <li><code>onChange</code> (optional): Callback function that receives the new theme value</li>
+          <li><code>iconSize</code> (optional, default: 18): Size of the theme icon in pixels</li>
+          <li><code>className</code> (optional): Additional CSS classes</li>
+          <li><code>style</code> (optional): Inline styles</li>
+        </ul>
+      </Card>
+      <Break amount={3} />
 
 
     </Container>

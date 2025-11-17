@@ -25,6 +25,8 @@ export interface TopNavProps {
   className?: string;
   style?: React.CSSProperties;
   fixed?: boolean;
+  customContent?: React.ReactNode;
+  customContentPosition?: "left" | "right";
 }
 
 
@@ -36,7 +38,9 @@ export default function TopNav({
   height = `96px`, 
   className, 
   style,
-  fixed = true
+  fixed = true,
+  customContent,
+  customContentPosition = "right"
 }: TopNavProps) {
 
   // Hamburger menu options
@@ -101,13 +105,29 @@ export default function TopNav({
             )
           })
         }
+
+        {/* custom content on wider screens */}
+        <span 
+          className="top-nav-custom-content"
+          style={{ order: customContentPosition === "left" ? -1 : 1 }}
+        >
+          {customContent}
+        </span>
       </div>
 
       {
         // render hamburger menu on smaller screens
-        <Dropdown options={hamburgerOptions} className="top-nav-hamburger">
-          <IconButton icon={<GrMenu />} />
-        </Dropdown>
+        <span className="small-screen-options">
+          <Dropdown options={hamburgerOptions} className="top-nav-hamburger">
+            <IconButton icon={<GrMenu />} />
+          </Dropdown>
+          <span 
+            className="top-nav-custom-content"
+            style={{ order: customContentPosition === "left" ? -1 : 1 }}
+          >
+            {customContent}
+          </span>
+        </span>
       }
     </nav>
   )

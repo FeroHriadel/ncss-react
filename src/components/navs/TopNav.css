@@ -50,13 +50,13 @@
   background-color: #f3f4f6;
 }
 
-.top-nav-hamburger {
+.small-screen-options {
   display: none !important;
 }
 
 @media (max-width: 1000px) {
-  .top-nav-hamburger {
-    display: block !important;
+  .small-screen-options {
+    display: flex !important;
   }
 
   .top-nav-right-side {

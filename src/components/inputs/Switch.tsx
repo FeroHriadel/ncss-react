@@ -7,6 +7,7 @@ export interface SwitchProps {
   label?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
+  style?: React.CSSProperties;
   id?: string;
   name?: string;
   width?: string;
@@ -25,6 +26,7 @@ const Switch = forwardRef<SwitchHandle, SwitchProps>(function Switch(
     label,
     onChange,
     className = '',
+    style = {},
     id,
     name,
     width,
@@ -73,7 +75,7 @@ const Switch = forwardRef<SwitchHandle, SwitchProps>(function Switch(
     : 'calc(44px - 18px - 4px)'; // 22px for default
 
   return (
-    <div className={`switch-container ${className}`}>
+    <div className={`switch-container ${className}`} style={style}>
       <span className="switch-wrapper" style={{ width, height }}>
         <input
           type="checkbox"

@@ -41,7 +41,17 @@ const topNavWithDropdownCode = `const links = [
   className="bg-gray-100 shadow-md"
 />`;
 
-const topNavCustomContentCode = `<TopNav
+const topNavCustomContentCode = `import ThemeSwitch from './components/buttons/ThemeSwitch';
+
+<TopNav
+  logo={<span className="font-bold text-xl">MyApp</span>}
+  logoUrl="/"
+  links={links}
+  customContent={<ThemeSwitch />}
+  customContentPosition="right"  // or "left"
+/>`;
+
+const topNavCustomContentLeftCode = `<TopNav
   logo={<span className="font-bold text-xl">MyApp</span>}
   logoUrl="/"
   links={links}
@@ -52,6 +62,7 @@ const topNavCustomContentCode = `<TopNav
       </button>
     </div>
   }
+  customContentPosition="left"  // Positions content on the left side
 />`;
 
 const leftNavBasicCode = `import LeftNav from './components/navs/LeftNav';
@@ -253,10 +264,30 @@ export default function NavsPage() {
       {/* TOPNAV WITH CUSTOM CONTENT */}
       <h3 className="mb-4 text-xl font-semibold">TopNav with Custom Content</h3>
       <p className="text-gray-700 mb-4">
-        Add buttons, user avatars, or any custom content to the right side of the navigation:
+        Add buttons, theme switchers, user avatars, or any custom content to the navigation bar.
+        Use <code>customContentPosition</code> to control whether the content appears on the left or right side (default is "right"):
       </p>
 
       <Highlight theme={themes.vsLight} code={topNavCustomContentCode} language="tsx">
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={2} />
+
+      <p className="text-gray-700 mb-4">
+        Custom content on the left side:
+      </p>
+
+      <Highlight theme={themes.vsLight} code={topNavCustomContentLeftCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
             {tokens.map((line, i) => (
@@ -306,7 +337,13 @@ export default function NavsPage() {
               <td className="py-2 pr-4"><code>customContent</code></td>
               <td className="py-2 pr-4">React.ReactNode</td>
               <td className="py-2 pr-4">-</td>
-              <td className="py-2">Custom content to display on the right side</td>
+              <td className="py-2">Custom content to display in the navigation bar</td>
+            </tr>
+            <tr className="border-b">
+              <td className="py-2 pr-4"><code>customContentPosition</code></td>
+              <td className="py-2 pr-4">"left" | "right"</td>
+              <td className="py-2 pr-4">"right"</td>
+              <td className="py-2">Position of the custom content within the nav bar</td>
             </tr>
             <tr className="border-b">
               <td className="py-2 pr-4"><code>height</code></td>
@@ -327,10 +364,10 @@ export default function NavsPage() {
               <td className="py-2">Additional CSS classes</td>
             </tr>
             <tr>
-              <td className="py-2 pr-4"><code>keepCustomContentOnSmallScreens</code></td>
-              <td className="py-2 pr-4">boolean</td>
-              <td className="py-2 pr-4">true</td>
-              <td className="py-2">Show custom content on small screens</td>
+              <td className="py-2 pr-4"><code>style</code></td>
+              <td className="py-2 pr-4">React.CSSProperties</td>
+              <td className="py-2 pr-4">-</td>
+              <td className="py-2">Inline styles</td>
             </tr>
           </tbody>
         </table>

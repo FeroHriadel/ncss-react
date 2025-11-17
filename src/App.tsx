@@ -7,6 +7,7 @@ import NavsPage from './pages/NavsPage';
 import VirtualizedTablePage from './pages/VirtualizedTablePage'
 import TopNav from './components/navs/TopNav';
 import LeftNav, { LeftNavPage } from './components/navs/LeftNav';
+import ThemeSwitch from './components/buttons/ThemeSwitch';
 
 
 
@@ -78,6 +79,8 @@ function App() {
           links={topNavLinks}
           height="96px"
           className='shadow-md bg-gray-200'
+          customContent={<ThemeSwitch className='ml-1' />}
+          customContentPosition="right"
         />
         <LeftNav 
           width="200px" 
