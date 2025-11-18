@@ -2,3 +2,76 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
+:root {
+  /* Theme tracking */
+  --nc-theme: light;
+
+  /* Colors */
+  --nc-black-950: #000000;
+  --nc-black-900: #0a0a0a;
+  --nc-black-800: #1a1a1a;
+  --nc-black-700: #252525;
+  --nc-black-600: #303030;
+  --nc-black-500: #3a3a3a;
+  --nc-black-400: #454545;
+  --nc-black-300: #505050;
+  --nc-black-200: #5a5a5a;
+  --nc-black-100: #656565;
+  --nc-black-50: #707070;
+  --nc-gray-50: #f9fafb;
+  --nc-gray-100: #f3f4f6;
+  --nc-gray-200: #e5e7eb;
+  --nc-gray-300: #d1d5db;
+  --nc-gray-400: #9ca3af;
+  --nc-gray-500: #6b7280;
+  --nc-gray-600: #4b5563;
+  --nc-gray-700: #374151;
+  --nc-gray-800: #1f2937;
+  --nc-gray-900: #111827;
+  --nc-gray-950: #030712;
+  --nc-red-50: #fef2f2;
+  --nc-red-100: #fee2e2;
+  --nc-red-200: #fecaca;
+  --nc-red-300: #fca5a5;
+  --nc-red-400: #f87171;
+  --nc-red-500: #ef4444;
+  --nc-red-600: #dc2626;
+  --nc-red-700: #b91c1c;
+  --nc-red-800: #991b1b;
+  --nc-red-900: #7f1d1d;
+  --nc-red-950: #450a0a;
+  --nc-white: #ffffff;
+
+  /* Body */
+  --nc-body-bg: var(--nc-white);
+
+  /* Buttons */
+  --nc-btn-dark-border: var(--nc-black);
+  --nc-btn-dark-bg: var(--nc-gray-800);
+  --nc-btn-dark-hover-bg: var(--nc-gray-950);
+  --nc-btn-dark-text: var(--nc-white);
+  --nc-btn-outline-border: var(--nc-gray-500);
+  --nc-btn-outline-text: var(--nc-gray-700);
+  --nc-btn-outline-bg: transparent;
+  --nc-btn-outline-hover-bg: var(--nc-gray-100);
+  --nc-btn-outline-active-bg: var(--nc-gray-200);
+  --nc-btn-red-border: var(--nc-red-900);
+  --nc-btn-red-bg: var(--nc-red-900);
+  --nc-btn-red-text: var(--nc-white);
+  --nc-btn-red-hover-bg: var(--nc-red-800);
+  --nc-btn-transparent-border: transparent;
+  --nc-btn-transparent-bg: transparent; 
+  --nc-btn-transparent-text: var(--nc-gray-700);
+  --nc-btn-transparent-hover-bg: var(--nc-gray-100);
+  --nc-btn-transparent-active-bg: var(--nc-gray-200);
+  --nc-close-btn-text: var(--nc-red-900);
+  --nc-icon-btn-hover-bg: var(--nc-gray-100);
+  --nc-icon-btn-active-bg: var(--nc-gray-200);
+}
+
+body {
+  background-color: var(--nc-body-bg);
+}
+

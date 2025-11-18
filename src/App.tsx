@@ -11,6 +11,7 @@ import VirtualizedTablePage from './pages/VirtualizedTablePage'
 import TopNav from './components/navs/TopNav';
 import LeftNav, { LeftNavPage } from './components/navs/LeftNav';
 import ThemeSwitch from './components/buttons/ThemeSwitch';
+import TestPage from './pages/TestPage';
 
 
 
@@ -90,7 +91,7 @@ function App() {
   // Render
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen">
         <TopNav
           logo={<span className='font-extrabold text-gray-500 text-2xl' style={{filter: 'drop-shadow(2px 2px 2px rgba(0,0,0,0.2))'}}>NCSS</span>}
           logoUrl="/"
@@ -116,6 +117,7 @@ function App() {
             <Route path="/inputs" element={<InputsPage />} />
             <Route path="/pills" element={<PillsPage />} />
             <Route path="/navs" element={<NavsPage />} />
+            <Route path="/test" element={<TestPage />} />
           <Route path="/tables/virtualizedtable" element={<VirtualizedTablePage />} />
         </Routes>
       </LeftNavPage>
