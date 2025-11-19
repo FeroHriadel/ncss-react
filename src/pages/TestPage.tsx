@@ -70,7 +70,7 @@ export default function TestPage() {
         title="Click to Expand" 
         trigger={<Button variant="outline">Toggle Collapsible</Button>}
       >
-        <Card className="mt-2">
+        <Card className="mt-2 border">
           <p>This is the content inside the collapsible.</p>
           <p>It can contain any elements you like.</p>
           <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore, atque necessitatibus voluptatum eaque totam illum inventore, pariatur repellat esse exercitationem porro fugiat ab architecto amet nobis natus qui, magni excepturi nihil? Blanditiis, cum! Dicta nobis dolorum illo nemo iste rerum, culpa modi. Debitis qui quis consequatur amet quae fuga fugit repudiandae ea perspiciatis, aspernatur veritatis asperiores iste fugiat animi! Fugit modi, consequuntur totam, accusantium officiis officia vitae id dolorum culpa iste nesciunt autem eum harum nisi ab enim deserunt. Error necessitatibus repudiandae obcaecati soluta possimus, atque optio neque sed repellat itaque molestiae. Repudiandae deleniti illo voluptatem consequatur minima similique mollitia!</span>
