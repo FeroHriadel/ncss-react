@@ -30,6 +30,8 @@ export function setVariablesForTheme(theme: "light" | "dark"): void {
     document.documentElement.style.setProperty('--nc-btn-red-bg', 'var(--nc-red-950)');
     document.documentElement.style.setProperty('--nc-btn-red-text', 'var(--nc-gray-300)');
     document.documentElement.style.setProperty('--nc-btn-red-hover-bg', 'var(--nc-red-900)');
+    document.documentElement.style.setProperty('--nc-btn-transparent-hover-bg', 'var(--nc-black-700)');
+    document.documentElement.style.setProperty('--nc-btn-transparent-active-bg', 'var(--nc-black-800)');
     document.documentElement.style.setProperty('--nc-icon-btn-hover-bg', 'var(--nc-black-800)');
     document.documentElement.style.setProperty('--nc-icon-btn-active-bg', 'var(--nc-black-700)');
     document.documentElement.style.setProperty('--nc-icon-btn-text', 'var(--nc-gray-300)');

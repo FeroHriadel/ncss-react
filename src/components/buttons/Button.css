@@ -108,7 +108,7 @@
 /* Variant: transparent */
 .button-variant-transparent {
   background-color: var(--nc-btn-transparent-bg);
-  color: var(--nc-btn-transparent-text); /* text-gray-700 */
+  color: inherit;
   border: 1px solid var(--nc-btn-transparent-border);
 }
 
