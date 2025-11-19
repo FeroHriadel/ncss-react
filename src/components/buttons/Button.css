@@ -73,7 +73,7 @@
 
 .button-variant-dark:active,
 .button-variant-dark:focus {
-  background-color: var(--nc-btn-dark-hover-bg); /* active:bg-gray-950, focus:bg-gray-950 */
+  background-color: var(--nc-btn-dark-text); /* active:bg-gray-950, focus:bg-gray-950 */
 }
 
 /* Variant: outline */
@@ -129,4 +129,5 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  color: inherit; /* Force inherit color from button */
 }

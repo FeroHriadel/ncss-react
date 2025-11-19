@@ -12,6 +12,10 @@ export function setVariablesForTheme(theme: "light" | "dark"): void {
     // body
     document.documentElement.style.setProperty('--nc-body-bg', 'var(--nc-black-600)');
 
+    // text
+    document.documentElement.style.setProperty('--nc-text-color', 'var(--nc-gray-300)');
+    document.documentElement.style.setProperty('--nc-header-text-color', 'var(--nc-gray-200)');
+
     // buttons
     document.documentElement.style.setProperty('--nc-btn-dark-border', 'var(--nc-black-800)');
     document.documentElement.style.setProperty('--nc-btn-dark-bg', 'var(--nc-black-800)');
@@ -26,6 +30,10 @@ export function setVariablesForTheme(theme: "light" | "dark"): void {
     document.documentElement.style.setProperty('--nc-btn-red-bg', 'var(--nc-red-950)');
     document.documentElement.style.setProperty('--nc-btn-red-text', 'var(--nc-gray-300)');
     document.documentElement.style.setProperty('--nc-btn-red-hover-bg', 'var(--nc-red-900)');
+    document.documentElement.style.setProperty('--nc-icon-btn-hover-bg', 'var(--nc-black-800)');
+    document.documentElement.style.setProperty('--nc-icon-btn-active-bg', 'var(--nc-black-700)');
+    document.documentElement.style.setProperty('--nc-icon-btn-text', 'var(--nc-gray-300)');
+    document.documentElement.style.setProperty('--nc-theme-switch-text', 'var(--nc-gray-300)');
     return;
   }
 
@@ -33,8 +41,12 @@ export function setVariablesForTheme(theme: "light" | "dark"): void {
     // body
     document.documentElement.style.setProperty('--nc-body-bg', 'var(--nc-white)');
 
+    // text
+    document.documentElement.style.setProperty('--nc-text-color', 'var(--nc-gray-700)');
+    document.documentElement.style.setProperty('--nc-header-text-color', 'var(--nc-gray-800)');
+
     // buttons
-    document.documentElement.style.setProperty('--nc-btn-dark-border', 'var(--nc-black)');
+    document.documentElement.style.setProperty('--nc-btn-dark-border', 'var(--nc-black-950)');
     document.documentElement.style.setProperty('--nc-btn-dark-bg', 'var(--nc-gray-800)');
     document.documentElement.style.setProperty('--nc-btn-dark-hover-bg', 'var(--nc-gray-950)');
     document.documentElement.style.setProperty('--nc-btn-dark-text', 'var(--nc-white)');
@@ -47,6 +59,10 @@ export function setVariablesForTheme(theme: "light" | "dark"): void {
     document.documentElement.style.setProperty('--nc-btn-red-bg', 'var(--nc-red-900)');
     document.documentElement.style.setProperty('--nc-btn-red-text', 'var(--nc-white)');
     document.documentElement.style.setProperty('--nc-btn-red-hover-bg', 'var(--nc-red-800)');
+    document.documentElement.style.setProperty('--nc-icon-btn-hover-bg', 'var(--nc-gray-100)');
+    document.documentElement.style.setProperty('--nc-icon-btn-active-bg', 'var(--nc-gray-200)');
+    document.documentElement.style.setProperty('--nc-icon-btn-text', 'var(--nc-gray-700)');
+    document.documentElement.style.setProperty('--nc-theme-switch-text', 'var(--nc-gray-700)');
   }
 }
 

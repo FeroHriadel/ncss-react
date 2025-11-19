@@ -14,6 +14,7 @@
   background-color: transparent;
   cursor: pointer;
   transition: background-color 0.15s ease-in-out;
+  color: var(--nc-icon-btn-text);
 }
 
 .icon-button:hover,

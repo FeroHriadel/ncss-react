@@ -47,6 +47,10 @@
   /* Body */
   --nc-body-bg: var(--nc-white);
 
+  /* Text */
+  --nc-text-color: var(--nc-gray-700);
+  --nc-header-text-color: var(--nc-gray-800);
+
   /* Buttons */
   --nc-btn-dark-border: var(--nc-black);
   --nc-btn-dark-bg: var(--nc-gray-800);
@@ -69,9 +73,19 @@
   --nc-close-btn-text: var(--nc-red-900);
   --nc-icon-btn-hover-bg: var(--nc-gray-100);
   --nc-icon-btn-active-bg: var(--nc-gray-200);
+  --nc-icon-btn-text: var(--nc-gray-700);
+  --nc-theme-switch-text: var(--nc-gray-700);
 }
 
 body {
   background-color: var(--nc-body-bg);
+}
+
+a, p, span, div, li, input, textarea, small, label {
+  color: var(--nc-text-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--nc-header-text-color);
 }
 

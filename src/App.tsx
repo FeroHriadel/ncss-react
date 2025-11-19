@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import ButtonsPage from './pages/ButtonsPage';
+import CardsPage from './pages/CardsPage';
 import CollapsiblePage from './pages/CollapsiblePage';
 import DialogsPage from './pages/DialogsPage';
 import DropdownsPage from './pages/DropdownsPage';
@@ -27,6 +28,7 @@ function App() {
       linkName: 'Components',
       options: [ 
         { optionName: 'Buttons', optionUrl: '/buttons' },
+        { optionName: 'Cards', optionUrl: '/cards' },
         { optionName: 'Collapsible', optionUrl: '/collapsible' },
         { optionName: 'Dialogs', optionUrl: '/dialogs' },
         { optionName: 'Dropdowns', optionUrl: '/dropdowns' },
@@ -51,12 +53,16 @@ function App() {
       linkUrl: '/' 
     },
     {
-      linkName: 'Collapsible',
-      linkUrl: '/collapsible'
-    },
-    {
       linkName: 'Buttons',
       linkUrl: '/buttons'
+    },
+    {
+      linkName: 'Cards',
+      linkUrl: '/cards'
+    },
+    {
+      linkName: 'Collapsible',
+      linkUrl: '/collapsible'
     },
     {
       linkName: 'Dialogs',
@@ -111,6 +117,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/buttons" element={<ButtonsPage />} />
+            <Route path="/cards" element={<CardsPage />} />
             <Route path="/collapsible" element={<CollapsiblePage />} />
             <Route path="/dialogs" element={<DialogsPage />} />
             <Route path="/dropdowns" element={<DropdownsPage />} />

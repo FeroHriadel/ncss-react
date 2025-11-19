@@ -1,6 +1,7 @@
 import Button from "../components/buttons/Button";
 import CloseButton from "../components/buttons/CloseButton";
 import IconButton from "../components/buttons/IconButton";
+import { FaCheck } from "react-icons/fa";
 import ThemeSwitch from "../components/buttons/ThemeSwitch";
 import Break from "../components/spacers/Break";
 import Container from "../components/wrappers/Container";
@@ -9,7 +10,21 @@ import Container from "../components/wrappers/Container";
 export default function TestPage() {
   return (
     <Container className="px-4 pt-24">
-      <h1 className="text-2xl">BUTTONS</h1> 
+      {/* Text */}
+      <h2 className="text-2xl">TEXT</h2>
+      <p>Text like p and <span>span</span> and <small>small</small> looks like this</p>
+      <Break amount={1} />
+      <p>ul like this:</p>
+      <ul>
+        <li>item 1</li>
+        <li>item 2</li>
+        <li>item 3</li>
+      </ul>
+      <Break amount={4} />
+
+
+      {/* Buttons */}
+      <h2 className="text-2xl">BUTTONS</h2> 
       <Break amount={1} />
       <div className="flex gap-2 flex-wrap">
         <Button variant="dark" size="md">Dark Button</Button>
@@ -25,8 +40,8 @@ export default function TestPage() {
       <div className="flex gap-2 flex-wrap">
         <CloseButton ariaLabel="Close Button" />
         <CloseButton ariaLabel="Disabled Close Button" disabled />
-        <IconButton ariaLabel="Settings Button" icon="⚙️" />
-        <IconButton ariaLabel="Disabled Settings Button" icon="⚙️" disabled />
+        <IconButton ariaLabel="Settings Button" icon={<FaCheck />} />
+        <IconButton ariaLabel="Disabled Settings Button" icon={<FaCheck />} disabled />
         <ThemeSwitch 
           defaultTheme="light" 
           onChange={(newTheme) => console.log("Theme changed to:", newTheme)} 
