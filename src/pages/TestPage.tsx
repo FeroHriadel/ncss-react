@@ -7,6 +7,7 @@ import ThemeSwitch from "../components/buttons/ThemeSwitch";
 import Card from "../components/cards/Card";
 import Collapsible from "../components/collapsible/Collapsible";
 import Container from "../components/wrappers/Container";
+import Modal from "../components/dialogs/Modal";
 
 
 export default function TestPage() {
@@ -76,6 +77,15 @@ export default function TestPage() {
           <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore, atque necessitatibus voluptatum eaque totam illum inventore, pariatur repellat esse exercitationem porro fugiat ab architecto amet nobis natus qui, magni excepturi nihil? Blanditiis, cum! Dicta nobis dolorum illo nemo iste rerum, culpa modi. Debitis qui quis consequatur amet quae fuga fugit repudiandae ea perspiciatis, aspernatur veritatis asperiores iste fugiat animi! Fugit modi, consequuntur totam, accusantium officiis officia vitae id dolorum culpa iste nesciunt autem eum harum nisi ab enim deserunt. Error necessitatibus repudiandae obcaecati soluta possimus, atque optio neque sed repellat itaque molestiae. Repudiandae deleniti illo voluptatem consequatur minima similique mollitia!</span>
         </Card>
       </Collapsible>
+      <Break amount={4} />
+
+
+      {/* Dialogs */}
+      <h2 className="text-2xl">DIALOGS</h2>
+      <Break amount={1} />
+      <Modal trigger={<Button variant="dark">Open Modal</Button>}>
+        <p className="mt-2">This is the content inside the modal.</p>
+      </Modal>
       <Break amount={4} />
 
     </Container>
