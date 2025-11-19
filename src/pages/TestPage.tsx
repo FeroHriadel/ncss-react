@@ -1,9 +1,11 @@
+import Break from "../components/spacers/Break";
 import Button from "../components/buttons/Button";
 import CloseButton from "../components/buttons/CloseButton";
 import IconButton from "../components/buttons/IconButton";
 import { FaCheck } from "react-icons/fa";
 import ThemeSwitch from "../components/buttons/ThemeSwitch";
-import Break from "../components/spacers/Break";
+import Card from "../components/cards/Card";
+import Collapsible from "../components/collapsible/Collapsible";
 import Container from "../components/wrappers/Container";
 
 
@@ -50,7 +52,31 @@ export default function TestPage() {
       <Break amount={4} />
 
 
-      {/* Card */}
+      {/* Cards */}
+      <h2 className="text-2xl">CARDS</h2>
+      <Break amount={1} />
+      <Card style={{ maxWidth: '260px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <h1 className="mb-2">Card Title</h1>
+        <p>card paragraph</p>
+        No tag
+      </Card>
+      <Break amount={4} />
+
+
+      {/* Collapsible */}
+      <h2 className="text-2xl">COLLAPSIBLE</h2>
+      <Break amount={1} />
+      <Collapsible 
+        title="Click to Expand" 
+        trigger={<Button variant="outline">Toggle Collapsible</Button>}
+      >
+        <Card className="mt-2">
+          <p>This is the content inside the collapsible.</p>
+          <p>It can contain any elements you like.</p>
+          <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore, atque necessitatibus voluptatum eaque totam illum inventore, pariatur repellat esse exercitationem porro fugiat ab architecto amet nobis natus qui, magni excepturi nihil? Blanditiis, cum! Dicta nobis dolorum illo nemo iste rerum, culpa modi. Debitis qui quis consequatur amet quae fuga fugit repudiandae ea perspiciatis, aspernatur veritatis asperiores iste fugiat animi! Fugit modi, consequuntur totam, accusantium officiis officia vitae id dolorum culpa iste nesciunt autem eum harum nisi ab enim deserunt. Error necessitatibus repudiandae obcaecati soluta possimus, atque optio neque sed repellat itaque molestiae. Repudiandae deleniti illo voluptatem consequatur minima similique mollitia!</span>
+        </Card>
+      </Collapsible>
+      <Break amount={4} />
 
     </Container>
   );

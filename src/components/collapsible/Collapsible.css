@@ -2,8 +2,7 @@
 
 .collapsible-trigger {
   cursor: pointer;
-  display: block;
-  width: 100%;
+  display: inline-block;
   user-select: none;
 }
 
