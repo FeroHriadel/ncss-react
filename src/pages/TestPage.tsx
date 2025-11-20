@@ -11,11 +11,13 @@ import Container from "../components/wrappers/Container";
 import Modal from "../components/dialogs/Modal";
 import Dropdown, { type DropdownHandle } from "../components/dropdowns/Dropdown";
 import MultiSelect from "../components/dropdowns/MultiSelect";
+import Select from "../components/dropdowns/Select";
 
 
 export default function TestPage() {
   const dropdownRef = useRef<DropdownHandle>(null);
   const [multiselectValues, setMultiselectValues] = useState<string[]>([]);
+  const [selectValue, setSelectValue] = useState<string | null>(null);
 
   return (
     <Container className="px-4 pt-24">
@@ -170,6 +172,19 @@ export default function TestPage() {
       {' '}
       <span className="mt-2">Selected Values: {multiselectValues.join(', ') || 'None'}</span>
       <Break amount={1} />
+      {/* Dropdowns - (Select) */}
+      <Select
+        width="250px"
+        options={[
+          { value: 's1', displayValue: 'Select 1' },
+          { value: 's2', displayValue: 'Select 2' },
+          { value: 's3', displayValue: 'Select 3' },
+          { value: 's4', displayValue: 'Select 4' },
+        ]}
+        onChange={(selectedOption) => { setSelectValue(selectedOption); }}
+        className="mt-6"
+      />
+      <span className="m-2"> Selected Value: {selectValue || 'None'}</span>
 
     </Container>
   );
