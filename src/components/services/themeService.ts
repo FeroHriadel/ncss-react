@@ -36,6 +36,11 @@ export function setVariablesForTheme(theme: "light" | "dark"): void {
     document.documentElement.style.setProperty('--nc-icon-btn-active-bg', 'var(--nc-black-700)');
     document.documentElement.style.setProperty('--nc-icon-btn-text', 'var(--nc-gray-300)');
     document.documentElement.style.setProperty('--nc-theme-switch-text', 'var(--nc-gray-300)');
+
+    // cards
+    document.documentElement.style.setProperty('--nc-card-bg', 'var(--nc-black-700)');
+    document.documentElement.style.setProperty('--nc-card-shadow', '0 4px 6px -1px rgba(255, 255, 255, 0.1), 0 2px 4px -1px rgba(255, 255, 255, 0.06)');
+    document.documentElement.style.setProperty('--nc-card-border', 'var(--nc-gray-500)');
     return;
   }
 
@@ -65,6 +70,11 @@ export function setVariablesForTheme(theme: "light" | "dark"): void {
     document.documentElement.style.setProperty('--nc-icon-btn-active-bg', 'var(--nc-gray-200)');
     document.documentElement.style.setProperty('--nc-icon-btn-text', 'var(--nc-gray-700)');
     document.documentElement.style.setProperty('--nc-theme-switch-text', 'var(--nc-gray-700)');
+
+    // cards
+    document.documentElement.style.setProperty('--nc-card-bg', 'transparent');
+    document.documentElement.style.setProperty('--nc-card-shadow', '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)');
+    document.documentElement.style.setProperty('--nc-card-border', 'var(--nc-gray-300)');
   }
 }
 

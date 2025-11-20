@@ -75,6 +75,11 @@
   --nc-icon-btn-active-bg: var(--nc-gray-200);
   --nc-icon-btn-text: var(--nc-gray-700);
   --nc-theme-switch-text: var(--nc-gray-700);
+
+  /* Cards */
+  --nc-card-bg: transparent;
+  --nc-card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --nc-card-border: var(--nc-gray-300);
 }
 
 body {
