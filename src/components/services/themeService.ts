@@ -41,6 +41,10 @@ export function setVariablesForTheme(theme: "light" | "dark"): void {
     document.documentElement.style.setProperty('--nc-card-bg', 'var(--nc-black-700)');
     document.documentElement.style.setProperty('--nc-card-shadow', '0 4px 6px -1px rgba(255, 255, 255, 0.1), 0 2px 4px -1px rgba(255, 255, 255, 0.06)');
     document.documentElement.style.setProperty('--nc-card-border', 'var(--nc-gray-500)');
+
+    // modals
+    document.documentElement.style.setProperty('--nc-modal-content-bg', 'var(--nc-black-600)');
+    document.documentElement.style.setProperty('--nc-modal-content-shadow', '0 4px 6px rgba(255, 255, 255, 0.1), 0 10px 10px -1px rgba(255, 255, 255, 0.06)');
     return;
   }
 
@@ -75,6 +79,11 @@ export function setVariablesForTheme(theme: "light" | "dark"): void {
     document.documentElement.style.setProperty('--nc-card-bg', 'transparent');
     document.documentElement.style.setProperty('--nc-card-shadow', '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)');
     document.documentElement.style.setProperty('--nc-card-border', 'var(--nc-gray-300)');
+
+    // modals
+    document.documentElement.style.setProperty('--nc-modal-content-bg', 'var(--nc-white)');
+    document.documentElement.style.setProperty('--nc-modal-content-shadow', '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)');
+    return;
   }
 }
 
