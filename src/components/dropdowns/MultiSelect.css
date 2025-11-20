@@ -53,6 +53,7 @@
 
 .multiselect-options.multiselect-options-top {
   bottom: 100%;
+  margin-bottom: 0.25rem;
 }
 
 .multiselect-options.multiselect-options-bottom {

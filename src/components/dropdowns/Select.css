@@ -28,7 +28,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   text-align: left;
-  color: #374151;
+  color: var(--nc-multiselect-text);
   font-size: 1rem;
   pointer-events: none;
 }
@@ -38,17 +38,17 @@
   right: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #374151;
+  color: var(--nc-multiselect-text);
   font-size: 0.75rem;
   pointer-events: none;
 }
 
 .select-options {
   position: absolute;
-  background-color: white;
-  border: 1px solid #d1d5db;
+  background-color: var(--nc-multiselect-options-bg);
+  border: 1px solid var(--nc-multiselect-options-border);
   border-radius: 0.25rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--nc-multiselect-options-shadow);
   z-index: 50;
 }
 
@@ -72,13 +72,13 @@
 
 .select-header {
   padding: 0.5rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--nc-multiselect-text);
 }
 
 .select-header-text {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--nc-multiselect-text);
 }
 
 .select-options-wrap {
@@ -101,11 +101,11 @@
   justify-content: space-between;
   transition: background-color 0.2s;
   font-size: 0.875rem;
-  color: #374151;
+  color: var(--nc-multiselect-text);
 }
 
 .select-option:hover {
-  background-color: #f3f4f6;
+  background-color: var(--nc-multiselect-option-hover-bg);
 }
 
 .select-option-text {
@@ -116,7 +116,7 @@
 
 .select-option-icon {
   margin-left: 0.75rem;
-  color: #6b7280;
+  color: var(--nc-multiselect-text);
   font-size: 0.75rem;
   flex-shrink: 0;
 }
