@@ -19,6 +19,9 @@ export interface DropdownProps {
   trigger?: React.ReactNode;
   children?: React.ReactNode;
   closeOnSelect?: boolean;
+  openX?: "left" | "right";
+  openY?: "up" | "down";
+  onChange?: (selectedOption: string | null) => void;
 }
 
 export interface DropdownHandle {
@@ -31,7 +34,7 @@ export interface DropdownHandle {
 
 
 const Dropdown = forwardRef<DropdownHandle, DropdownProps>(function Dropdown(
-  { options, className, style, optionsClassName, optionsStyle, id, disabled, trigger, children, closeOnSelect = true },
+  { options, className, style, optionsClassName, optionsStyle, id, disabled, trigger, children, closeOnSelect = true, openX, openY, onChange = () => {} },
   ref
 ) {
   
@@ -39,7 +42,10 @@ const Dropdown = forwardRef<DropdownHandle, DropdownProps>(function Dropdown(
   const measureRef = useRef<HTMLUListElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const maxHeight = measureRef.current ? Math.min(measureRef.current.scrollHeight, 400) : 400;
+  
+  // Only set maxHeight if content exceeds 400px
+  const contentHeight = measureRef.current ? measureRef.current.scrollHeight : 0;
+  const maxHeight = contentHeight > 400 ? 400 : undefined;
 
 
   // Toggle dropdown
@@ -74,15 +80,20 @@ const Dropdown = forwardRef<DropdownHandle, DropdownProps>(function Dropdown(
 
   // Check available space below
   function hasSpaceBelow(): boolean {
-    // max-options-height is 400px
-    const rect = measureRef.current?.getBoundingClientRect();
-    if (!rect) return true;
-    const spaceBelow = window.innerHeight - rect.bottom;
-    return spaceBelow >= maxHeight;
+    if (openY === "up") return false;
+    if (openY === "down") return true;
+    // Check if there's space below the trigger for the dropdown
+    const triggerRect = wrapperRef.current?.getBoundingClientRect();
+    if (!triggerRect) return true;
+    const dropdownHeight = maxHeight || contentHeight;
+    const spaceBelow = window.innerHeight - triggerRect.bottom;
+    return spaceBelow >= dropdownHeight;
   }
 
   // Check available space on the right
   function hasSpaceRight(): boolean {
+    if (openX === "left") return false;
+    if (openX === "right") return true;
     const rect = wrapperRef.current?.getBoundingClientRect();
     if (!rect) return true;
     const dropdownWidth = measureRef.current?.offsetWidth || 200;
@@ -124,13 +135,16 @@ const Dropdown = forwardRef<DropdownHandle, DropdownProps>(function Dropdown(
         &&
         <ul 
           className={`dropdown-options ${hasSpaceBelow() ? 'dropdown-options-bottom' : 'dropdown-options-top'} ${hasSpaceRight() ? 'dropdown-options-left' : 'dropdown-options-right'} ${optionsClassName || ''}`}
-          style={{ maxHeight: `${maxHeight}px`, ...optionsStyle }}
+          style={{ ...(maxHeight && { maxHeight: `${maxHeight}px` }), ...optionsStyle }}
         >
           {options.map((opt, index) => (
             <li 
               key={index} 
               className="dropdown-option"
-              onClick={() => closeOnSelect && setIsOpen(false)}
+              onClick={() => { 
+                if (closeOnSelect) setIsOpen(false); 
+                onChange(opt.value || null); }
+              }
             >
               {opt.render}
             </li>

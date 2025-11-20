@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import Break from "../components/spacers/Break";
 import Button from "../components/buttons/Button";
 import CloseButton from "../components/buttons/CloseButton";
@@ -8,9 +9,13 @@ import Card from "../components/cards/Card";
 import Collapsible from "../components/collapsible/Collapsible";
 import Container from "../components/wrappers/Container";
 import Modal from "../components/dialogs/Modal";
+import Dropdown, { type DropdownHandle } from "../components/dropdowns/Dropdown";
+import MultiSelect from "../components/dropdowns/MultiSelect";
 
 
 export default function TestPage() {
+  const dropdownRef = useRef<DropdownHandle>(null);
+
   return (
     <Container className="px-4 pt-24">
       {/* Text */}
@@ -87,6 +92,68 @@ export default function TestPage() {
         <p className="mt-2">This is the content inside the modal.</p>
       </Modal>
       <Break amount={4} />
+
+      {/* Dropdowns - (customizable Dropdown) */}
+      <h2 className="text-2xl">DROPDOWNS</h2>
+      <Break amount={1} />
+      <div className="flex gap-2">
+        <Dropdown
+          ref={dropdownRef}
+          trigger={<Button variant="dark">Open Dropdown</Button>} 
+          options={[
+            { render: <span className="p-6 bg-slate-500 text-white">Option 1</span>, value: 'opt1' },
+            { render: <span className="p-4 ml-8 bg-slate-600 text-white">Option 2</span>, value: 'opt2' },
+            { render: <span className="p-2 ml-16 bg-slate-700 text-white">Option 3</span>, value: 'opt3' }
+          ]}
+          openY="up"
+          openX="left"
+          onChange={(v: string | null) => console.log(v)}
+          optionsClassName="bg-slate-400"
+          closeOnSelect={false}
+        />
+
+        <Dropdown
+          trigger={<Button variant="outline">Open Dropdown 2</Button>} 
+          options={[
+            { render: <span>Option A</span>, value: 'optA' },
+            { render: <span>Option B</span>, value: 'optB' },
+            { render: <span>Option C</span>, value: 'optC' },
+            { render: <span>Option D</span>, value: 'optD' },
+            { render: <span>Option E</span>, value: 'optE' },
+            { render: <span>Option F</span>, value: 'optF' },
+            { render: <span>Option G</span>, value: 'optG' },
+            { render: <span>Option H</span>, value: 'optH' },
+            { render: <span>Option I</span>, value: 'optI' },
+            { render: <span>Option J</span>, value: 'optJ' },
+            { render: <span>Option K</span>, value: 'optK' },
+            { render: <span>Option L</span>, value: 'optL' },
+            { render: <span>Option M</span>, value: 'optM' },
+            { render: <span>Option N</span>, value: 'optN' },
+            { render: <span>Option O</span>, value: 'optO' },
+            { render: <span>Option P</span>, value: 'optP' },
+            { render: <span>Option Q</span>, value: 'optQ' },
+            { render: <span>Option R</span>, value: 'optR' },
+            { render: <span>Option S</span>, value: 'optS' },
+            { render: <span>Option T</span>, value: 'optT' },
+            { render: <span>Option U</span>, value: 'optU' },
+            { render: <span>Option V</span>, value: 'optV' },
+            { render: <span>Option W</span>, value: 'optW' },
+            { render: <span>Option X</span>, value: 'optX' },
+            { render: <span>Option Y</span>, value: 'optY' },
+            { render: <span>Option Z</span>, value: 'optZ' },
+          ]}
+          onChange={(v: string | null) => console.log(v)}
+        />
+      </div>
+      <Break amount={2} />
+      {/* Dropdowns - (Multiselect) */}
+      <MultiSelect
+        trigger={<Button variant="red">Open MultiSelect</Button>} 
+        options={[
+          
+        ]}
+        onChange={(v: string[]) => alert(v)}
+      />
 
     </Container>
   );

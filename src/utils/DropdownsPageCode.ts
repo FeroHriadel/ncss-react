@@ -174,6 +174,63 @@ export const dropdownWithRefCode = `
   }
 `;
 
+export const dropdownWithManyOptionsCode = `
+  import Dropdown from "../components/dropdowns/Dropdown";
+  import Button from "../components/buttons/Button";
+
+  <Dropdown
+    trigger={<Button variant="outline">Select Letter</Button>} 
+    options={[
+      { render: <span>Option A</span>, value: 'optA' },
+      { render: <span>Option B</span>, value: 'optB' },
+      { render: <span>Option C</span>, value: 'optC' },
+      { render: <span>Option D</span>, value: 'optD' },
+      { render: <span>Option E</span>, value: 'optE' },
+      { render: <span>Option F</span>, value: 'optF' },
+      { render: <span>Option G</span>, value: 'optG' },
+      { render: <span>Option H</span>, value: 'optH' },
+      { render: <span>Option I</span>, value: 'optI' },
+      { render: <span>Option J</span>, value: 'optJ' },
+      { render: <span>Option K</span>, value: 'optK' },
+      { render: <span>Option L</span>, value: 'optL' },
+      { render: <span>Option M</span>, value: 'optM' },
+      { render: <span>Option N</span>, value: 'optN' },
+      { render: <span>Option O</span>, value: 'optO' },
+      { render: <span>Option P</span>, value: 'optP' },
+      { render: <span>Option Q</span>, value: 'optQ' },
+      { render: <span>Option R</span>, value: 'optR' },
+      { render: <span>Option S</span>, value: 'optS' },
+      { render: <span>Option T</span>, value: 'optT' },
+      { render: <span>Option U</span>, value: 'optU' },
+      { render: <span>Option V</span>, value: 'optV' },
+      { render: <span>Option W</span>, value: 'optW' },
+      { render: <span>Option X</span>, value: 'optX' },
+      { render: <span>Option Y</span>, value: 'optY' },
+      { render: <span>Option Z</span>, value: 'optZ' },
+    ]}
+    onChange={(v: string | null) => console.log(v)}
+  />
+`;
+
+export const dropdownWithCustomStyledOptionsCode = `
+  import Dropdown from "../components/dropdowns/Dropdown";
+  import Button from "../components/buttons/Button";
+
+  <Dropdown
+    trigger={<Button variant="dark">Open Dropdown</Button>} 
+    options={[
+      { render: <span className="p-6 bg-slate-500 text-white">Option 1</span>, value: 'opt1' },
+      { render: <span className="p-4 ml-8 bg-slate-600 text-white">Option 2</span>, value: 'opt2' },
+      { render: <span className="p-2 ml-16 bg-slate-700 text-white">Option 3</span>, value: 'opt3' }
+    ]}
+    openY="up"
+    openX="left"
+    onChange={(value: string | null) => console.log('Selected value:', value)}
+    optionsClassName="bg-slate-400"
+    closeOnSelect={false}
+  />
+`;
+
 export const multiSelectCode = `
   import MultiSelect from "../components/dropdowns/MultiSelect";
 

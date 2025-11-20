@@ -7,7 +7,7 @@ import Dropdown from "../components/dropdowns/Dropdown";
 import type { DropdownHandle } from "../components/dropdowns/Dropdown";
 import Break from "../components/spacers/Break";
 import { Highlight, themes } from "prism-react-renderer";
-import { selectCode, selectWithTriggerCode, selectWithRefCode, multiSelectCode, multiSelectWithTriggerCode, multiSelectWithRefCode, dropdownCode, dropdownWithChildrenCode, dropdownWithRefCode } from "../utils/DropdownsPageCode";
+import { selectCode, selectWithTriggerCode, selectWithRefCode, multiSelectCode, multiSelectWithTriggerCode, multiSelectWithRefCode, dropdownCode, dropdownWithChildrenCode, dropdownWithRefCode, dropdownWithManyOptionsCode, dropdownWithCustomStyledOptionsCode } from "../utils/DropdownsPageCode";
 import { useRef } from "react";
 import Card from "../components/cards/Card";
 import Button from "../components/buttons/Button";
@@ -591,6 +591,51 @@ export default function DropdownsPage() {
         )}
       </Highlight>
 
+      {/* DROPDOWN WITH CUSTOM STYLED OPTIONS AND VALUES */}
+      <h2 className="mb-4 text-2xl uppercase font-semibold mt-8">Dropdown with Custom Styled Options and Values</h2>
+      <p className="text-gray-700 mb-4">
+        You can fully customize the appearance of dropdown options using Tailwind classes (or any CSS classes) and retrieve the selected option's <code>value</code> through the <code>onChange</code> callback. 
+        Each option can have a <code>value</code> property that gets passed to <code>onChange</code> when selected. 
+        This is useful when you want rich visual options but need to work with simple identifiers in your code.
+      </p>
+
+      <Dropdown
+        trigger={<Button variant="dark">Open Dropdown</Button>} 
+        options={[
+          { render: <span className="p-6 bg-slate-500 text-white">Option 1</span>, value: 'opt1' },
+          { render: <span className="p-4 ml-8 bg-slate-600 text-white">Option 2</span>, value: 'opt2' },
+          { render: <span className="p-2 ml-16 bg-slate-700 text-white">Option 3</span>, value: 'opt3' }
+        ]}
+        openY="up"
+        openX="left"
+        onChange={(value: string | null) => {
+          console.log('Selected value:', value);
+          alert(`You selected: ${value}`);
+        }}
+        optionsClassName="bg-slate-400"
+        closeOnSelect={false}
+        className="mb-8"
+      />
+
+      <Highlight
+        theme={themes.vsLight}
+        code={dropdownWithCustomStyledOptionsCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
       <Card className="bg-gray-100 border border-gray-200 rounded p-4 mb-12 mt-8">
         <h3 className="text-lg font-semibold mb-2">Dropdown Props</h3>
         <ul className="space-y-2">
@@ -604,8 +649,72 @@ export default function DropdownsPage() {
           <li><code>optionsClassName</code> (optional): Additional CSS classes for the dropdown menu</li>
           <li><code>optionsStyle</code> (optional): Inline styles for the dropdown menu</li>
           <li><code>id</code> (optional): HTML id attribute</li>
+          <li><code>openX</code> (optional): Force dropdown to open "left" or "right" (auto-detects if not set)</li>
+          <li><code>openY</code> (optional): Force dropdown to open "up" or "down" (auto-detects if not set)</li>
+          <li><code>onChange</code> (optional): Callback when an option is selected, receives the option's value</li>
         </ul>
       </Card>
+
+      {/* DROPDOWN WITH MANY OPTIONS */}
+      <h2 className="mb-4 text-2xl uppercase font-semibold">Dropdown with Many Options</h2>
+      <p className="text-gray-700 mb-4">
+        When a dropdown has many options, it automatically limits its height to 400px and becomes scrollable. 
+        The dropdown also intelligently positions itself - it will open upward if there's not enough space below the trigger, 
+        and adjust its horizontal position based on available screen space.
+      </p>
+
+      <Dropdown
+        trigger={<Button variant="outline">Select Letter</Button>} 
+        options={[
+          { render: <span>Option A</span>, value: 'optA' },
+          { render: <span>Option B</span>, value: 'optB' },
+          { render: <span>Option C</span>, value: 'optC' },
+          { render: <span>Option D</span>, value: 'optD' },
+          { render: <span>Option E</span>, value: 'optE' },
+          { render: <span>Option F</span>, value: 'optF' },
+          { render: <span>Option G</span>, value: 'optG' },
+          { render: <span>Option H</span>, value: 'optH' },
+          { render: <span>Option I</span>, value: 'optI' },
+          { render: <span>Option J</span>, value: 'optJ' },
+          { render: <span>Option K</span>, value: 'optK' },
+          { render: <span>Option L</span>, value: 'optL' },
+          { render: <span>Option M</span>, value: 'optM' },
+          { render: <span>Option N</span>, value: 'optN' },
+          { render: <span>Option O</span>, value: 'optO' },
+          { render: <span>Option P</span>, value: 'optP' },
+          { render: <span>Option Q</span>, value: 'optQ' },
+          { render: <span>Option R</span>, value: 'optR' },
+          { render: <span>Option S</span>, value: 'optS' },
+          { render: <span>Option T</span>, value: 'optT' },
+          { render: <span>Option U</span>, value: 'optU' },
+          { render: <span>Option V</span>, value: 'optV' },
+          { render: <span>Option W</span>, value: 'optW' },
+          { render: <span>Option X</span>, value: 'optX' },
+          { render: <span>Option Y</span>, value: 'optY' },
+          { render: <span>Option Z</span>, value: 'optZ' },
+        ]}
+        onChange={(v: string | null) => console.log(v)}
+        className="mb-8"
+      />
+
+      <Highlight
+        theme={themes.vsLight}
+        code={dropdownWithManyOptionsCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
 
 
 
