@@ -50,6 +50,13 @@ export function setVariablesForTheme(theme: "light" | "dark"): void {
     document.documentElement.style.setProperty('--nc-dropdown-options-bg', 'var(--nc-black-700)');
     document.documentElement.style.setProperty('--nc-dropdown-options-border', 'var(--nc-gray-500)');
     document.documentElement.style.setProperty('--nc-dropdown-options-shadow', '0 4px 6px rgba(255, 255, 255, 0.1), 0 10px 10px -1px rgba(255, 255, 255, 0.06)');
+    document.documentElement.style.setProperty('--nc-multiselect-text', 'var(--nc-gray-300)');
+    document.documentElement.style.setProperty('--nc-multiselect-bg', 'var(--nc-black-800)');
+    document.documentElement.style.setProperty('--nc-multiselect-options-bg', 'var(--nc-black-700)');
+    document.documentElement.style.setProperty('--nc-multiselect-options-border', 'var(--nc-gray-500)');
+    document.documentElement.style.setProperty('--nc-multiselect-options-shadow', '0 4px 6px rgba(255, 255, 255, 0.1), 0 10px 10px -1px rgba(255, 255, 255, 0.06)');
+    document.documentElement.style.setProperty('--nc-multiselect-option-hover-bg', 'var(--nc-black-600)');
+    document.documentElement.style.setProperty('--nc-multiselect-icon', 'var(--nc-gray-300)');
     return;
   }
 
@@ -93,6 +100,13 @@ export function setVariablesForTheme(theme: "light" | "dark"): void {
     document.documentElement.style.setProperty('--nc-dropdown-options-bg', 'var(--nc-white)');
     document.documentElement.style.setProperty('--nc-dropdown-options-border', 'var(--nc-gray-300)');
     document.documentElement.style.setProperty('--nc-dropdown-options-shadow', '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)');
+    document.documentElement.style.setProperty('--nc-multiselect-text', 'var(--nc-gray-700)');
+    document.documentElement.style.setProperty('--nc-multiselect-bg', 'transparent');
+    document.documentElement.style.setProperty('--nc-multiselect-options-bg', 'var(--nc-white)');
+    document.documentElement.style.setProperty('--nc-multiselect-options-border', 'var(--nc-gray-300)');
+    document.documentElement.style.setProperty('--nc-multiselect-options-shadow', '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)');
+    document.documentElement.style.setProperty('--nc-multiselect-option-hover-bg', 'var(--nc-gray-100)');
+    document.documentElement.style.setProperty('--nc-multiselect-icon', 'var(--nc-gray-500)');
   }
 }
 

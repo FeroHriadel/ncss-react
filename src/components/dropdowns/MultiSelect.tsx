@@ -26,6 +26,7 @@ export interface MultiSelectProps {
   onChange?: (selectedOptions: string[]) => void;
   openX?: "left" | "right";
   openY?: "up" | "down";
+  width?: string;
 }
 
 export interface MultiSelectHandle {
@@ -53,7 +54,8 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
     preselectedOptions = [],
     onChange,
     openX,
-    openY
+    openY,
+    width
   },
   ref
 ) {
@@ -170,7 +172,10 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
   return (
     <div 
       className={`multiselect-wrapper ${className || ''}`}
-      style={{ opacity: disabled ? 0.5 : 1, pointerEvents: disabled ? 'none' : 'auto', ...style }} 
+      style={{ 
+        opacity: disabled ? 0.5 : 1, 
+        pointerEvents: disabled ? 'none' : 'auto', width: width || 'auto', 
+        ...style }} 
       ref={dropdownRef} 
       id={id}
     >

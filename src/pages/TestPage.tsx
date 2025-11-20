@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Break from "../components/spacers/Break";
 import Button from "../components/buttons/Button";
 import CloseButton from "../components/buttons/CloseButton";
@@ -15,6 +15,7 @@ import MultiSelect from "../components/dropdowns/MultiSelect";
 
 export default function TestPage() {
   const dropdownRef = useRef<DropdownHandle>(null);
+  const [multiselectValues, setMultiselectValues] = useState<string[]>([]);
 
   return (
     <Container className="px-4 pt-24">
@@ -96,7 +97,7 @@ export default function TestPage() {
       {/* Dropdowns - (customizable Dropdown) */}
       <h2 className="text-2xl">DROPDOWNS</h2>
       <Break amount={1} />
-      <div className="flex gap-2">
+      <div className="flex gap-2 items-center">
         <Dropdown
           ref={dropdownRef}
           trigger={<Button variant="dark">Open Dropdown</Button>} 
@@ -144,16 +145,31 @@ export default function TestPage() {
           ]}
           onChange={(v: string | null) => console.log(v)}
         />
+        <span>This is on the same line as Dropdown</span>
       </div>
-      <Break amount={2} />
+      <Break amount={1} />
       {/* Dropdowns - (Multiselect) */}
       <MultiSelect
-        trigger={<Button variant="red">Open MultiSelect</Button>} 
+        width="300px"
         options={[
-          
+          { value: 'val1', displayValue: 'Value 1' },
+          { value: 'val2', displayValue: 'Value 2' },
+          { value: 'val3', displayValue: 'Value 3' },
+          { value: 'val4', displayValue: 'Value 4' },
+          { value: 'val5', displayValue: 'Value 5' },
+          { value: 'val6', displayValue: 'Value 6' },
+          { value: 'val7', displayValue: 'Value 7' },
+          { value: 'val8', displayValue: 'Value 8' },
+          { value: 'val9', displayValue: 'Value 9' },
+          { value: 'val10', displayValue: 'Value 10' },
+          { value: 'val11', displayValue: 'Value 11' },
+          { value: 'val12', displayValue: 'Value 12' },
         ]}
-        onChange={(v: string[]) => alert(v)}
+        onChange={(selectedOptions) => { setMultiselectValues(selectedOptions); }}
       />
+      {' '}
+      <span className="mt-2">Selected Values: {multiselectValues.join(', ') || 'None'}</span>
+      <Break amount={1} />
 
     </Container>
   );

@@ -89,6 +89,13 @@
   --nc-dropdown-options-border: var(--nc-gray-300);
   --nc-dropdown-options-bg: var(--nc-white);
   --nc-dropdown-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --nc-multiselect-text: var(--nc-gray-700);
+  --nc-multiselect-bg: transparent;
+  --nc-multiselect-options-bg: var(--nc-white);
+  --nc-multiselect-options-border: var(--nc-gray-300);
+  --nc-multiselect-options-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --nc-multiselect-option-hover-bg: var(--nc-gray-100);
+  --nc-multiselect-icon: var(--nc-gray-500);
 }
 
 body {
