@@ -12,6 +12,7 @@ import Modal from "../components/dialogs/Modal";
 import Dropdown, { type DropdownHandle } from "../components/dropdowns/Dropdown";
 import MultiSelect from "../components/dropdowns/MultiSelect";
 import Select from "../components/dropdowns/Select";
+import Checkbox from "../components/inputs/Checkbox";
 
 
 export default function TestPage() {
@@ -185,7 +186,13 @@ export default function TestPage() {
         className="mt-6"
       />
       <span className="m-2"> Selected Value: {selectValue || 'None'}</span>
-      <Break amount={20} />
+      <Break amount={4} />
+
+
+      {/* Inputs */}
+      <Checkbox label="This is a checkbox" /> <span>Is this on the same line?</span>
+      <Break amount={1} />
+      <Checkbox label="This is a disabled checkbox" disabled />
 
     </Container>
   );

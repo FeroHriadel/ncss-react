@@ -96,6 +96,13 @@
   --nc-multiselect-options-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --nc-multiselect-option-hover-bg: var(--nc-gray-100);
   --nc-multiselect-icon: var(--nc-gray-500);
+
+  /* Inputs */
+  --nc-checkbox-border: var(--nc-gray-800);
+  --nc-checkbox-checked-bg: var(--nc-gray-800);
+  --nc-checkbox-hover-bg: var(--nc-gray-950);
+  --nc-checkbox-icon: var(--nc-white);
+  --nc-checkbox-label: var(--nc-gray-700);
 }
 
 body {
