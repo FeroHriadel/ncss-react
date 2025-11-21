@@ -13,12 +13,14 @@ import Dropdown, { type DropdownHandle } from "../components/dropdowns/Dropdown"
 import MultiSelect from "../components/dropdowns/MultiSelect";
 import Select from "../components/dropdowns/Select";
 import Checkbox from "../components/inputs/Checkbox";
+import Email, { type EmailHandle} from "../components/inputs/Email";
 
 
 export default function TestPage() {
   const dropdownRef = useRef<DropdownHandle>(null);
   const [multiselectValues, setMultiselectValues] = useState<string[]>([]);
   const [selectValue, setSelectValue] = useState<string | null>(null);
+  const emailRef = useRef<EmailHandle>(null);
 
   return (
     <Container className="px-4 pt-24">
@@ -190,9 +192,45 @@ export default function TestPage() {
 
 
       {/* Inputs */}
-      <Checkbox label="This is a checkbox" /> <span>Is this on the same line?</span>
-      <Break amount={1} />
-      <Checkbox label="This is a disabled checkbox" disabled />
+      <Checkbox label="This is a checkbox" /> <span>This is on the same line as the checkbox</span> <Checkbox label="This is a disabled checkbox" disabled />
+      <Break amount={2} />
+      
+      <div className="flex gap-2">
+              <Email 
+              placeholder="Enter your email" 
+              ref={emailRef} validate 
+            />
+            <Button variant="outline" onClick={() => {
+              if (emailRef.current) {
+                const error = emailRef.current.validate();
+                alert(error);
+              }
+            }}>Validate</Button>
+            <Button variant="outline" onClick={() => {
+              if (emailRef.current) {
+                const value = emailRef.current.getValue();
+                alert(value);
+              }
+            }}>Get Value</Button>
+            <Button variant="outline" onClick={() => {
+              if (emailRef.current) {
+                emailRef.current.setValue('BREKEKE');
+              }
+            }}>Set Value to BREKEKE</Button>
+            <Button variant="outline" onClick={() => {
+              if (emailRef.current) {
+                emailRef.current.clear();
+              }
+            }}>Clear</Button>
+      </div>
+      <Email 
+        label="Email with Label" 
+        className="mt-4"
+      /> 
+      <Break amount={2} />
+      <Email label="With message" message="brekeke" />
+      <Email value={"value from parent & disabled"} disabled />
+      <Break amount={4} />
 
     </Container>
   );

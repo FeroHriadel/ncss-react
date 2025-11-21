@@ -1,8 +1,9 @@
 /* Checkbox Component Styles */
 
 .checkbox-container {
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  vertical-align: middle;
 }
 
 .checkbox-wrapper {

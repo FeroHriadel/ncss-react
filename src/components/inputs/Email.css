@@ -1,5 +1,9 @@
 /* Email Component Styles - Extends Input styles */
 
+.email-wrapper {
+  display: inline-block;
+}
+
 .email-label {
   margin-bottom: 0.5rem; /* mb-2 */
   font-size: 0.875rem; /* text-sm */

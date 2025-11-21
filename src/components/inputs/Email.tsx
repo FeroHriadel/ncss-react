@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useCallback } from 'react';
+import React, { forwardRef, useImperativeHandle, useCallback, useRef, useState } from 'react';
 import './Email.css';
 
 export interface EmailProps {
@@ -16,10 +16,14 @@ export interface EmailProps {
   disabled?: boolean;
   required?: boolean;
   autoComplete?: string;
+  validate?: boolean;
 }
 
 export interface EmailHandle {
-  validate: () => string[];
+  validate: () => string;
+  getValue: () => string;
+  setValue: (val: string) => void;
+  clear: () => void;
 }
 
 const Email = forwardRef<EmailHandle, EmailProps>((props, ref) => {
@@ -32,45 +36,68 @@ const Email = forwardRef<EmailHandle, EmailProps>((props, ref) => {
     onChange,
     placeholder,
     label,
-    errorMessage,
+    errorMessage = '',
     message,
-    width = '300px',
+    width = '260px',
     disabled = false,
     required = false,
     autoComplete,
+    validate = false,
   } = props;
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [internalError, setInternalError] = useState<string>('');
 
-  const validate = useCallback((): string[] => {
-    const errors: string[] = [];
-    const emailValue = typeof value === 'string' ? value : '';
-
+  const validateEmail = useCallback((): string => {
+    let emailError: string = '';
+    // Get value from either props (controlled) or input element (uncontrolled)
+    const emailValue = value !== undefined ? value : (inputRef.current?.value || '');
     // Check if email is required and empty
     if (required && !emailValue.trim()) {
-      errors.push('Email is required');
-      return errors;
+      emailError = 'Email is required';
+      return emailError;
     }
-
     // If not required and empty, it's valid
     if (!emailValue.trim()) {
-      return errors;
+      return emailError;
     }
-
     // Email regex pattern
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
     if (!emailRegex.test(emailValue)) {
-      errors.push('Please enter a valid email address');
+      emailError = 'Please enter a valid email address';
     }
-
-    return errors;
+    return emailError;
   }, [value, required]);
 
+  const handleBlur = () => {
+    if (validate) {
+      const error = validateEmail();
+      setInternalError(error);
+    }
+  };
+
+  const handleFocus = () => {
+    if (validate) {
+      setInternalError('');
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    if (!onChange) return;
+    if (value === undefined) onChange(e);
+  }
+
   useImperativeHandle(ref, () => ({
-    validate,
-  }), [validate]);
+    validate: validateEmail,
+    getValue: () => { return value !== undefined ? value : (inputRef.current?.value || ''); },
+    setValue: (val: string) => { if (inputRef?.current) inputRef.current.value = val; },
+    clear: () => { if (inputRef?.current) inputRef.current.value = ''; },
+  }), [validateEmail, value]);
+
+  // Determine which error to display: parent's errorMessage takes precedence
+  const displayError = errorMessage || (validate ? internalError : '');
 
   return (
-    <div className={className} style={style}>
+    <div className={`email-wrapper ${className}`} style={style}>
       {label && (
         <label
           htmlFor={id}
@@ -82,11 +109,14 @@ const Email = forwardRef<EmailHandle, EmailProps>((props, ref) => {
       )}
       <div className="email-field-wrapper">
         <input
+          ref={inputRef}
           type="email"
           name={name}
           id={id}
           value={value}
-          onChange={onChange}
+          onChange={handleChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           placeholder={placeholder}
           disabled={disabled}
           required={required}
@@ -94,12 +124,12 @@ const Email = forwardRef<EmailHandle, EmailProps>((props, ref) => {
           className={`email-field ${disabled ? 'email-field-disabled' : ''}`}
           style={width ? { width } : undefined}
         />
-        {errorMessage && (
+        {displayError && (
           <p className='email-error-message'>
-            {errorMessage}
+            {displayError}
           </p>
         )}
-        {message && !errorMessage && (
+        {message && !displayError && (
           <p className='email-message'>
             {message}
           </p>
