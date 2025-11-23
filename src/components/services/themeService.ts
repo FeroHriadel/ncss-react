@@ -70,7 +70,7 @@ export function setVariablesForTheme(theme: "light" | "dark"): void {
     document.documentElement.style.setProperty('--nc-input-text', 'var(--nc-gray-300)');
     document.documentElement.style.setProperty('--nc-input-hover-bg', 'var(--nc-black-900)');
     document.documentElement.style.setProperty('--nc-input-placeholder', 'var(--nc-gray-600)');
-    document.documentElement.style.setProperty('--nc-input-message-text', 'var(--nc-gray-300)');
+    document.documentElement.style.setProperty('--nc-input-message-text', 'var(--nc-gray-400)');
     document.documentElement.style.setProperty('--nc-input-error-text', 'var(--nc-red-300)');
     return;
   }

@@ -74,5 +74,5 @@
   transform: translateY(0.25rem); /* translate-y-1 */
   font-size: 0.75rem; /* text-xs */
   line-height: 1rem;
-  color: #4b5563; /* text-gray-600 */
+  color: var(--nc-input-message-text)
 }

@@ -14,6 +14,7 @@ import MultiSelect from "../components/dropdowns/MultiSelect";
 import Select from "../components/dropdowns/Select";
 import Checkbox from "../components/inputs/Checkbox";
 import Email, { type EmailHandle} from "../components/inputs/Email";
+import FileUpload from "../components/inputs/FileUpload";
 
 
 export default function TestPage() {
@@ -196,32 +197,32 @@ export default function TestPage() {
       <Break amount={2} />
       
       <div className="flex gap-2">
-              <Email 
-              placeholder="Enter your email" 
-              ref={emailRef} validate 
-            />
-            <Button variant="outline" onClick={() => {
-              if (emailRef.current) {
-                const error = emailRef.current.validate();
-                alert(error);
-              }
-            }}>Validate</Button>
-            <Button variant="outline" onClick={() => {
-              if (emailRef.current) {
-                const value = emailRef.current.getValue();
-                alert(value);
-              }
-            }}>Get Value</Button>
-            <Button variant="outline" onClick={() => {
-              if (emailRef.current) {
-                emailRef.current.setValue('BREKEKE');
-              }
-            }}>Set Value to BREKEKE</Button>
-            <Button variant="outline" onClick={() => {
-              if (emailRef.current) {
-                emailRef.current.clear();
-              }
-            }}>Clear</Button>
+        <Email 
+          placeholder="Enter your email" 
+          ref={emailRef} validate 
+        />
+        <Button variant="outline" onClick={() => {
+          if (emailRef.current) {
+            const error = emailRef.current.validate();
+            alert(error);
+          }
+        }}>Validate</Button>
+        <Button variant="outline" onClick={() => {
+          if (emailRef.current) {
+            const value = emailRef.current.getValue();
+            alert(value);
+          }
+        }}>Get Value</Button>
+        <Button variant="outline" onClick={() => {
+          if (emailRef.current) {
+            emailRef.current.setValue('BREKEKE');
+          }
+        }}>Set Value to BREKEKE</Button>
+        <Button variant="outline" onClick={() => {
+          if (emailRef.current) {
+            emailRef.current.clear();
+          }
+        }}>Clear</Button>
       </div>
       <Email 
         label="Email with Label" 
@@ -231,6 +232,19 @@ export default function TestPage() {
       <Email label="With message" message="brekeke" />
       <Email value={"value from parent & disabled"} disabled />
       <Break amount={4} />
+
+      <FileUpload
+        max={2}
+        onChange={(v) => console.log(v)}
+        message="Message"
+      />
+      <Break amount={2} />
+      <FileUpload
+        label="File Upload with Label"
+        required
+        className="mt-4"
+        errorMessage="Error message"
+      />
 
     </Container>
   );

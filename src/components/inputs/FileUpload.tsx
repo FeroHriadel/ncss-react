@@ -1,67 +1,116 @@
-import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useRef, useState, useCallback } from 'react';
 import CloseButton from '../buttons/CloseButton';
 import './FileUpload.css';
 
 export interface FileUploadProps {
-  disabled?: boolean;
-  onChange?: (files: File[]) => void;
+  name?: string;
   className?: string;
-  style?: React.CSSProperties;
   id?: string;
+  style?: React.CSSProperties;
+  files?: File[];
+  onChange?: (files: File[]) => void;
   label?: string;
-  message?: string;
   errorMessage?: string;
+  message?: string;
+  width?: string;
+  disabled?: boolean;
+  required?: boolean;
   accept?: string[];
   max?: number;
-  width?: string;
+  validate?: boolean;
 }
 
 export interface FileUploadHandle {
+  validate: () => string;
+  getValue: () => File[];
+  setValue: (files: File[]) => void;
   clear: () => void;
-  getFiles: () => File[];
 }
 
 const FileUpload = forwardRef<FileUploadHandle, FileUploadProps>(function FileUpload(
   {
-    disabled = false,
-    onChange,
+    name,
     className = '',
-    style,
     id,
+    style,
+    files: controlledFiles,
+    onChange,
     label,
+    errorMessage = '',
     message,
-    errorMessage,
+    width = '260px',
+    disabled = false,
+    required = false,
     accept = ['*'],
     max,
-    width,
+    validate = false,
   },
   ref
 ) {
-  const [files, setFiles] = useState<File[]>([]);
+  const [internalFiles, setInternalFiles] = useState<File[]>([]);
+  const [internalError, setInternalError] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
+  
+  // Support both controlled and uncontrolled modes
+  const isControlled = controlledFiles !== undefined;
+  const files = isControlled ? controlledFiles : internalFiles;
 
   if (!id) id = `ncss-fileupload-${Math.random().toString(10)}`;
 
+  const validateFiles = useCallback((): string => {
+    if (required && files.length === 0) {
+      return 'At least one file is required';
+    }
+    return '';
+  }, [required, files]);
+
   useImperativeHandle(ref, () => ({
+    validate: validateFiles,
+    getValue: () => files,
+    setValue: (newFiles: File[]) => {
+      if (!isControlled) {
+        setInternalFiles(newFiles);
+      }
+      // Note: Cannot programmatically set files on file input for security reasons
+    },
     clear: () => {
-      setFiles([]);
+      if (!isControlled) {
+        setInternalFiles([]);
+      }
       if (inputRef.current) {
         inputRef.current.value = '';
       }
       onChange?.([]);
     },
-    getFiles: () => files,
-  }), [files, onChange]);
+  }), [files, isControlled, onChange, validateFiles]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || []);
     const limitedFiles = max ? selectedFiles.slice(0, max) : selectedFiles;
-    setFiles(limitedFiles);
+    
+    if (!isControlled) {
+      setInternalFiles(limitedFiles);
+    }
     onChange?.(limitedFiles);
   };
 
+  const handleBlur = () => {
+    if (validate) {
+      const error = validateFiles();
+      setInternalError(error);
+    }
+  };
+
+  const handleFocus = () => {
+    if (validate) {
+      setInternalError('');
+    }
+  };
+
   const handleClear = () => {
-    setFiles([]);
+    if (!isControlled) {
+      setInternalFiles([]);
+    }
     if (inputRef.current) {
       inputRef.current.value = '';
     }
@@ -81,26 +130,32 @@ const FileUpload = forwardRef<FileUploadHandle, FileUploadProps>(function FileUp
   };
 
   const acceptString = accept.join(',');
+  const displayError = errorMessage || (validate ? internalError : '');
 
   return (
-    <div className={`fileupload-wrapper ${className}`} style={width ? { width } : {}}>
+    <div className={`fileupload-wrapper ${className}`} style={style}>
       {label && (
         <label htmlFor={id} className="fileupload-label">
           {label}
+          {required && <span className="fileupload-required-mark">*</span>}
         </label>
       )}
-      <div className="fileupload-container">
+      <div className="fileupload-field-wrapper">
         <div
-          className={`fileupload-inner ${disabled ? 'fileupload-disabled' : ''}`}
-          style={style}
+          className={`fileupload-field ${disabled ? 'fileupload-field-disabled' : ''}`}
+          style={width ? { width } : undefined}
         >
           <input
             ref={inputRef}
             type="file"
+            name={name}
             id={id}
             className="fileupload-input"
             onChange={handleFileChange}
+            onBlur={handleBlur}
+            onFocus={handleFocus}
             disabled={disabled}
+            required={required}
             accept={acceptString}
             multiple={!max || max > 1}
           />
@@ -121,15 +176,15 @@ const FileUpload = forwardRef<FileUploadHandle, FileUploadProps>(function FileUp
             </div>
           )}
         </div>
-        {errorMessage && (
-          <span className="fileupload-error-message">
-            {errorMessage}
-          </span>
+        {displayError && (
+          <p className="fileupload-error-message">
+            {displayError}
+          </p>
         )}
-        {message && (
-          <span className="fileupload-message">
+        {message && !displayError && (
+          <p className="fileupload-message">
             {message}
-          </span>
+          </p>
         )}
       </div>
     </div>
