@@ -102,7 +102,16 @@
   --nc-checkbox-checked-bg: var(--nc-gray-800);
   --nc-checkbox-hover-bg: var(--nc-gray-950);
   --nc-checkbox-icon: var(--nc-white);
-  --nc-checkbox-label: var(--nc-gray-700);
+  --nc-input-label: var(--nc-gray-600);
+  --nc-input-border: var(--nc-gray-300);
+  --nc-input-bg: var(--nc-gray-100);
+  --nc-input-text: var(--nc-gray-700);
+  --nc-input-hover-bg: var(--nc-gray-200);
+  --nc-input-placeholder: var(--nc-gray-600);
+  --nc-input-message-text: var(--nc-gray-600);
+  --nc-input-error-text: var(--nc-red-900);
+
+
 }
 
 body {

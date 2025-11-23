@@ -61,7 +61,7 @@
   margin-left: 0.5rem; /* ml-2 */
   font-size: 0.875rem; /* text-sm */
   line-height: 1.25rem;
-  color: var(--nc-checkbox-label); /* text-gray-700 */
+  color: var(--nc-input-label); /* text-gray-700 */
   user-select: none; /* select-none */
   cursor: pointer;
 }
