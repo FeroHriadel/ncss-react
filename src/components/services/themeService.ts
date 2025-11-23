@@ -72,6 +72,10 @@ export function setVariablesForTheme(theme: "light" | "dark"): void {
     document.documentElement.style.setProperty('--nc-input-placeholder', 'var(--nc-gray-600)');
     document.documentElement.style.setProperty('--nc-input-message-text', 'var(--nc-gray-400)');
     document.documentElement.style.setProperty('--nc-input-error-text', 'var(--nc-red-300)');
+    document.documentElement.style.setProperty('--nc-switch-track-unchecked-bg', 'var(--nc-black-800)');
+    document.documentElement.style.setProperty('--nc-switch-track-checked-bg', 'var(--nc-gray-500)');
+    document.documentElement.style.setProperty('--nc-switch-track-checked-hover-bg', 'var(--nc-gray-400)');
+    document.documentElement.style.setProperty('--nc-switch-thumb-bg', 'var(--nc-black-600)');
     return;
   }
 
@@ -137,6 +141,10 @@ export function setVariablesForTheme(theme: "light" | "dark"): void {
     document.documentElement.style.setProperty('--nc-input-placeholder', 'var(--nc-gray-600)');
     document.documentElement.style.setProperty('--nc-input-message-text', 'var(--nc-gray-600)');
     document.documentElement.style.setProperty('--nc-input-error-text', 'var(--nc-red-900)');
+    document.documentElement.style.setProperty('--nc-switch-track-unchecked-bg', 'var(--nc-gray-500)');
+    document.documentElement.style.setProperty('--nc-switch-track-checked-bg', 'var(--nc-gray-800)');
+    document.documentElement.style.setProperty('--nc-switch-track-checked-hover-bg', 'var(--nc-gray-950)');
+    document.documentElement.style.setProperty('--nc-switch-thumb-bg', 'var(--nc-gray-100)');
   }
 }
 

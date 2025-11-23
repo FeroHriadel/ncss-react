@@ -1,7 +1,7 @@
 /* Switch.css */
 
 .switch-container {
-  display: flex;
+  display: inline-flex;
   align-items: center;
 }
 
@@ -40,24 +40,24 @@
 }
 
 .switch-track.switch-unchecked {
-  background-color: #6b7280;
+  background-color: var(--nc-switch-track-unchecked-bg);
 }
 
 .switch-track.switch-checked {
-  background-color: #1f2937;
+  background-color: var(--nc-switch-track-checked-bg);
 }
 
 .switch-track.switch-checked:hover {
-  background-color: #030712;
+  background-color: var(--nc-switch-track-checked-hover-bg);
 }
 
 .switch-track.switch-checked:focus {
-  background-color: #030712;
+  background-color: var(--nc-switch-track-checked-hover-bg);
 }
 
 .switch-thumb {
   position: absolute;
-  background-color: #f3f4f6;
+  background-color: var(--nc-switch-thumb-bg);
   border-radius: 9999px;
   transition: transform 0.2s ease-in-out;
 }
@@ -65,7 +65,7 @@
 .switch-label {
   margin-left: 0.5rem;
   font-size: 0.875rem;
-  color: #374151;
+  color: var(--nc-checkbox-label);
   user-select: none;
 }
 

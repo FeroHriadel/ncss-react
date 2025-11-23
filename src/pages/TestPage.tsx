@@ -12,21 +12,25 @@ import Modal from "../components/dialogs/Modal";
 import Dropdown, { type DropdownHandle } from "../components/dropdowns/Dropdown";
 import MultiSelect from "../components/dropdowns/MultiSelect";
 import Select from "../components/dropdowns/Select";
-import Checkbox from "../components/inputs/Checkbox";
+import Checkbox, { type CheckboxHandle } from "../components/inputs/Checkbox";
 import Email, { type EmailHandle} from "../components/inputs/Email";
 import FileUpload from "../components/inputs/FileUpload";
 import Input, { type InputHandle } from "../components/inputs/Input";
 import Password, { type PasswordHandle } from "../components/inputs/Password";
+import Switch, { type SwitchHandle } from "../components/inputs/Switch";
 
 
 export default function TestPage() {
   const dropdownRef = useRef<DropdownHandle>(null);
   const [multiselectValues, setMultiselectValues] = useState<string[]>([]);
   const [selectValue, setSelectValue] = useState<string | null>(null);
+  const checkboxRef = useRef<CheckboxHandle>(null);
   const emailRef = useRef<EmailHandle>(null);
   const [inputVal, setInputVal] = useState<string>('');
   const inputRef = useRef<InputHandle>(null);
   const passwordRef = useRef<PasswordHandle>(null);
+  const switchRef = useRef<SwitchHandle>(null);
+  const [switchOn, setSwitchOn] = useState(false);
 
   return (
     <Container className="px-4 pt-24">
@@ -199,7 +203,26 @@ export default function TestPage() {
 
       {/* Inputs */}
       <Checkbox label="This is a checkbox" /> <span>This is on the same line as the checkbox</span> <Checkbox label="This is a disabled checkbox" disabled />
-      <Break amount={2} />
+      <Break amount={1} />
+      <Card className="my-8">
+        <Checkbox 
+          label="Controlled Checkbox" 
+          ref={checkboxRef}
+          className="mr-4"
+        />
+        <Button variant="outline" onClick={() => {
+          if (checkboxRef.current) {
+            const checked = checkboxRef.current.getChecked();
+            alert(checked ? 'Checked' : 'Not Checked');
+          }
+        }}>Get Checked</Button>
+        <Button variant="outline" onClick={() => {
+          if (checkboxRef.current) {
+            const isChecked = checkboxRef.current.getChecked();
+            checkboxRef.current.setChecked(!isChecked);
+          }
+        }}>Toggle Checked</Button>
+      </Card>
       
       <div className="flex gap-2">
         <Email 
@@ -348,7 +371,37 @@ export default function TestPage() {
           }
         }}>Validate</Button>
       </Card>
-  
+
+      <Break amount={1} />
+
+      <Switch 
+        label="Controlled Switch"
+        className="mt-4" 
+        checked={switchOn}
+        onChange={(e) => setSwitchOn(e.target.checked)}
+      />
+
+      <Switch 
+        label="Uncontrolled Switch"
+        className="mt-4"
+        ref={switchRef}
+      />
+
+      <Card className="my-4">
+        <Switch ref={switchRef}  />
+        <Button variant="outline" onClick={() => {
+          if (switchRef.current) {
+            const isOn = switchRef.current.getChecked();
+            alert(isOn ? 'On' : 'Off');
+          }
+        }}>Get Checked</Button> 
+        <Button variant="outline" onClick={() => {
+          if (switchRef.current) {
+            const isOn = switchRef.current.getChecked();
+            switchRef.current.setChecked(!isOn);
+          }
+        }}>Toggle Checked</Button>
+      </Card>
 
     </Container>
   );

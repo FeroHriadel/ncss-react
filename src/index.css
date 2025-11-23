@@ -110,8 +110,10 @@
   --nc-input-placeholder: var(--nc-gray-600);
   --nc-input-message-text: var(--nc-gray-600);
   --nc-input-error-text: var(--nc-red-900);
-
-
+  --nc-switch-track-unchecked-bg: var(--nc-gray-500);
+  --nc-switch-track-checked-bg: var(--nc-gray-800);
+  --nc-switch-track-checked-hover-bg: var(--nc-gray-950);
+  --nc-switch-thumb-bg: var(--nc-gray-100);
 }
 
 body {
