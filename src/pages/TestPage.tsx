@@ -16,6 +16,7 @@ import Checkbox from "../components/inputs/Checkbox";
 import Email, { type EmailHandle} from "../components/inputs/Email";
 import FileUpload from "../components/inputs/FileUpload";
 import Input, { type InputHandle } from "../components/inputs/Input";
+import Password, { type PasswordHandle } from "../components/inputs/Password";
 
 
 export default function TestPage() {
@@ -25,6 +26,7 @@ export default function TestPage() {
   const emailRef = useRef<EmailHandle>(null);
   const [inputVal, setInputVal] = useState<string>('');
   const inputRef = useRef<InputHandle>(null);
+  const passwordRef = useRef<PasswordHandle>(null);
 
   return (
     <Container className="px-4 pt-24">
@@ -259,7 +261,8 @@ export default function TestPage() {
         onChange={(e) => setInputVal(e.target.value)}
       />
 
-      <Card className="my-8 pb-8">
+      <Card className="my-8 
+      !pb-8">
         <Input
           label="Uncontrolled Input"
           placeholder="Uncontrolled Input"
@@ -301,6 +304,51 @@ export default function TestPage() {
         className="mt-4"
         message="brekeke"
       />
+
+      <Password 
+        label="Controlled Password"
+        placeholder="Controlled Password"
+        className="mt-4"
+        message="brekeke"
+        value={inputVal}
+        onChange={(e) => setInputVal(e.target.value)}
+      />
+      <Card className="my-8 !pb-8 ">
+        <Password 
+          label="Uncontrolled Password"
+          placeholder="Uncontrolled Password"
+          className="mt-4"
+          canShowPassword
+          requireNumber
+          requireSpecialCharacter
+          requireUpperCase
+          minLength={8}
+          ref={passwordRef}
+        />
+        <Button variant="outline" onClick={() => {
+          if (passwordRef.current) {
+            const value = passwordRef.current.getValue();
+            alert(value);
+          }
+        }}>Get Value</Button>
+        <Button variant="outline" onClick={() => {
+          if (passwordRef.current) {
+            passwordRef.current.setValue('BREKEKE');
+          }
+        }}>Set Value to BREKEKE</Button>
+        <Button variant="outline" onClick={() => {
+          if (passwordRef.current) {
+            passwordRef.current.clear();
+          }
+        }}>Clear</Button> 
+        <Button variant="outline" onClick={() => {
+          if (passwordRef.current) {
+            const error = passwordRef.current.validate();
+            alert(error);
+          }
+        }}>Validate</Button>
+      </Card>
+  
 
     </Container>
   );
