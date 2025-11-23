@@ -3,10 +3,11 @@
 
 
 
+import React, { forwardRef, useImperativeHandle, useCallback, useRef, useState } from 'react';
 import './Input.css';
 
 export interface InputProps {
-  type?: 'text';
+  type?: 'text' | 'number' | 'tel' | 'url' | 'search';
   name?: string;
   className?: string;
   id?: string;
@@ -14,41 +15,134 @@ export interface InputProps {
   value?: string | number;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
   placeholder?: string;
+  label?: string;
+  errorMessage?: string;
+  message?: string;
+  width?: string;
   disabled?: boolean;
   required?: boolean;
   title?: string;
-  label?: string;
-  width?: string;
-  errorMessage?: string;
-  message?: string;
+  autoComplete?: string;
+  validate?: boolean;
 }
 
+export interface InputHandle {
+  validate: () => string;
+  getValue: () => string | number;
+  setValue: (val: string | number) => void;
+  clear: () => void;
+}
 
+const Input = forwardRef<InputHandle, InputProps>((props, ref) => {
+  const {
+    type = 'text',
+    name,
+    className = '',
+    id: providedId,
+    style,
+    value,
+    onChange,
+    placeholder,
+    label,
+    errorMessage = '',
+    message,
+    width = '260px',
+    disabled = false,
+    required = false,
+    title,
+    autoComplete,
+    validate = false,
+  } = props;
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [internalError, setInternalError] = useState<string>('');
 
-export default function Input({ type, name, className, id, style, value, onChange = () => {}, placeholder, disabled, required, title, label, width, errorMessage, message }: InputProps) {
+  const id = providedId || `ncss-input-${Math.random().toString(10)}`;
 
-  if (!id) id=`ncss-input-${Math.random().toString(10)}`;
+  const validateInput = useCallback((): string => {
+    let inputError: string = '';
+    // Get value from either props (controlled) or input element (uncontrolled)
+    const inputValue = value !== undefined ? String(value) : (inputRef.current?.value || '');
+    // Check if input is required and empty
+    if (required && !inputValue.trim()) {
+      inputError = 'This field is required';
+      return inputError;
+    }
+    return inputError;
+  }, [value, required]);
+
+  const handleBlur = () => {
+    if (validate) {
+      const error = validateInput();
+      setInternalError(error);
+    }
+  };
+
+  const handleFocus = () => {
+    if (validate) {
+      setInternalError('');
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    if (onChange) {
+      onChange(e);
+    }
+  };
+
+  useImperativeHandle(ref, () => ({
+    validate: validateInput,
+    getValue: () => { return value !== undefined ? value : (inputRef.current?.value || ''); },
+    setValue: (val: string | number) => { if (inputRef?.current) inputRef.current.value = String(val); },
+    clear: () => { if (inputRef?.current) inputRef.current.value = ''; },
+  }), [validateInput, value]);
+
+  // Determine which error to display: parent's errorMessage takes precedence
+  const displayError = errorMessage || (validate ? internalError : '');
 
   return (
-    <div className={`input-wrapper ${className || ''}`} style={width ? { width } : {}}>
-      {label && <label htmlFor={id} className="input-label">{label}{required && <span className="input-required-mark">*</span>}</label>}
+    <div className={`input-wrapper ${className}`} style={style}>
+      {label && (
+        <label
+          htmlFor={id}
+          className="input-label"
+        >
+          {label}
+          {required && <span className="input-required-mark">*</span>}
+        </label>
+      )}
       <div className="input-field-wrapper">
         <input
+          ref={inputRef}
           type={type}
           name={name}
-          className="input-field"
           id={id}
-          style={width ? { width, opacity: disabled ? 0.5 : 1, cursor: disabled ? 'not-allowed' : 'text', ...style } : { opacity: disabled ? 0.5 : 1, cursor: disabled ? 'not-allowed' : 'text', ...style }}
           value={value}
-          onChange={onChange}
+          onChange={handleChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           placeholder={placeholder}
           disabled={disabled}
           required={required}
           title={title}
+          autoComplete={autoComplete}
+          className={`input-field ${disabled ? 'input-field-disabled' : ''}`}
+          style={width ? { width } : undefined}
         />
-        {errorMessage && <span className="input-error-message">{errorMessage}</span>}
-        {message && <span className="input-message">{message}</span>}
+        {displayError && (
+          <p className='input-error-message'>
+            {displayError}
+          </p>
+        )}
+        {message && !displayError && (
+          <p className='input-message'>
+            {message}
+          </p>
+        )}
       </div>
     </div>
   );
-}
+});
+
+Input.displayName = 'Input';
+
+export default Input;

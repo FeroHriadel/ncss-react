@@ -15,6 +15,7 @@ import Select from "../components/dropdowns/Select";
 import Checkbox from "../components/inputs/Checkbox";
 import Email, { type EmailHandle} from "../components/inputs/Email";
 import FileUpload from "../components/inputs/FileUpload";
+import Input, { type InputHandle } from "../components/inputs/Input";
 
 
 export default function TestPage() {
@@ -22,6 +23,8 @@ export default function TestPage() {
   const [multiselectValues, setMultiselectValues] = useState<string[]>([]);
   const [selectValue, setSelectValue] = useState<string | null>(null);
   const emailRef = useRef<EmailHandle>(null);
+  const [inputVal, setInputVal] = useState<string>('');
+  const inputRef = useRef<InputHandle>(null);
 
   return (
     <Container className="px-4 pt-24">
@@ -244,6 +247,59 @@ export default function TestPage() {
         required
         className="mt-4"
         errorMessage="Error message"
+      />
+      <Break amount={4} />
+
+      <Input
+        label="Controlled Input"
+        placeholder="Controlled Input"
+        className="mt-4"
+        message="brekeke"
+        value={inputVal}
+        onChange={(e) => setInputVal(e.target.value)}
+      />
+
+      <Card className="my-8 pb-8">
+        <Input
+          label="Uncontrolled Input"
+          placeholder="Uncontrolled Input"
+          className="mt-4"
+          message="brekeke"
+          ref={inputRef}
+        />
+        <Button variant="outline" onClick={() => {
+          if (inputRef.current) {
+            const value = inputRef.current.getValue();
+            alert(value);
+          }
+        }}>Get Value</Button>
+        <Button variant="outline" onClick={() => {
+          if (inputRef.current) {
+            inputRef.current.setValue('BREKEKE');
+          }
+        }}>Set Value to BREKEKE</Button>
+        <Button variant="outline" onClick={() => {
+          if (inputRef.current) {
+            inputRef.current.clear();
+          }
+        }}>Clear</Button>
+      </Card>
+
+      <Break amount={1} />
+
+      <Email 
+        label="Controlled Email"
+        placeholder="Controlled Email"
+        className="mt-4"
+        message="brekeke"
+        value={inputVal}
+        onChange={(e) => setInputVal(e.target.value)}
+      />
+      <Email 
+        label="Uncontrolled Email"
+        placeholder="Uncontrolled Email"
+        className="mt-4"
+        message="brekeke"
       />
 
     </Container>

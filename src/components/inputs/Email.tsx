@@ -82,8 +82,9 @@ const Email = forwardRef<EmailHandle, EmailProps>((props, ref) => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    if (!onChange) return;
-    if (value === undefined) onChange(e);
+    if (onChange) {
+      onChange(e);
+    }
   }
 
   useImperativeHandle(ref, () => ({
