@@ -39,6 +39,34 @@ export default function TestPage() {
     {id:1, name:"John Doe", age: 30, job:"Engineer", interested: true},
     {id:2, name:"Jane Smith", age: 25, job:"Designer", interested: false},
     {id:3, name:"Mike Johnson", age: 35, job:"Manager", interested: true},
+    {id:4, name:"Emily Davis", age: 28, job:"Developer", interested: false},
+    {id:5, name:"Sarah Wilson", age: 32, job:"Analyst", interested: true},
+    {id:6, name:"David Brown", age: 29, job:"Consultant", interested: false},
+    {id:7, name:"Linda Garcia", age: 31, job:"Architect", interested: true},
+    {id:8, name:"James Martinez", age: 27, job:"Technician", interested: false},
+    {id:9, name:"Chris Lee", age: 33, job:"Scientist", interested: true},
+    {id:10, name:"Anna Kim", age: 26, job:"Artist", interested: false},
+    {id:11, name:"Tom Clark", age: 34, job:"Writer", interested: true},
+    {id:12, name:"Olivia Harris", age: 29, job:"Photographer", interested: false},
+    {id:13, name:"Ethan Walker", age: 30, job:"Developer", interested: true},
+    {id:14, name:"Sophia Hall", age: 28, job:"Designer", interested: false},
+    {id:15, name:"Mason Allen", age: 31, job:"Engineer", interested: true},
+    {id:16, name:"Isabella Young", age: 27, job:"Manager", interested: false},
+    {id:17, name:"Logan King", age: 32, job:"Analyst", interested: true},
+    {id:18, name:"Mia Wright", age: 26, job:"Consultant", interested: false},
+    {id:19, name:"Lucas Scott", age: 33, job:"Architect", interested: true},
+    {id:20, name:"Amelia Green", age: 29, job:"Technician", interested: false},
+    {id:21, name:"Alexander Adams", age: 34, job:"Scientist", interested: true},
+    {id:22, name:"Charlotte Baker", age: 30, job:"Artist", interested: false},
+    {id:23, name:"Daniel Gonzalez", age: 28, job:"Writer", interested: true},
+    {id:24, name:"Harper Nelson", age: 31, job:"Photographer", interested: false},
+    {id:25, name:"Matthew Carter", age: 27, job:"Developer", interested: true},
+    {id:26, name:"Evelyn Mitchell", age: 32, job:"Designer", interested: false},
+    {id:27, name:"Aiden Perez", age: 29, job:"Engineer", interested: true},
+    {id:28, name:"Abigail Roberts", age: 33, job:"Manager", interested: false},
+    {id:29, name:"Henry Turner", age: 26, job:"Analyst", interested: true},
+    {id:30, name:"Ella Phillips", age: 34, job:"Consultant", interested: false},
+    {id:31, name:"Joseph Campbell", age: 30, job:"Architect", interested: true},
   ]
 
   return (
@@ -457,7 +485,7 @@ export default function TestPage() {
       </Card>
       <Break amount={4} />
 
-      <VirtualizedTable data={data} />
+      <VirtualizedTable data={data} className="mb-8" />
 
     </Container>
   );

@@ -83,15 +83,21 @@ function VirtualizedTable({
       const { filteredData, filteredColumns, setColumnsFilter, setColumnOrder, filterState, setFilterConditions, resetFilters, setSortColumn, isSorting } = useVirtualizedTableFilter({ data, columns });
 
       // Reset scroll position when filters change
+      // Only reset when user intentionally changes visible columns
+      const prevFilteredColumnsLengthRef = React.useRef(filteredColumns.length);
       React.useEffect(() => {
-        if (headerRef.current) {
-          headerRef.current.scrollLeft = 0;
+        // Only reset if number of visible columns changed (user hid/showed columns)
+        if (prevFilteredColumnsLengthRef.current !== filteredColumns.length) {
+          if (headerRef.current) {
+            headerRef.current.scrollLeft = 0;
+          }
+          if (bodyRef.current) {
+            bodyRef.current.scrollLeft = 0;
+            bodyRef.current.scrollTop = 0;
+          }
+          prevFilteredColumnsLengthRef.current = filteredColumns.length;
         }
-        if (bodyRef.current) {
-          bodyRef.current.scrollLeft = 0;
-          bodyRef.current.scrollTop = 0;
-        }
-      }, [filteredColumns, filteredData]);
+      }, [filteredColumns.length]);
 
 
 
