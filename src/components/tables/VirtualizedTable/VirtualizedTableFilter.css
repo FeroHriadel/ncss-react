@@ -18,7 +18,7 @@
 
 .vt-filter-description {
   font-size: 0.875rem;
-  color: #374151;
+  color: var(--nc-table-text);
   margin-bottom: 1rem;
 }
 
@@ -44,7 +44,7 @@
 }
 
 .vt-filter-input-border {
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--nc-table-header-border);
 }
 
 .vt-filter-close-button {

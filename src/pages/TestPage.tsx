@@ -19,6 +19,8 @@ import Input, { type InputHandle } from "../components/inputs/Input";
 import Password, { type PasswordHandle } from "../components/inputs/Password";
 import Switch, { type SwitchHandle } from "../components/inputs/Switch";
 import Textarea, { type TextareaHandle} from "../components/inputs/Textarea";
+import VirtualizedTable from "../components/tables/VirtualizedTable/VirtualizedTable";
+
 
 
 export default function TestPage() {
@@ -33,6 +35,11 @@ export default function TestPage() {
   const switchRef = useRef<SwitchHandle>(null);
   const [switchOn, setSwitchOn] = useState(false);
   const textAreaRef = useRef<TextareaHandle>(null);
+  const data = [
+    {id:1, name:"John Doe", age: 30, job:"Engineer", interested: true},
+    {id:2, name:"Jane Smith", age: 25, job:"Designer", interested: false},
+    {id:3, name:"Mike Johnson", age: 35, job:"Manager", interested: true},
+  ]
 
   return (
     <Container className="px-4 pt-24">
@@ -448,9 +455,9 @@ export default function TestPage() {
           }
         }}>Validate</Button>
       </Card>
+      <Break amount={4} />
 
-
-      
+      <VirtualizedTable data={data} />
 
     </Container>
   );

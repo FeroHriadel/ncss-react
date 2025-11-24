@@ -114,6 +114,15 @@
   --nc-switch-track-checked-bg: var(--nc-gray-800);
   --nc-switch-track-checked-hover-bg: var(--nc-gray-950);
   --nc-switch-thumb-bg: var(--nc-gray-100);
+
+  /* Tables */
+  --nc-table-header-border: var(--nc-gray-300);
+  --nc-table-header-bg: var(--nc-gray-200);
+  --nc-table-text: var(--nc-gray-700);
+  --nc-table-text-light: var(--nc-gray-600);
+  --nc-table-scrollbar-bg: var(--nc-gray-50);
+  --nc-table-scrollbar-thumb-bg: var(--nc-gray-400);
+  --nc-table-applied-filters-bg: var(--nc-gray-100);
 }
 
 body {
