@@ -123,6 +123,9 @@
   --nc-table-scrollbar-bg: var(--nc-gray-50);
   --nc-table-scrollbar-thumb-bg: var(--nc-gray-400);
   --nc-table-applied-filters-bg: var(--nc-gray-100);
+  --nc-table-row-bg: var(--nc-white);
+  --nc-table-row-striped-bg: var(--nc-gray-100);
+  --nc-table-row-hover-bg: var(--nc-gray-200);
 }
 
 body {

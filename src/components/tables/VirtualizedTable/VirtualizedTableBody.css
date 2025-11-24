@@ -98,5 +98,56 @@
   font-weight: 600;
   color: white;
   background-color: rgba(31, 41, 55, 0.9);
+}
+
+/* Row backgrounds */
+.vt-row-bg {
+  position: absolute;
+  left: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.vt-row-bg-white {
+  background-color: var(--nc-table-row-bg);
+}
+
+.vt-row-bg-striped {
+  background-color: var(--nc-table-row-striped-bg);
+}
+
+/* Hover overlay */
+.vt-row-hover-overlay {
+  position: absolute;
+  left: 0;
+  pointer-events: none;
+  z-index: 2;
+  background-color: var(--nc-table-row-hover-bg);
+  opacity: 0;
+  transition: opacity 0.15s ease-in-out;
+}
+
+.vt-row-hover-overlay.vt-row-hovered {
+  opacity: 1;
+}
+
+/* Separator lines */
+.vt-horizontal-separator {
+  position: absolute;
+  left: 0;
+  height: 1px;
+  background-color: var(--nc-table-header-border);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.vt-vertical-separator-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: var(--nc-table-header-border);
+  pointer-events: none;
+  z-index: 1;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }

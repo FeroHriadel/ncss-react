@@ -74,21 +74,19 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
   
 
   // HELPER FUNCTIONS
-    // Get background color for a row (striped or white)
-    function getRowBackgroundColor(rowIndex: number): string {
-      if (!striped) return 'white';
+    // Get background CSS class for a row (striped or white)
+    function getRowBackgroundClass(rowIndex: number): string {
+      if (!striped) return 'vt-row-bg vt-row-bg-white';
       const stripedEnabled = typeof striped === 'boolean' ? striped : striped.enabled;
-      if (!stripedEnabled) return 'white';
-      return rowIndex % 2 === 1 ? 'rgb(243 244 246)' : 'white';
+      if (!stripedEnabled) return 'vt-row-bg vt-row-bg-white';
+      return rowIndex % 2 === 1 ? 'vt-row-bg vt-row-bg-striped' : 'vt-row-bg vt-row-bg-white';
     }
     
-    // Get hover CSS class for rows
-    function getHoverBackgroundColor(): string | undefined {
-      if (!hover) return undefined;
+    // Check if hover is enabled for rows
+    function isHoverEnabled(): boolean {
+      if (!hover) return false;
       const hoverEnabled = typeof hover === 'boolean' ? hover : hover.enabled;
-      if (!hoverEnabled) return undefined;
-      const customColor = typeof hover === 'object' ? hover.color : undefined;
-      return customColor || 'rgb(243 244 246)'; // default to gray-100
+      return hoverEnabled;
     }
     
     // Render cell content (handles different data types)
@@ -340,54 +338,39 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
       {/* Absolute positioned backgrounds for striped rows */}
       {virtualItems.map((virtualRow) => {
         const rowIndex = virtualRow.index;
-        const bgColor = getRowBackgroundColor(rowIndex);
-        const hoverEnabled = getHoverBackgroundColor() !== undefined;
+        const bgClass = getRowBackgroundClass(rowIndex);
+        const hoverEnabled = isHoverEnabled();
         const isHovered = hoveredRowIndex === rowIndex;
         
         return (
           <React.Fragment key={`bg-${virtualRow.key}`}>
             {/* Background fill */}
             <div
+              className={bgClass}
               style={{
-                position: 'absolute',
                 top: `${virtualRow.start}px`,
-                left: 0,
                 width: tableScrollWidth > 0 ? `${tableScrollWidth}px` : '100%',
                 height: `${virtualRow.size}px`,
-                backgroundColor: bgColor,
-                pointerEvents: 'none',
-                zIndex: 1,
               }}
             />
-            {/* Hover overlay - uses bg-gray-200 background */}
+            {/* Hover overlay */}
             {hoverEnabled && (
               <div
+                className={`vt-row-hover-overlay ${isHovered ? 'vt-row-hovered' : ''}`}
                 style={{
-                  position: 'absolute',
                   top: `${virtualRow.start}px`,
-                  left: 0,
                   width: tableScrollWidth > 0 ? `${tableScrollWidth}px` : '100%',
                   height: `${virtualRow.size}px`,
-                  backgroundColor: 'rgb(229, 231, 235)', // Tailwind gray-200
-                  pointerEvents: 'none',
-                  zIndex: 2,
-                  opacity: isHovered ? 1 : 0,
-                  transition: 'opacity 0.15s ease-in-out',
                 }}
               />
             )}
             {/* Horizontal separator line */}
             {horizontalSeparators && (
               <div
+                className="vt-horizontal-separator"
                 style={{
-                  position: 'absolute',
                   top: `${virtualRow.start + virtualRow.size}px`,
-                  left: 0,
                   width: tableScrollWidth > 0 ? `${tableScrollWidth}px` : '100%',
-                  height: '1px',
-                  backgroundColor: 'rgb(229 231 235)',
-                  pointerEvents: 'none',
-                  zIndex: 1,
                 }}
               />
             )}
@@ -399,15 +382,9 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
       {verticalSeparators && columnPositions.map((position, index) => (
         <div
           key={`vcol-${index}`}
+          className="vt-vertical-separator-line"
           style={{
-            position: 'absolute',
-            top: 0,
-            bottom: 0,
             left: `${position}px`,
-            width: '1px',
-            backgroundColor: 'rgb(229 231 235)',
-            pointerEvents: 'none',
-            zIndex: 1,
           }}
         />
       ))}

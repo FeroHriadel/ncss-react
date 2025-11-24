@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import IconButton from "./IconButton";
 import { CiDark, CiLight } from "react-icons/ci";
-import { toggleTheme, setTheme, getTheme } from "../services/themeService";
+import useTheme from "../services/themeService";
 
 
 
@@ -22,27 +22,30 @@ export default function ThemeSwitch({
   iconSize = 18,
 }: ThemeSwitchProps) {
 
-  const [currentTheme, setCurrentTheme] = useState<"light" | "dark">(getTheme());
+  // values
+  const [firstRender, setFirstRender] = useState(true);
+  const { toggleTheme, setTheme, theme } = useTheme();
+
+  // apply default theme on first render
+  useEffect(() => {
+    if (!firstRender) return;
+    setFirstRender(false);
+    if (theme !== defaultTheme) { setTheme(defaultTheme); }
+  }, [theme, firstRender]);
+  
 
   // helpers
   const handleThemeChange = () => {
     const newTheme = toggleTheme();
-    setCurrentTheme(newTheme);
     onChange(newTheme);
   }
-
-  // use default theme on mount
-  useEffect(() => { 
-    setTheme(defaultTheme);
-    setCurrentTheme(defaultTheme);
-  }, [defaultTheme]);
 
   // render
   return (
     <IconButton
       className={className}
       style={style}
-      icon={currentTheme === "light" ? <CiDark size={iconSize} /> : <CiLight size={iconSize} />}
+      icon={theme === "light" ? <CiDark size={iconSize} /> : <CiLight size={iconSize} />}
       onClick={handleThemeChange}
     />
   )
