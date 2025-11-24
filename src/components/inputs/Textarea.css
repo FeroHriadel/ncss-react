@@ -2,12 +2,13 @@
 
 .textarea-wrapper {
   width: 100%;
+  display: inline-block;
 }
 
 .textarea-label {
   margin-bottom: 0.5rem;
   font-size: 0.875rem;
-  color: #4b5563;
+  color: var(--nc-input-label);
 }
 
 .textarea-required {
@@ -20,26 +21,26 @@
 
 .textarea-field {
   outline: none;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--nc-input-border);
   border-radius: 0.375rem;
   font-size: 1rem;
-  background-color: #f3f4f6;
-  color: #374151;
+  background-color: var(--nc-input-bg);
+  color: var(--nc-input-text);
   width: 100%;
   padding: 0.75rem;
   resize: vertical;
 }
 
 .textarea-field:hover {
-  background-color: #e5e7eb;
+  background-color: var(--nc-input-hover-bg);
 }
 
 .textarea-field:focus {
-  background-color: #e5e7eb;
+  background-color: var(--nc-input-hover-bg);
 }
 
 .textarea-field::placeholder {
-  color: #4b5563;
+  color: var(--nc-input-placeholder);
   font-weight: 300;
   font-style: italic;
 }
@@ -51,7 +52,7 @@
 
 .textarea-error-message {
   font-size: 0.75rem;
-  color: #7f1d1d;
+  color: var(--nc-input-error-text);
   position: absolute;
   left: 0;
   top: 100%;
@@ -59,7 +60,7 @@
 
 .textarea-message {
   font-size: 0.75rem;
-  color: #4b5563;
+  color: var(--nc-input-message-text);
   position: absolute;
   left: 0;
   top: 100%;

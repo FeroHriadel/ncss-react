@@ -18,6 +18,7 @@ import FileUpload from "../components/inputs/FileUpload";
 import Input, { type InputHandle } from "../components/inputs/Input";
 import Password, { type PasswordHandle } from "../components/inputs/Password";
 import Switch, { type SwitchHandle } from "../components/inputs/Switch";
+import Textarea, { type TextareaHandle} from "../components/inputs/Textarea";
 
 
 export default function TestPage() {
@@ -31,6 +32,7 @@ export default function TestPage() {
   const passwordRef = useRef<PasswordHandle>(null);
   const switchRef = useRef<SwitchHandle>(null);
   const [switchOn, setSwitchOn] = useState(false);
+  const textAreaRef = useRef<TextareaHandle>(null);
 
   return (
     <Container className="px-4 pt-24">
@@ -402,6 +404,53 @@ export default function TestPage() {
           }
         }}>Toggle Checked</Button>
       </Card>
+
+      <Break amount={4} />
+
+      <Textarea width="260px" /> <Textarea width="260px" />
+      <Textarea
+        label="Controled Textarea with Label"
+        className="mt-4"
+        required
+        value={inputVal}
+        onChange={(e) => setInputVal(e.target.value)}
+        validate
+      />
+
+      <Card className="my-8 !pb-8 ">
+        <Textarea
+          label="Uncontrolled Textarea with Label"
+          className="mt-4"
+          ref={textAreaRef}
+          message="brekeke"
+        />
+        <Break amount={2} />
+        <Button variant="outline" onClick={() => {
+          if (textAreaRef.current) {
+            const value = textAreaRef.current.getValue();
+            alert(value);
+          }
+        }}>Get Value</Button>
+        <Button variant="outline" onClick={() => {
+          if (textAreaRef.current) {
+            textAreaRef.current.setValue('BREKEKE');
+          }
+        }}>Set Value to BREKEKE</Button>
+        <Button variant="outline" onClick={() => {
+          if (textAreaRef.current) {
+            textAreaRef.current.clear();
+          }
+        }}>Clear</Button>
+        <Button variant="outline" onClick={() => {
+          if (textAreaRef.current) {
+            const error = textAreaRef.current.validate();
+            alert(error);
+          }
+        }}>Validate</Button>
+      </Card>
+
+
+      
 
     </Container>
   );
