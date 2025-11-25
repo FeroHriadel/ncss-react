@@ -1,0 +1,228 @@
+import React from "react";
+import './TableControlBar.css';
+import IconButton from "../../buttons/IconButton";
+import MultiSelect, { type MultiSelectHandle } from "../../dropdowns/MultiSelect";
+import { CiZoomIn, CiZoomOut, CiViewColumn, CiFilter } from "react-icons/ci";
+import Modal from "../../dialogs/Modal";
+import TableFilter, { type FilterRow, type FilterPreset } from "./TableFilter";
+import { IoRefresh } from "react-icons/io5";
+import Pill from "../../pills/Pill";
+
+
+
+interface FilterState {
+  columnsFilter: string[];
+  columnOrder: string[];
+  conditions: FilterRow[];
+}
+
+interface ControlBarProps {
+  zoomLevel: number;
+  minZoom: number;
+  maxZoom: number;
+  handleZoomIn: () => void;
+  handleZoomOut: () => void;
+  columns: { column: string; displayValue: string }[];
+  setColumnsFilter: (selectedColumns: string[]) => void;
+  filterState: FilterState;
+  setFilterConditions: (conditions: FilterRow[]) => void;
+  data: Record<string, unknown>[]; // For type inference in filter
+  resetFilters: () => void; // Reset all filters to initial state
+  resultCount: number; // Number of filtered results
+  filterPresets?: FilterPreset[];
+  controlBarClassName?: string;
+  controlBarStyle?: React.CSSProperties;
+  isSorting: boolean; // Indicates if data is currently being filtered/sorted
+}
+
+
+
+const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
+  zoomLevel,
+  minZoom,
+  maxZoom,
+  handleZoomIn,
+  handleZoomOut,
+  columns,
+  setColumnsFilter,
+  filterState,
+  setFilterConditions,
+  data,
+  resetFilters,
+  resultCount,
+  filterPresets,
+  controlBarClassName,
+  controlBarStyle,
+  isSorting,
+}) => {
+
+  // Refs & values
+  const multiselectRef = React.useRef<MultiSelectHandle>(null);
+  const columnOptions = columns.map(col => ({ value: col.column, displayValue: col.displayValue }));  
+  const preselectedOptions = columns.map(col => col.column);
+  const [modalOpen, setModalOpen] = React.useState(false);
+
+
+  // Handlers
+  function handleColumnsChange(selectedColumns: string[]) {
+    setColumnsFilter(selectedColumns);
+  }
+
+  function closeModal() {
+    setModalOpen(false);
+  }
+
+  function openModal() {
+    setModalOpen(true);
+  }
+
+  // Get human-readable condition label
+  function getConditionLabel(condition: string | null): string {
+    const conditionMap: Record<string, string> = {
+      'equals': 'equals',
+      'not_equals': 'does not equal',
+      'contains': 'contains',
+      'not_contains': 'does not contain',
+      'greater_than': 'is greater than',
+      'less_than': 'is less than',
+      'starts_with': 'starts with',
+      'ends_with': 'ends with',
+      'is_between': 'is between',
+    };
+    return condition ? conditionMap[condition] || condition : '';
+  }
+
+  // Get column display name
+  function getColumnDisplayName(columnKey: string | null): string {
+    if (!columnKey) return '';
+    const column = columns.find(col => col.column === columnKey);
+    return column ? column.displayValue : columnKey;
+  }
+
+  // Format filter condition as readable text
+  function formatFilterCondition(filter: FilterRow): string {
+    const columnName = getColumnDisplayName(filter.column);
+    const conditionLabel = getConditionLabel(filter.condition);
+    return `${columnName} ${conditionLabel} ${filter.value}`;
+  }
+
+  // Remove a specific filter condition
+  function removeFilterCondition(filterId: number) {
+    const updatedConditions = filterState.conditions.filter(condition => condition.id !== filterId);
+    setFilterConditions(updatedConditions);
+  }
+
+
+  // Render
+  return (
+    <>
+      {/* Row number (left side) and controls (right side) Container */}
+      <div 
+        className={`vt-control-bar ${controlBarClassName || ''}`} 
+        role="toolbar"
+        aria-label="Table controls"
+        style={controlBarStyle}
+      >
+
+        {/*Left Side */}
+        <div className="vt-control-bar-left">
+          <span className="vt-control-bar-result-count" role="status" aria-live="polite">
+            {isSorting ? 'Loading...' : `${resultCount} ${resultCount === 1 ? 'result' : 'results'}`}
+          </span>
+        </div>
+
+
+        {/** Right Side */}
+        <div 
+          className="vt-control-bar-right" 
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', overflow: 'visible' }}
+          role="group" 
+          aria-label="Table actions"
+        >
+
+          {/* Filter Modal */}
+          <Modal
+            trigger={<IconButton title="Filter" icon={<CiFilter size={20} />} onClick={openModal} className="vt-control-bar-filter-button" />}
+            className="w-[95%] sm:w-[75%]"
+            isOpen={modalOpen}
+            onClose={closeModal}
+          >
+            <TableFilter 
+              columns={columns} 
+              closeModal={closeModal}
+              filterConditions={filterState.conditions}
+              setFilterConditions={setFilterConditions}
+              data={data}
+              filterPresets={filterPresets}
+            />
+          </Modal>
+            
+
+          {/* Hide/show columns dropdown */}
+          <MultiSelect
+            trigger={<IconButton title="Show/Hide Columns" icon={<CiViewColumn size={20} />} />}
+            options={columnOptions}
+            title="Show/Hide Columns"
+            preselectedOptions={preselectedOptions}
+            ref={multiselectRef}
+            onChange={handleColumnsChange}
+          />
+
+          {/* Zoom Controls */}
+          <IconButton
+            title="Zoom Out"
+            onClick={handleZoomOut}
+            icon={<CiZoomOut size={20} />}
+            style={zoomLevel <= minZoom ? { pointerEvents: 'none', opacity: 0.6 } : undefined}
+            disabled={zoomLevel <= minZoom}
+          />
+
+          <span className="vt-control-bar-zoom-level">
+            {Math.round(zoomLevel * 100)}%
+          </span>
+
+          <IconButton
+            title="Zoom In"
+            onClick={handleZoomIn}
+            icon={<CiZoomIn size={20} />}
+            style={zoomLevel >= maxZoom ? { pointerEvents: 'none', opacity: 0.6 } : undefined}
+            disabled={zoomLevel >= maxZoom}
+          />
+
+          {/* Refresh */}
+          <IconButton
+            title="Refresh data"
+            onClick={resetFilters}
+            icon={<IoRefresh size={20} />}
+          />
+        </div>
+      </div>
+
+      {/* Applied filters info bar */}
+      {filterState.conditions.length > 0 && (
+        <div className="vt-applied-filters-wrap">
+          <span className="vt-applied-filters-title">Active Filters:</span>
+          <div className="vt-applied-filters-list">
+            {filterState.conditions.map((filter, index) => {
+              const isLastPill = index === filterState.conditions.length - 1;
+              return (
+                <React.Fragment key={filter.id}>
+                  <Pill onClose={() => removeFilterCondition(filter.id)}>
+                    {formatFilterCondition(filter)}
+                    {!isLastPill && filter.operator && (
+                      <span className="vt-applied-filter-operator">
+                        {filter.operator.toUpperCase()}
+                      </span>
+                    )}
+                  </Pill>
+                </React.Fragment>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </>
+  )
+};
+
+export default VirtualizedTableControlBar;

@@ -20,6 +20,7 @@ import Password, { type PasswordHandle } from "../components/inputs/Password";
 import Switch, { type SwitchHandle } from "../components/inputs/Switch";
 import Textarea, { type TextareaHandle} from "../components/inputs/Textarea";
 import VirtualizedTable from "../components/tables/VirtualizedTable/VirtualizedTable";
+import Table from "../components/tables/Table/Table";
 
 
 
@@ -485,7 +486,18 @@ export default function TestPage() {
       </Card>
       <Break amount={4} />
 
-      <VirtualizedTable data={data} className="mb-8" />
+      <p>Virtualized Table</p>
+      <VirtualizedTable 
+        data={data} 
+        className="mb-8" 
+      />
+
+      <Break amount={2} />
+
+      <p>Regular table</p>
+      <Table 
+        data={data} 
+      />
 
     </Container>
   );

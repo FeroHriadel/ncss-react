@@ -105,7 +105,7 @@ export default function useTheme() {
       document.documentElement.style.setProperty('--nc-table-text-light', 'var(--nc-gray-400)');
       document.documentElement.style.setProperty('--nc-table-scrollbar-bg', 'var(--nc-black-800)');
       document.documentElement.style.setProperty('--nc-table-scrollbar-thumb-bg', 'var(--nc-gray-600)');
-      document.documentElement.style.setProperty('--nc-table-applied-filters-bg', 'var(--nc-black-800)');
+      document.documentElement.style.setProperty('--nc-table-applied-filters-bg', 'var(--nc-black-700)');
       document.documentElement.style.setProperty('--nc-table-row-bg', 'var(--nc-black-800)');
       document.documentElement.style.setProperty('--nc-table-row-striped-bg', 'var(--nc-black-700)');
       document.documentElement.style.setProperty('--nc-table-row-hover-bg', 'var(--nc-black-600)');
@@ -186,7 +186,7 @@ export default function useTheme() {
       document.documentElement.style.setProperty('--nc-table-text-light', 'var(--nc-gray-600)');
       document.documentElement.style.setProperty('--nc-table-scrollbar-bg', 'var(--nc-gray-50)');
       document.documentElement.style.setProperty('--nc-table-scrollbar-thumb-bg', 'var(--nc-gray-400)');
-      document.documentElement.style.setProperty('--nc-table-applied-filters-bg', 'var(--nc-gray-100)');
+      document.documentElement.style.setProperty('--nc-table-applied-filters-bg', 'var(--nc-gray-200)');
       document.documentElement.style.setProperty('--nc-table-row-bg', 'var(--nc-white)');
       document.documentElement.style.setProperty('--nc-table-row-striped-bg', 'var(--nc-gray-100)');
       document.documentElement.style.setProperty('--nc-table-row-hover-bg', 'var(--nc-gray-200)');
