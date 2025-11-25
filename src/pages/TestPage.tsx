@@ -489,7 +489,19 @@ export default function TestPage() {
       <p>Virtualized Table</p>
       <VirtualizedTable 
         data={data} 
-        className="mb-8" 
+        striped={true}
+        columnsConfig={[ //if specified, only these columns will be shown, and in this order!!!
+          {column: 'id', displayValue: 'ID', width: '50px'},
+          {column: 'name', displayValue: 'Name', width: '500px'}, //flexible width
+          {column: 'age', displayValue: 'Age', width: '75px'},
+          {column: 'job', displayValue: 'Job', width: '200px' },
+          {column: 'interested', displayValue: 'Interested', width: '400px'},
+        ]}
+        horizontalSeparators={false}
+        verticalSeparators={false}
+        hover={true}
+        controls={true}
+        className="mb-8"
       />
 
       <Break amount={2} />
@@ -497,6 +509,19 @@ export default function TestPage() {
       <p>Regular table</p>
       <Table 
         data={data} 
+        striped={true}
+        columnsConfig={[ //if specified, only these columns will be shown, and in this order!!!
+          {column: 'id', displayValue: 'ID', width: '50px'},
+          {column: 'name', displayValue: 'Name', width: '500px'}, //flexible width
+          {column: 'age', displayValue: 'Age', width: '75px'},
+          {column: 'job', displayValue: 'Job', width: '200px' },
+          {column: 'interested', displayValue: 'Interested', width: '400px'},
+        ]}
+        horizontalSeparators={false}
+        verticalSeparators={true}
+        hover={true}
+        controls={true}
+        className="mb-8"
       />
 
     </Container>

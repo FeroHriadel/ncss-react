@@ -6,11 +6,13 @@
 
 /* Table Body Container */
 .table-body {
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: visible;
   border-left: 1px solid var(--nc-table-header-border);
   border-right: 1px solid var(--nc-table-header-border);
   border-bottom: 1px solid var(--nc-table-header-border);
   border-bottom-left-radius: 0.375rem;
+  border-bottom-right-radius: 0.375rem;
   flex: 1;
   cursor: grab;
 }

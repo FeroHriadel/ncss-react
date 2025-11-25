@@ -44,7 +44,7 @@
 }
 
 .vt-header-th.vt-header-vertical-separator {
-  border-right: 1px solid var(--nc-table-header-bg);
+  border-right: 1px solid var(--nc-table-header-border);
 }
 
 .vt-header-content {

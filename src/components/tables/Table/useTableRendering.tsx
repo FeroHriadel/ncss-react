@@ -1,4 +1,4 @@
-import { useCallback, useRef, useEffect } from "react";
+import { useCallback, useRef, useEffect, useState } from "react";
 
 interface UseTableRenderingProps {
   bodyRef: React.RefObject<HTMLDivElement | null>;
@@ -17,7 +17,7 @@ export function useTableRendering({
 
   // VALUES AND STATE
     // Drag table state
-    const isDraggingTableRef = useRef(false);
+    const [isDraggingTable, setIsDraggingTable] = useState(false);
     const lastMousePosition = useRef({ x: 0, y: 0 });
 
   // SCROLL HANDLERS
@@ -47,14 +47,14 @@ export function useTableRendering({
   // TABLE DRAG-TO-SCROLL HANDLERS
     // Start table drag-to-scroll
     function handleTableMouseDown(e: React.MouseEvent) {
-      isDraggingTableRef.current = true;
+      setIsDraggingTable(true);
       lastMousePosition.current = { x: e.clientX, y: e.clientY };
       e.preventDefault();
     }
     
     // Stop table drag when mouse leaves
     function handleTableMouseLeave() {
-      isDraggingTableRef.current = false;
+      setIsDraggingTable(false);
     }
 
   // KEYBOARD NAVIGATION HANDLERS
@@ -129,19 +129,23 @@ export function useTableRendering({
     // Handle mouse move and mouse up for drag operations
     useEffect(() => {
       function handleMouseMove(e: MouseEvent) {
-        //table drag-to-scroll
-        if (isDraggingTableRef.current && bodyRef.current) {
-          const deltaX = e.clientX - lastMousePosition.current.x;
-          const deltaY = e.clientY - lastMousePosition.current.y;
-          bodyRef.current.scrollLeft -= deltaX;
-          bodyRef.current.scrollTop -= deltaY;
+        //table drag-to-scroll - only horizontal if content is wider than container
+        if (isDraggingTable && bodyRef.current) {
+          const container = bodyRef.current;
+          const hasHorizontalScroll = container.scrollWidth > container.clientWidth;
+          
+          if (hasHorizontalScroll) {
+            const deltaX = e.clientX - lastMousePosition.current.x;
+            container.scrollLeft -= deltaX;
+          }
+          
           lastMousePosition.current = { x: e.clientX, y: e.clientY };
         }
       }
       function handleMouseUp() {
-        isDraggingTableRef.current = false;
+        setIsDraggingTable(false);
       }
-      if (isDraggingTableRef.current) {
+      if (isDraggingTable) {
         document.addEventListener("mousemove", handleMouseMove);
         document.addEventListener("mouseup", handleMouseUp);
       }
@@ -149,7 +153,7 @@ export function useTableRendering({
         document.removeEventListener("mousemove", handleMouseMove);
         document.removeEventListener("mouseup", handleMouseUp);
       };
-    }, [bodyRef]);
+    }, [isDraggingTable, bodyRef]);
 
 
   // EXPOSE FUNCTIONS AND VALUES

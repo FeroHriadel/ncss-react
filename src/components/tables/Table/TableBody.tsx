@@ -43,9 +43,7 @@ const TableBody: React.FC<TableBodyProps> = ({
   // VALUES
     // State and Refs
     const tableRef = useRef<HTMLTableElement>(null);
-    const prevPositionsRef = useRef<string>('');
     const [tableScrollWidth, setTableScrollWidth] = useState<number>(0);
-    const [columnPositions, setColumnPositions] = useState<number[]>([]);
     const [hoveredRowIndex, setHoveredRowIndex] = useState<number | null>(null);
     const [copyNotification, setCopyNotification] = useState<{ x: number; y: number; text: string } | null>(null);
     const visibleColumnsCount = columns.length;
@@ -141,34 +139,15 @@ const TableBody: React.FC<TableBodyProps> = ({
     }
 
   // EFFECTS
-    // Measure column positions and table scroll width
+    // Measure table scroll width
     useEffect(() => {
       if (!tableRef.current) return;
-        //helper function to measure column positions
-        function measureColumns() {
-          if (!tableRef.current) return;
-          setTableScrollWidth(tableRef.current.scrollWidth); //update table scroll width for horizontal backgrounds/lines
-          //measure column widths for vertical separator lines
-          const firstRow = tableRef.current.querySelector('tbody tr');
-          if (!firstRow) return;
-          const cells = firstRow.querySelectorAll('td');
-          const positions: number[] = [];
-          let cumulativeWidth = 0;
-          cells.forEach((cell, index) => {
-            if (index < cells.length - 1) {
-              cumulativeWidth += cell.offsetWidth;
-              positions.push(cumulativeWidth);
-            }
-          });
-          //only update state if positions changed (avoid unnecessary re-renders)
-          const positionsStr = JSON.stringify(positions);
-          if (positionsStr !== prevPositionsRef.current) {
-            prevPositionsRef.current = positionsStr;
-            setColumnPositions(positions);
-          }
-        }
-      measureColumns(); //measure initially
-      const handleResize = () => measureColumns(); //remeasure on window resize (e.g., DevTools open/close)
+      function measureTable() {
+        if (!tableRef.current) return;
+        setTableScrollWidth(tableRef.current.scrollWidth);
+      }
+      measureTable(); //measure initially
+      const handleResize = () => measureTable(); //remeasure on window resize
       window.addEventListener('resize', handleResize);
       return () => window.removeEventListener('resize', handleResize);
     }, [zoomLevel, visibleColumnsCount, columns]);
@@ -219,6 +198,7 @@ const TableBody: React.FC<TableBodyProps> = ({
               {/* Table cells */}
               {columns.map((col, colIndex) => {
                 const cellValue = row[col.column];
+                const isLastColumn = colIndex === columns.length - 1;
                 return (
                   <td
                     key={colIndex}
@@ -226,6 +206,7 @@ const TableBody: React.FC<TableBodyProps> = ({
                     style={{
                       ...getColumnStyle(col),
                       borderBottom: horizontalSeparators ? '1px solid var(--nc-table-header-border)' : 'none',
+                      borderRight: verticalSeparators && !isLastColumn ? '1px solid var(--nc-table-header-border)' : 'none',
                     }}
                     role="cell"
                     aria-colindex={colIndex + 1}
@@ -239,19 +220,6 @@ const TableBody: React.FC<TableBodyProps> = ({
           ))}
         </tbody>
       </table>
-
-      {/* Vertical column separator lines */}
-      <div style={{position: 'relative', pointerEvents: 'none'}}>
-      {verticalSeparators && columnPositions.map((position, index) => (
-        <div
-          key={`vcol-${index}`}
-          className="table-vertical-separator-line"
-          style={{
-            left: `${position}px`,
-          }}
-        />
-      ))}
-      </div>
     </div>
 
     {/* Copy notification */}
