@@ -8,6 +8,7 @@
 .select-trigger-custom {
   cursor: pointer;
   display: inline-block;
+  outline: none;
 }
 
 .select-trigger-default {

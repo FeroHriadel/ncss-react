@@ -388,7 +388,6 @@ export default function VirtualizedTableFilter({ columns, closeModal, filterCond
               />
               <Input 
                 width="200px" 
-                className="vt-filter-input-border" 
                 placeholder={getPlaceholderForCondition(row.column, row.condition)} 
                 value={row.value}
                 onChange={(e) => updateRow(row.id, 'value', e.target.value)}

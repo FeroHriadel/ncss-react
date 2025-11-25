@@ -7,6 +7,7 @@
 
 .multiselect-trigger-custom {
   display: inline-block;
+  outline: none;
 }
 
 .multiselect-trigger-default {

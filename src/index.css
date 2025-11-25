@@ -115,6 +115,10 @@
   --nc-switch-track-checked-hover-bg: var(--nc-gray-950);
   --nc-switch-thumb-bg: var(--nc-gray-100);
 
+  /* Pills */
+  --nc-pill-bg: var(--nc-gray-100);
+  --nc-pill-text: var(--nc-gray-600);
+
   /* Tables */
   --nc-table-header-border: var(--nc-gray-300);
   --nc-table-header-bg: var(--nc-gray-200);

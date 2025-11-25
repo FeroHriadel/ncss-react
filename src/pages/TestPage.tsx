@@ -518,7 +518,7 @@ export default function TestPage() {
           {column: 'interested', displayValue: 'Interested', width: '400px'},
         ]}
         horizontalSeparators={false}
-        verticalSeparators={true}
+        verticalSeparators={false}
         hover={true}
         controls={true}
         className="mb-8"

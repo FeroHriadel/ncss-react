@@ -97,6 +97,10 @@ export default function useTheme() {
       document.documentElement.style.setProperty('--nc-switch-track-checked-bg', 'var(--nc-gray-500)');
       document.documentElement.style.setProperty('--nc-switch-track-checked-hover-bg', 'var(--nc-gray-400)');
       document.documentElement.style.setProperty('--nc-switch-thumb-bg', 'var(--nc-black-600)');
+
+      // pills
+      document.documentElement.style.setProperty('--nc-pill-bg', 'var(--nc-black-500)');
+      document.documentElement.style.setProperty('--nc-pill-text', 'var(--nc-gray-300)');
       
       // tables
       document.documentElement.style.setProperty('--nc-table-header-border', 'var(--nc-gray-700)');
@@ -178,6 +182,10 @@ export default function useTheme() {
       document.documentElement.style.setProperty('--nc-switch-track-checked-bg', 'var(--nc-gray-800)');
       document.documentElement.style.setProperty('--nc-switch-track-checked-hover-bg', 'var(--nc-gray-950)');
       document.documentElement.style.setProperty('--nc-switch-thumb-bg', 'var(--nc-gray-100)');
+
+      // pills
+      document.documentElement.style.setProperty('--nc-pill-bg', 'var(--nc-gray-100)');
+      document.documentElement.style.setProperty('--nc-pill-text', 'var(--nc-gray-600)');
 
       // tables
       document.documentElement.style.setProperty('--nc-table-header-border', 'var(--nc-gray-300)');

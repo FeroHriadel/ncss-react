@@ -8,6 +8,7 @@ import DropdownsPage from './pages/DropdownsPage';
 import InputsPage from './pages/InputsPage';
 import PillsPage from './pages/PillsPage';
 import NavsPage from './pages/NavsPage';
+import TablePage from './pages/TablePage';
 import VirtualizedTablePage from './pages/VirtualizedTablePage'
 import TopNav from './components/navs/TopNav';
 import LeftNav, { LeftNavPage } from './components/navs/LeftNav';
@@ -125,6 +126,7 @@ function App() {
             <Route path="/pills" element={<PillsPage />} />
             <Route path="/navs" element={<NavsPage />} />
             <Route path="/test" element={<TestPage />} />
+            <Route path="/tables/table" element={<TablePage />} />
           <Route path="/tables/virtualizedtable" element={<VirtualizedTablePage />} />
         </Routes>
       </LeftNavPage>
