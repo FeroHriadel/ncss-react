@@ -3,6 +3,7 @@ import Dropdown from "../dropdowns/Dropdown";
 import { GrMenu } from "react-icons/gr";
 import IconButton from "../buttons/IconButton";
 import "./TopNav.css";
+import Button from "../buttons/Button";
 
 
 
@@ -87,7 +88,7 @@ export default function TopNav({
               return (
                 <Dropdown
                   key={'dropdown-' + link.linkName}
-                  trigger={<span className="top-nav-dropdown-trigger">{link.linkName}</span>}
+                  trigger={<Button variant="transparent" className="top-nav-dropdown-trigger">{link.linkName}</Button>}
                   closeOnSelect={true}
                   options={link.options.map((opt) => ({
                     render: <Link to={opt.optionUrl || '/'} className="top-nav-dropdown-option">{opt.optionName}</Link>,

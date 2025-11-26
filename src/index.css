@@ -130,6 +130,13 @@
   --nc-table-row-bg: var(--nc-white);
   --nc-table-row-striped-bg: var(--nc-gray-100);
   --nc-table-row-hover-bg: var(--nc-gray-200);
+
+  /* Navs */
+  --nc-nav-bg: var(--nc-gray-200);
+  --nc-nav-text: var(--nc-gray-700);
+  --nc-nav-text-hover: var(--nc-gray-900);
+  --nc-nav-option-hover-bg: var(--nc-gray-100);
+  --nc-nav-border: var(--nc-gray-300);
 }
 
 body {
@@ -142,5 +149,9 @@ a, p, span, div, li, input, textarea, small, label {
 
 h1, h2, h3, h4, h5, h6 {
   color: var(--nc-header-text-color);
+}
+
+a {
+  outline-offset: 3px;
 }
 

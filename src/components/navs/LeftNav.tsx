@@ -57,6 +57,7 @@ export default function LeftNav({
     }
   }
 
+
   // Render
   return (
     <>
@@ -94,9 +95,11 @@ export default function LeftNav({
               <Collapsible
                 key={'collapsible-' + link.linkName}
                 trigger={
-                  <span className={`left-nav-link-trigger ${index > 0 ? 'left-nav-border-top-0' : ''}`}>
+                  <span 
+                    className={`left-nav-link-trigger ${index > 0 ? 'left-nav-border-top-0' : ''}`}
+                  >
                     {link.linkName}
-                    <FaChevronDown size={10} className="left-nav-chevron" />
+                    <FaChevronDown size={10} className="left-nav-chevron" style={{ color: 'var(--nc-nav-text)' }} />
                   </span>
                 }
               >
@@ -105,6 +108,7 @@ export default function LeftNav({
                     key={'option-' + opt.optionName} 
                     to={opt.optionUrl || '/'} 
                     className="left-nav-option-link"
+                    tabIndex={-1}
                   >
                     {opt.optionName}
                   </Link>
@@ -120,6 +124,7 @@ export default function LeftNav({
                 key={'link-' + link.linkName} 
                 to={link.linkUrl || '/'} 
                 className={`left-nav-simple-link ${index > 0 ? 'left-nav-border-top-0' : ''}`}
+                tabIndex={-1}
               >
                 {link.linkName}
               </Link>

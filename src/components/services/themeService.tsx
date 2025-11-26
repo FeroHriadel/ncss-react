@@ -51,8 +51,11 @@ export default function useTheme() {
       document.documentElement.style.setProperty('--nc-btn-red-bg', 'var(--nc-red-950)');
       document.documentElement.style.setProperty('--nc-btn-red-text', 'var(--nc-gray-300)');
       document.documentElement.style.setProperty('--nc-btn-red-hover-bg', 'var(--nc-red-900)');
+      document.documentElement.style.setProperty('--nc-btn-transparent-bg', 'transparent');
       document.documentElement.style.setProperty('--nc-btn-transparent-hover-bg', 'var(--nc-black-700)');
       document.documentElement.style.setProperty('--nc-btn-transparent-active-bg', 'var(--nc-black-800)');
+      document.documentElement.style.setProperty('--nc-btn-transparent-border', 'transparent');
+      document.documentElement.style.setProperty('--nc-btn-transparent-text', 'var(--nc-gray-300)');
       document.documentElement.style.setProperty('--nc-icon-btn-hover-bg', 'var(--nc-black-800)');
       document.documentElement.style.setProperty('--nc-icon-btn-active-bg', 'var(--nc-black-700)');
       document.documentElement.style.setProperty('--nc-icon-btn-text', 'var(--nc-gray-300)');
@@ -113,6 +116,13 @@ export default function useTheme() {
       document.documentElement.style.setProperty('--nc-table-row-bg', 'var(--nc-black-800)');
       document.documentElement.style.setProperty('--nc-table-row-striped-bg', 'var(--nc-black-700)');
       document.documentElement.style.setProperty('--nc-table-row-hover-bg', 'var(--nc-black-600)');
+
+      //navs
+      document.documentElement.style.setProperty('--nc-nav-bg', 'var(--nc-black-700)');
+      document.documentElement.style.setProperty('--nc-nav-text', 'var(--nc-gray-300)');
+      document.documentElement.style.setProperty('--nc-nav-text-hover', 'var(--nc-white)');
+      document.documentElement.style.setProperty('--nc-nav-option-hover-bg', 'var(--nc-black-600)');
+      document.documentElement.style.setProperty('--nc-nav-border', 'var(--nc-gray-500)');
       return;
     }
 
@@ -138,6 +148,11 @@ export default function useTheme() {
       document.documentElement.style.setProperty('--nc-btn-red-bg', 'var(--nc-red-900)');
       document.documentElement.style.setProperty('--nc-btn-red-text', 'var(--nc-white)');
       document.documentElement.style.setProperty('--nc-btn-red-hover-bg', 'var(--nc-red-800)');
+      document.documentElement.style.setProperty('--nc-btn-transparent-bg', 'transparent');
+      document.documentElement.style.setProperty('--nc-btn-transparent-hover-bg', 'var(--nc-gray-100)');
+      document.documentElement.style.setProperty('--nc-btn-transparent-active-bg', 'var(--nc-gray-200)');
+      document.documentElement.style.setProperty('--nc-btn-transparent-border', 'transparent');
+      document.documentElement.style.setProperty('--nc-btn-transparent-text', 'var(--nc-gray-700)');
       document.documentElement.style.setProperty('--nc-icon-btn-hover-bg', 'var(--nc-gray-100)');
       document.documentElement.style.setProperty('--nc-icon-btn-active-bg', 'var(--nc-gray-200)');
       document.documentElement.style.setProperty('--nc-icon-btn-text', 'var(--nc-gray-700)');
@@ -198,6 +213,13 @@ export default function useTheme() {
       document.documentElement.style.setProperty('--nc-table-row-bg', 'var(--nc-white)');
       document.documentElement.style.setProperty('--nc-table-row-striped-bg', 'var(--nc-gray-100)');
       document.documentElement.style.setProperty('--nc-table-row-hover-bg', 'var(--nc-gray-200)');
+
+      //navs
+      document.documentElement.style.setProperty('--nc-nav-bg', 'var(--nc-gray-200)');
+      document.documentElement.style.setProperty('--nc-nav-text', 'var(--nc-gray-700)');
+      document.documentElement.style.setProperty('--nc-nav-text-hover', 'var(--nc-gray-900)');
+      document.documentElement.style.setProperty('--nc-nav-option-hover-bg', 'var(--nc-gray-100)');
+      document.documentElement.style.setProperty('--nc-nav-border', 'var(--nc-gray-300)');
     }
   }
 

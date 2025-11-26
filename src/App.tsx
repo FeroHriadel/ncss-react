@@ -34,17 +34,20 @@ function App() {
         { optionName: 'Dialogs', optionUrl: '/dialogs' },
         { optionName: 'Dropdowns', optionUrl: '/dropdowns' },
         { optionName: 'Inputs', optionUrl: '/inputs' },
-        { optionName: 'Pills', optionUrl: '/pills' }
-      ]
-    },
-    {
-      linkName: 'Constructs',
-      options: [ 
         { optionName: 'Navs', optionUrl: '/navs' },
-        { optionName: 'Tables', optionUrl: '/tables/table' },
+        { optionName: 'Pills', optionUrl: '/pills' },
+        { optionName: 'Table', optionUrl: '/tables/table' },
         { optionName: 'Virtualized Table', optionUrl: '/tables/virtualizedtable' }
       ]
-    }
+    },
+    // {
+    //   linkName: 'Constructs',
+    //   options: [ 
+    //     { optionName: 'Navs', optionUrl: '/navs' },
+    //     { optionName: 'Tables', optionUrl: '/tables/table' },
+    //     { optionName: 'Virtualized Table', optionUrl: '/tables/virtualizedtable' }
+    //   ]
+    // }
   ];
 
   // LeftNav links
@@ -104,14 +107,14 @@ function App() {
           logoUrl="/"
           links={topNavLinks}
           height="96px"
-          className='shadow-md bg-gray-200'
+          className='shadow-md'
           customContent={<ThemeSwitch className='ml-1' />}
           customContentPosition="right"
         />
         <LeftNav 
           width="200px" 
           top="96px" 
-          className='shadow-md bg-gray-200'
+          className='shadow-md'
           links={links}
         />
         <LeftNavPage top="96px" left="200px">
