@@ -9,6 +9,7 @@ export interface CollapsibleProps {
   defaultOpen?: boolean;
   children: React.ReactNode;
   trigger: React.ReactNode;
+  onToggle?: (isOpen: boolean) => void;
 }
 
 
@@ -20,12 +21,17 @@ export default function Collapsible({
   defaultOpen = false,
   children,
   trigger,
+  onToggle,
 }: CollapsibleProps) {
 
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   function toggleOpen() {
-    setIsOpen(!isOpen);
+    const newIsOpen = !isOpen;
+    setIsOpen(newIsOpen);
+    if (onToggle) {
+      onToggle(newIsOpen);
+    }
   }
 
   return (

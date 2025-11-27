@@ -65,7 +65,7 @@ export default function InputsPage() {
     <Container className="px-4 pt-24">
       {/* INTRO */}
       <h1 className="mb-4 uppercase font-bold text-3xl">Input Components</h1>
-      <p className="text-gray-800 text-lg mb-12">
+      <p className="text-lg mb-12">
         Input components: <code>Input</code>, <code>Email</code>, <code>Password</code>, <code>Textarea</code>, <code>Checkbox</code>, <code>Switch</code>, <code>FileUpload</code>
       </p>
       <Card className="mb-12 p-4 bg-gray-100 flex flex-col gap-4">
@@ -82,7 +82,7 @@ export default function InputsPage() {
 
       {/* INPUT */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="input">Input</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         The <code>Input</code> component provides a styled text input with label, validation, error messages, and helper text support.
         It works in both controlled and uncontrolled modes and exposes an imperative handle for programmatic control.
       </p>
@@ -96,9 +96,9 @@ export default function InputsPage() {
         className="mb-8"
       />
 
-      <Highlight theme={themes.vsLight} code={inputCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={inputCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -113,7 +113,7 @@ export default function InputsPage() {
 
       {/* INPUT TYPES */}
       <h3 className="mb-4 text-xl font-semibold">Input Types</h3>
-      <p className="text-gray-700 mb-4">The Input component supports multiple input types:</p>
+      <p className="mb-4">The Input component supports multiple input types:</p>
 
       <div className="flex gap-2 mb-8 flex-wrap">
         <Input type="text" placeholder="Text input" />
@@ -121,9 +121,9 @@ export default function InputsPage() {
         <Input type="tel" placeholder="Phone number" />
       </div>
 
-      <Highlight theme={themes.vsLight} code={inputTypesCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={inputTypesCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -138,7 +138,7 @@ export default function InputsPage() {
 
       {/* INPUT VALIDATION */}
       <h3 className="mb-4 text-xl font-semibold">Input Validation</h3>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Use the <code>validate</code> prop for automatic validation on blur, or access the <code>validate()</code> method via ref for manual validation.
       </p>
 
@@ -158,9 +158,9 @@ export default function InputsPage() {
         </Button>
       </div>
 
-      <Highlight theme={themes.vsLight} code={inputValidationCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={inputValidationCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps}) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -175,7 +175,7 @@ export default function InputsPage() {
 
       {/* INPUT ERROR */}
       <h3 className="mb-4 text-xl font-semibold">Error Message</h3>
-      <p className="text-gray-700 mb-4">Display validation errors below the input:</p>
+      <p className="mb-4">Display validation errors below the input:</p>
 
       <Input
         label="Username"
@@ -184,9 +184,9 @@ export default function InputsPage() {
         className="mb-8"
       />
 
-      <Highlight theme={themes.vsLight} code={inputErrorCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={inputErrorCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -201,7 +201,7 @@ export default function InputsPage() {
 
       {/* INPUT MESSAGE */}
       <h3 className="mb-4 text-xl font-semibold">Helper Message</h3>
-      <p className="text-gray-700 mb-4">Display helper text below the input:</p>
+      <p className="mb-4">Display helper text below the input:</p>
 
       <Input
         label="Username"
@@ -210,9 +210,9 @@ export default function InputsPage() {
         className="mb-8"
       />
 
-      <Highlight theme={themes.vsLight} code={inputMessageCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={inputMessageCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -227,7 +227,7 @@ export default function InputsPage() {
 
       {/* INPUT DISABLED */}
       <h3 className="mb-4 text-xl font-semibold">Disabled State</h3>
-      <p className="text-gray-700 mb-4">Inputs can be disabled:</p>
+      <p className="mb-4">Inputs can be disabled:</p>
 
       <Input
         label="Username"
@@ -236,9 +236,9 @@ export default function InputsPage() {
         className="mb-8"
       />
 
-      <Highlight theme={themes.vsLight} code={inputDisabledCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={inputDisabledCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -283,7 +283,7 @@ export default function InputsPage() {
 
       {/* EMAIL */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="email">Email</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         The <code>Email</code> component is similar to Input but includes built-in email validation.
         It supports both controlled and uncontrolled modes with automatic validation on blur.
       </p>
@@ -296,9 +296,9 @@ export default function InputsPage() {
         className="mb-8"
       />
 
-      <Highlight theme={themes.vsLight} code={emailCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={emailCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -313,7 +313,7 @@ export default function InputsPage() {
 
       {/* EMAIL VALIDATION */}
       <h3 className="mb-4 text-xl font-semibold">Automatic Email Validation</h3>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Enable automatic email format validation with the <code>validate</code> prop:
       </p>
 
@@ -325,9 +325,9 @@ export default function InputsPage() {
         className="mb-8"
       />
 
-      <Highlight theme={themes.vsLight} code={emailValidationCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={emailValidationCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -342,7 +342,7 @@ export default function InputsPage() {
 
       {/* EMAIL IMPERATIVE HANDLE */}
       <h3 className="mb-4 text-xl font-semibold">Email Imperative Handle</h3>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Access validation and value management methods via ref:
       </p>
 
@@ -356,9 +356,9 @@ export default function InputsPage() {
         </div>
       </div>
 
-      <Highlight theme={themes.vsLight} code={emailHandleCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={emailHandleCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -381,7 +381,7 @@ export default function InputsPage() {
 
       {/* PASSWORD */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="password">Password</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         The <code>Password</code> component is similar to Input but for passwords. It supports visibility toggle
         (eye icon) and advanced validation rules.
       </p>
@@ -395,9 +395,9 @@ export default function InputsPage() {
         className="mb-8"
       />
 
-      <Highlight theme={themes.vsLight} code={passwordCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={passwordCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -412,7 +412,7 @@ export default function InputsPage() {
 
       {/* PASSWORD VALIDATION */}
       <h3 className="mb-4 text-xl font-semibold">Password Validation Rules</h3>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         The Password component supports multiple validation rules:
       </p>
 
@@ -429,9 +429,9 @@ export default function InputsPage() {
         className="mb-8"
       />
 
-      <Highlight theme={themes.vsLight} code={passwordValidationCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={passwordValidationCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -446,7 +446,7 @@ export default function InputsPage() {
 
       {/* PASSWORD IMPERATIVE HANDLE */}
       <h3 className="mb-4 text-xl font-semibold">Password Imperative Handle</h3>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Access validation and value management methods via ref:
       </p>
 
@@ -459,9 +459,9 @@ export default function InputsPage() {
         </div>
       </div>
 
-      <Highlight theme={themes.vsLight} code={passwordHandleCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={passwordHandleCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -490,7 +490,7 @@ export default function InputsPage() {
 
       {/* TEXTAREA */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="textarea">Textarea</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         The <code>Textarea</code> component is a multi-line text input with the same functionality as Input.
         It supports validation, error messages, and imperative handle.
       </p>
@@ -504,9 +504,9 @@ export default function InputsPage() {
         className="mb-8"
       />
 
-      <Highlight theme={themes.vsLight} code={textareaCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={textareaCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -521,7 +521,7 @@ export default function InputsPage() {
 
       {/* TEXTAREA VALIDATION */}
       <h3 className="mb-4 text-xl font-semibold">Textarea Validation</h3>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Use the <code>validate</code> prop for automatic validation:
       </p>
 
@@ -533,9 +533,9 @@ export default function InputsPage() {
         className="mb-8"
       />
 
-      <Highlight theme={themes.vsLight} code={textareaValidationCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={textareaValidationCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -550,7 +550,7 @@ export default function InputsPage() {
 
       {/* TEXTAREA HEIGHT */}
       <h3 className="mb-4 text-xl font-semibold">Custom Height</h3>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Control textarea height with <code>rows</code> or <code>height</code> props:
       </p>
 
@@ -561,9 +561,9 @@ export default function InputsPage() {
         className="mb-8"
       />
 
-      <Highlight theme={themes.vsLight} code={textareaHeightCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={textareaHeightCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -578,7 +578,7 @@ export default function InputsPage() {
 
       {/* TEXTAREA IMPERATIVE HANDLE */}
       <h3 className="mb-4 text-xl font-semibold">Textarea Imperative Handle</h3>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Access validation and value management methods via ref:
       </p>
 
@@ -592,9 +592,9 @@ export default function InputsPage() {
         </div>
       </div>
 
-      <Highlight theme={themes.vsLight} code={textareaHandleCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={textareaHandleCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -620,7 +620,7 @@ export default function InputsPage() {
 
       {/* CHECKBOX */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="checkbox">Checkbox</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         The <code>Checkbox</code> component is a styled checkbox with custom styling and imperative handle.
         It works in both controlled and uncontrolled modes.
       </p>
@@ -632,9 +632,9 @@ export default function InputsPage() {
         className="mb-8"
       />
 
-      <Highlight theme={themes.vsLight} code={checkboxCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={checkboxCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -649,15 +649,15 @@ export default function InputsPage() {
 
       {/* CHECKBOX UNCONTROLLED */}
       <h3 className="mb-4 text-xl font-semibold">Uncontrolled Checkbox</h3>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Checkbox works without checked/onChange props:
       </p>
 
       <Checkbox label="Remember me" className="mb-8" />
 
-      <Highlight theme={themes.vsLight} code={checkboxUncontrolledCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={checkboxUncontrolledCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -672,7 +672,7 @@ export default function InputsPage() {
 
       {/* CHECKBOX IMPERATIVE HANDLE */}
       <h3 className="mb-4 text-xl font-semibold">Checkbox Imperative Handle</h3>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Programmatically control checkbox state via ref:
       </p>
 
@@ -685,9 +685,9 @@ export default function InputsPage() {
         </div>
       </div>
 
-      <Highlight theme={themes.vsLight} code={checkboxHandleCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={checkboxHandleCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -702,13 +702,13 @@ export default function InputsPage() {
 
       {/* CHECKBOX DISABLED */}
       <h3 className="mb-4 text-xl font-semibold">Disabled Checkbox</h3>
-      <p className="text-gray-700 mb-4">Checkboxes can be disabled:</p>
+      <p className="mb-4">Checkboxes can be disabled:</p>
 
       <Checkbox label="Disabled checkbox" checked={true} disabled className="mb-8" />
 
-      <Highlight theme={themes.vsLight} code={checkboxDisabledCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={checkboxDisabledCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -743,7 +743,7 @@ export default function InputsPage() {
 
       {/* SWITCH */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="switch">Switch</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         The <code>Switch</code> component is a toggle switch with animated thumb and imperative handle.
         It works in both controlled and uncontrolled modes and supports custom sizing.
       </p>
@@ -755,9 +755,9 @@ export default function InputsPage() {
         className="mb-8"
       />
 
-      <Highlight theme={themes.vsLight} code={switchCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={switchCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -772,15 +772,15 @@ export default function InputsPage() {
 
       {/* SWITCH UNCONTROLLED */}
       <h3 className="mb-4 text-xl font-semibold">Uncontrolled Switch</h3>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Switch works without checked/onChange props:
       </p>
 
       <Switch label="Dark mode" className="mb-8" />
 
-      <Highlight theme={themes.vsLight} code={switchUncontrolledCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={switchUncontrolledCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -795,7 +795,7 @@ export default function InputsPage() {
 
       {/* SWITCH SIZES */}
       <h3 className="mb-4 text-xl font-semibold">Custom Sizes</h3>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Customize switch size with width and height props:
       </p>
 
@@ -805,9 +805,9 @@ export default function InputsPage() {
         <Switch label="Large" width="60px" height="30px" />
       </div>
 
-      <Highlight theme={themes.vsLight} code={switchSizesCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={switchSizesCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -822,7 +822,7 @@ export default function InputsPage() {
 
       {/* SWITCH IMPERATIVE HANDLE */}
       <h3 className="mb-4 text-xl font-semibold">Switch Imperative Handle</h3>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Programmatically control switch state via ref:
       </p>
 
@@ -835,9 +835,9 @@ export default function InputsPage() {
         </div>
       </div>
 
-      <Highlight theme={themes.vsLight} code={switchHandleCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={switchHandleCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -852,13 +852,13 @@ export default function InputsPage() {
 
       {/* SWITCH DISABLED */}
       <h3 className="mb-4 text-xl font-semibold">Disabled Switch</h3>
-      <p className="text-gray-700 mb-4">Switches can be disabled:</p>
+      <p className="mb-4">Switches can be disabled:</p>
 
       <Switch label="Disabled switch" checked={true} disabled className="mb-8" />
 
-      <Highlight theme={themes.vsLight} code={switchDisabledCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={switchDisabledCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -896,7 +896,7 @@ export default function InputsPage() {
 
       {/* FILEUPLOAD */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="fileupload">FileUpload</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         The <code>FileUpload</code> component is a file upload input with drag & drop support and imperative handle.
         It supports file type restrictions, file count limits, and validation.
       </p>
@@ -907,9 +907,9 @@ export default function InputsPage() {
         className="mb-8"
       />
 
-      <Highlight theme={themes.vsLight} code={fileUploadCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={fileUploadCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -924,7 +924,7 @@ export default function InputsPage() {
 
       {/* FILEUPLOAD OPTIONS */}
       <h3 className="mb-4 text-xl font-semibold">File Type and Limit</h3>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Restrict file types with <code>accept</code> and limit file count with <code>max</code>:
       </p>
 
@@ -936,9 +936,9 @@ export default function InputsPage() {
         className="mb-8"
       />
 
-      <Highlight theme={themes.vsLight} code={fileUploadOptionsCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={fileUploadOptionsCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -953,7 +953,7 @@ export default function InputsPage() {
 
       {/* FILEUPLOAD VALIDATION */}
       <h3 className="mb-4 text-xl font-semibold">FileUpload Validation</h3>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Use the <code>validate</code> and <code>required</code> props for validation:
       </p>
 
@@ -964,9 +964,9 @@ export default function InputsPage() {
         className="mb-8"
       />
 
-      <Highlight theme={themes.vsLight} code={fileUploadValidationCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={fileUploadValidationCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -981,7 +981,7 @@ export default function InputsPage() {
 
       {/* FILEUPLOAD IMPERATIVE HANDLE */}
       <h3 className="mb-4 text-xl font-semibold">FileUpload Imperative Handle</h3>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Access validation and file management methods via ref:
       </p>
 
@@ -997,9 +997,9 @@ export default function InputsPage() {
         </div>
       </div>
 
-      <Highlight theme={themes.vsLight} code={fileUploadHandleCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={fileUploadHandleCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -1014,13 +1014,13 @@ export default function InputsPage() {
 
       {/* FILEUPLOAD DISABLED */}
       <h3 className="mb-4 text-xl font-semibold">Disabled FileUpload</h3>
-      <p className="text-gray-700 mb-4">FileUpload can be disabled:</p>
+      <p className="mb-4">FileUpload can be disabled:</p>
 
       <FileUpload label="Upload disabled" disabled className="mb-8" />
 
-      <Highlight theme={themes.vsLight} code={fileUploadDisabledCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={fileUploadDisabledCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (

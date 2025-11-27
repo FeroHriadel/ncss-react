@@ -43,9 +43,9 @@ export default function TablePage() {
     /* INTRO  */
     <Container className="px-4 pt-24">
       <h1 className="mb-4 uppercase font-bold text-3xl">Table</h1>
-      <p className="text-gray-800 text-lg mb-8">A standard table component for displaying data without virtualization. Best for smaller datasets where all rows should be visible at once.</p>
-      <p className="text-gray-700 mb-4">Features:</p>
-      <ul className="text-gray-700 list-disc mb-16">
+      <p className="text-lg mb-8">A standard table component for displaying data without virtualization. Best for smaller datasets where all rows should be visible at once.</p>
+      <p className="mb-4">Features:</p>
+      <ul className="list-disc mb-16">
         <li className="ml-8 pb-1">Displays all rows without virtualization</li>
         <li className="ml-8 pb-1">Auto-sizes to content height</li>
         <li className="ml-8 pb-1">Horizontal scrolling when content is wider than container</li>
@@ -87,15 +87,15 @@ export default function TablePage() {
 
       {/* BASIC USE */}
       <h2 className="mb-4 text-2xl uppercase font-semibold">Basic use</h2>
-      <p className="mb-8 text-gray-700">Just pass your data (object[]) as data prop to Table component:</p>
+      <p className="mb-8">Just pass your data (object[]) as data prop to Table component:</p>
 
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={basicUse}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -112,24 +112,24 @@ export default function TablePage() {
 
       {/* COLUMNS CONFIG */}
       <h2 className="mb-4 text-2xl uppercase font-semibold">Columns Config</h2>
-      <p className="text-gray-700 mb-4">If you need to configure the columns of the table, you can do so by passing a columnsConfig prop to the Table component.</p> 
+      <p className="mb-4">If you need to configure the columns of the table, you can do so by passing a columnsConfig prop to the Table component.</p> 
       
-      <p className="text-gray-700 mb-4">{`It is an array of {column, displayName, width} objects:`}</p>
-      <ul className="text-gray-700 list-disc mb-4">
+      <p className="mb-4">{`It is an array of {column, displayName, width} objects:`}</p>
+      <ul className="list-disc mb-4">
         <li className="ml-8 pb-1">column: the object key in your data array</li>
         <li className="ml-8 pb-1">displayName: renames the column header. If your data is e.g.: {`id: 1`} and you want to rename the column to "User ID", you would set displayName to "User ID".</li>
         <li className="ml-8 pb-1">width: custom column width (e.g. "100px", "20%")</li>
       </ul>
 
-      <p className="text-gray-700 mb-8">{`The order in which you define the columns will be the order in which they appear in the table. E.g. if you define the columns as [ { column: 'id', ... }, { column: 'name', ... } ], the table will show the ID column first, followed by the Name column.`}</p>
+      <p className="mb-8">{`The order in which you define the columns will be the order in which they appear in the table. E.g. if you define the columns as [ { column: 'id', ... }, { column: 'name', ... } ], the table will show the ID column first, followed by the Name column.`}</p>
 
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={columnsConfig}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -147,8 +147,8 @@ export default function TablePage() {
       {/* OTHER PROPS */}
       <h2 className="mb-4 text-2xl uppercase font-semibold">Other Props</h2>
 
-      <p className="text-gray-700 mb-4">{`In addition to the props mentioned above, the Table component also accepts the following props:`}</p>
-      <ul className="text-gray-700 list-disc mb-4">
+      <p className="mb-4">{`In addition to the props mentioned above, the Table component also accepts the following props:`}</p>
+      <ul className="list-disc mb-4">
         <li className="ml-8 pb-1">{`className: additional class names to apply to the table`}</li>
         <li className="ml-8 pb-1">{`style: additional styles to apply to the table`}</li>
         <li className="ml-8 pb-1">{`headerClassName: additional class names to apply to the table header`}</li>
@@ -167,16 +167,16 @@ export default function TablePage() {
 
       {/* WHEN TO USE */}
       <h2 className="mb-4 text-2xl uppercase font-semibold">When to Use Table vs VirtualizedTable</h2>
-      <p className="text-gray-700 mb-4">Use the <strong>Table</strong> component when:</p>
-      <ul className="text-gray-700 list-disc mb-4">
+      <p className="mb-4">Use the <strong>Table</strong> component when:</p>
+      <ul className="list-disc mb-4">
         <li className="ml-8 pb-1">Your dataset is relatively small (fewer than ~100 rows)</li>
         <li className="ml-8 pb-1">You want all rows visible at once without scrolling</li>
         <li className="ml-8 pb-1">You need simpler implementation with less overhead</li>
         <li className="ml-8 pb-1">You want the table to auto-size to its content</li>
       </ul>
 
-      <p className="text-gray-700 mb-4">Use the <strong>VirtualizedTable</strong> component when:</p>
-      <ul className="text-gray-700 list-disc mb-8">
+      <p className="mb-4">Use the <strong>VirtualizedTable</strong> component when:</p>
+      <ul className="list-disc mb-8">
         <li className="ml-8 pb-1">Your dataset is large (100+ rows, or thousands)</li>
         <li className="ml-8 pb-1">You need optimal performance with large datasets</li>
         <li className="ml-8 pb-1">You want to control the table height and enable vertical scrolling</li>
@@ -188,14 +188,14 @@ export default function TablePage() {
 
       {/* REAL LIFE EXAMPLE */}
       <h2 className="mb-4 text-2xl uppercase font-semibold">Real-Life Example</h2>
-      <p className="text-gray-700 mb-4">{`A real-life example of using the Table component would be displaying a list of team members, product catalog with limited items, or form submissions where you want to see all entries at once. Here is the sample implementation of the Table component shown at the top of this page:`}</p>
+      <p className="mb-4">{`A real-life example of using the Table component would be displaying a list of team members, product catalog with limited items, or form submissions where you want to see all entries at once. Here is the sample implementation of the Table component shown at the top of this page:`}</p>
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={tableRealLifeExampleCode}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (

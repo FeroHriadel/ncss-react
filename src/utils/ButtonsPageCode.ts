@@ -81,7 +81,6 @@ export const themeSwitchWithCallbackCode = `
 
   <ThemeSwitch 
     onChange={(newTheme) => console.log('Theme changed to:', newTheme)}
-    defaultTheme="light"
     iconSize={18}
   />
 `;

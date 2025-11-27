@@ -12,7 +12,7 @@ export default function PillsPage() {
     <Container className="px-4 pt-24">
       {/* INTRO */}
       <h1 className="mb-4 uppercase font-bold text-3xl">Pills</h1>
-      <p className="text-gray-800 text-lg mb-12">
+      <p className="text-lg mb-12">
         The <code>Pill</code> component displays small, rounded badges or tags. Pills can be static, clickable, or closeable.
       </p>
       <Card className="mb-12 p-4 bg-gray-100 flex flex-col gap-4">
@@ -27,16 +27,16 @@ export default function PillsPage() {
 
       {/* BASIC PILL */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="basic">Basic Pill</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         The simplest form of a pill displays text or content in a rounded badge.
       </p>
 
       <Pill>Basic Pill</Pill>
       <Break amount={2} />
 
-      <Highlight theme={themes.vsLight} code={pillBasicCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={pillBasicCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -53,16 +53,16 @@ export default function PillsPage() {
 
       {/* INTERACTIVE PILL */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="interactive">Interactive Pill</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Pills become clickable and show hover effects when an <code>onClick</code> handler is provided:
       </p>
 
       <Pill onClick={() => alert('Pill clicked!')}>Clickable Pill</Pill>
       <Break amount={2} />
 
-      <Highlight theme={themes.vsLight} code={pillInteractiveCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={pillInteractiveCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -77,7 +77,7 @@ export default function PillsPage() {
 
       {/* CLOSEABLE PILL */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="closeable">Closeable Pill</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Pills can display a close button when an <code>onClose</code> handler is provided. This is useful for tags or filters:
       </p>
 
@@ -87,9 +87,9 @@ export default function PillsPage() {
         <Pill onClose={() => console.log('Close Tag 3')}>Tag 3</Pill>
       </div>
 
-      <Highlight theme={themes.vsLight} code={pillCloseableCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={pillCloseableCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -104,7 +104,7 @@ export default function PillsPage() {
 
       {/* CUSTOM STYLING */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="custom">Custom Styling</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Pills can be customized with inline styles or additional CSS classes:
       </p>
 
@@ -120,9 +120,9 @@ export default function PillsPage() {
       </Pill>
       <Break amount={2} />
 
-      <Highlight theme={themes.vsLight} code={pillCustomStyleCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={pillCustomStyleCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (

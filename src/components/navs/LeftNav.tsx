@@ -57,6 +57,18 @@ export default function LeftNav({
     }
   }
 
+  // Handle collapsible toggle
+  function handleCollapsibleToggle(isOpen: boolean) {
+    if (isOpen) {
+      setTimeout(() => {
+        const leftNav = document.querySelector('.left-nav') as HTMLElement;
+        if (leftNav) {
+          leftNav.scrollBy({ top: 50, behavior: 'smooth' });
+        }
+      }, 100);
+    }
+  }
+
 
   // Render
   return (
@@ -94,13 +106,14 @@ export default function LeftNav({
             return (
               <Collapsible
                 key={'collapsible-' + link.linkName}
+                onToggle={handleCollapsibleToggle}
                 trigger={
-                  <span 
+                  <button
                     className={`left-nav-link-trigger ${index > 0 ? 'left-nav-border-top-0' : ''}`}
                   >
-                    {link.linkName}
-                    <FaChevronDown size={10} className="left-nav-chevron" style={{ color: 'var(--nc-nav-text)' }} />
-                  </span>
+                      {link.linkName}
+                      <FaChevronDown size={10} className="left-nav-chevron" style={{ color: 'var(--nc-nav-text)' }} />
+                  </button>
                 }
               >
                 {link.options.map((opt) => (
@@ -108,7 +121,6 @@ export default function LeftNav({
                     key={'option-' + opt.optionName} 
                     to={opt.optionUrl || '/'} 
                     className="left-nav-option-link"
-                    tabIndex={-1}
                   >
                     {opt.optionName}
                   </Link>
@@ -124,7 +136,6 @@ export default function LeftNav({
                 key={'link-' + link.linkName} 
                 to={link.linkUrl || '/'} 
                 className={`left-nav-simple-link ${index > 0 ? 'left-nav-border-top-0' : ''}`}
-                tabIndex={-1}
               >
                 {link.linkName}
               </Link>

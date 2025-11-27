@@ -52,8 +52,8 @@
 .email-field:-webkit-autofill:hover,
 .email-field:-webkit-autofill:focus,
 .email-field:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 30px #f3f4f6 inset !important;
-  -webkit-text-fill-color: #374151 !important;
+  -webkit-box-shadow: 0 0 0 30px var(--nc-input-bg) inset !important;
+  -webkit-text-fill-color: var(--nc-input-text) !important;
   transition: background-color 5000s ease-in-out 0s;
 }
 

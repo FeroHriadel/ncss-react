@@ -98,13 +98,18 @@ export const dropdownCode = `
   <Dropdown
     trigger={<Button variant="outline">Open Menu</Button>}
     options={[
-      { render: <button className="flex justify-between items-center w-full bg-gray-200 text-left px-4 py-2">Edit <CiViewColumn className="" /></button> },
-      { render: <button className="flex gap-2 items-center w-full bg-gray-300 text-left px-4 py-2">Delete <a className="font-thin text-gray-500" href="#">link</a></button> },
-      { render: <button className="w-full bg-gray-400 text-left px-4 py-2">
-        <span className="rounded-full w-4 h-4 bg-gray-100 p-1 text-xs">OK</span>
+      { render: <button className="flex justify-between items-center w-full bg-gray-100 text-left px-4 py-2 text-black">Edit <CiViewColumn className="" /></button> },
+      { render: <button className="flex gap-2 items-center w-full bg-gray-200 text-left px-4 py-2 text-black">Delete <a className="font-thin text-gray-100" href="#">link</a></button> },
+      { render: <button className="w-full bg-gray-300 text-left px-4 py-2 text-black">
+        Customizable content
+        {' '}
+        ===
+        {' '}
+        <span className="rounded-full w-4 h-4 bg-gray-300 p-2 text-xs">OK</span>
       </button> }
     ]}
     closeOnSelect={true}
+    className="mb-8"
   />
 `;
 

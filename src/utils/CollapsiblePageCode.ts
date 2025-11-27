@@ -70,3 +70,28 @@ export const collapsibleStyledCode = `<Collapsible
     This collapsible body has custom background, border, and padding.
   </p>
 </Collapsible>`;
+
+export const collapsibleOnToggleCode = `import { useState } from "react";
+
+function MyComponent() {
+  const [status, setStatus] = useState("Closed");
+
+  function handleToggle(isOpen: boolean) {
+    setStatus(isOpen ? "Open" : "Closed");
+    console.log("Collapsible is now:", isOpen ? "open" : "closed");
+  }
+
+  return (
+    <div>
+      <p>Status: {status}</p>
+      <Collapsible 
+        trigger={<Button>Toggle Me</Button>}
+        onToggle={handleToggle}
+      >
+        <div className="mt-2 p-4 bg-gray-50 rounded">
+          <p>Content here</p>
+        </div>
+      </Collapsible>
+    </div>
+  );
+}`;

@@ -11,7 +11,7 @@ export default function CardsPage() {
     <Container className="px-4 pt-24">
       {/* INTRO */}
       <h1 className="mb-4 uppercase font-bold text-3xl">Cards</h1>
-      <p className="text-gray-800 text-lg mb-12">
+      <p className="text-lg mb-12">
         The <code>Card</code> component provides a styled container for grouping related content.
       </p>
       <hr />
@@ -19,18 +19,18 @@ export default function CardsPage() {
 
       {/* BASIC CARD */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="basic">Basic Card</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         A simple container with default padding and styling:
       </p>
 
       <Card className="mb-8">
         <h3 className="text-xl font-semibold mb-2">Card Title</h3>
-        <p className="text-gray-700">This is a basic card with some content inside.</p>
+        <p>This is a basic card with some content inside.</p>
       </Card>
 
-      <Highlight theme={themes.vsLight} code={cardBasicCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={cardBasicCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -45,7 +45,7 @@ export default function CardsPage() {
 
       {/* STYLED CARD */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="styled">Custom Styling</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Cards can be customized with <code>className</code> and <code>style</code> props:
       </p>
 
@@ -53,13 +53,13 @@ export default function CardsPage() {
         className="mb-8 bg-blue-50 border-2 border-blue-300"
         style={{ padding: '2rem' }}
       >
-        <h3 className="text-xl font-semibold mb-2 text-blue-900">Styled Card</h3>
-        <p className="text-blue-800">This card has custom background, border, and padding.</p>
+        <h3 className="text-xl font-semibold mb-2">Styled Card</h3>
+        <p>This card has custom background, border, and padding.</p>
       </Card>
 
-      <Highlight theme={themes.vsLight} code={cardStyledCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={cardStyledCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -74,7 +74,7 @@ export default function CardsPage() {
 
       {/* NESTED CARDS */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="nested">Nested Cards</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Cards can contain other cards for hierarchical layouts:
       </p>
 
@@ -83,18 +83,18 @@ export default function CardsPage() {
         <div className="space-y-4">
           <Card className="bg-white p-4">
             <h4 className="font-semibold mb-2">Child Card 1</h4>
-            <p className="text-gray-700 text-sm">Nested content here.</p>
+            <p className="text-sm">Nested content here.</p>
           </Card>
           <Card className="bg-white p-4">
             <h4 className="font-semibold mb-2">Child Card 2</h4>
-            <p className="text-gray-700 text-sm">More nested content.</p>
+            <p className="text-sm">More nested content.</p>
           </Card>
         </div>
       </Card>
 
-      <Highlight theme={themes.vsLight} code={cardNestedCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={cardNestedCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (

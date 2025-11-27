@@ -26,7 +26,7 @@ export default function DropdownsPage() {
     <Container className="px-4 pt-24">
       {/* INTRO */}
       <h1 className="mb-4 uppercase font-bold text-3xl">Dropdowns</h1>
-      <p className="text-gray-800 text-lg mb-12">Dropdown components: <code>Select</code>, <code>Multiselect</code>, and <code>Dropdown</code>.</p>
+      <p className="text-lg mb-12">Dropdown components: <code>Select</code>, <code>Multiselect</code>, and <code>Dropdown</code>.</p>
       <Card className="mb-12 p-4 bg-gray-100 flex flex-col gap-4">
         <a href="#select"><div><code>Select</code> is a more customizable html select element <br /></div></a>
         <a href="#multiselect"><div><code>MultiSelect</code> is like <code>Select</code> but allows multiple selections <br /></div></a>
@@ -38,7 +38,7 @@ export default function DropdownsPage() {
 
       {/* SELECT - BASIC USE */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="select">Select</h2>
-      <p className="text-gray-700 mb-4">The <code>Select</code> component mimics the HTML <code>select</code> element but offers more customization options. Basic use would look like this (only the options prop is required) :</p>
+      <p className="mb-4">The <code>Select</code> component mimics the HTML <code>select</code> element but offers more customization options. Basic use would look like this (only the options prop is required) :</p>
 
       <Select
         title="Select an Option"
@@ -60,12 +60,12 @@ export default function DropdownsPage() {
       />
 
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={selectCode}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -79,7 +79,7 @@ export default function DropdownsPage() {
       <Break amount={3} />
 
       {/* SELECT WITH TRIGGER */}
-      <p className="text-gray-700 mb-4">You can change the trigger element for the <code>Select</code> component by using the <code>trigger</code> prop.</p>
+      <p className="mb-4">You can change the trigger element for the <code>Select</code> component by using the <code>trigger</code> prop.</p>
       <Select
         title="Select an Option"
         headerTitle="Please choose one:"
@@ -95,12 +95,12 @@ export default function DropdownsPage() {
         trigger={<button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Custom Trigger</button>}
       />
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={selectWithTriggerCode}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -115,14 +115,14 @@ export default function DropdownsPage() {
 
       {/* SELECT - REF & IMPERATIVE HANDLING */}
       <h2 className="mb-4 text-2xl uppercase font-semibold">Using Ref (Imperative Handle)</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         The <code>Select</code> component exposes methods through a ref that allow you to control it programmatically. 
         This is useful when you need to interact with the select component from outside, such as opening/closing it, 
         setting its value, or getting the current selection without relying on the <code>onChange</code> callback.
       </p>
       
-      <p className="text-gray-700 mb-4">Available methods:</p>
-      <ul className="text-gray-700 list-disc mb-8">
+      <p className="mb-4">Available methods:</p>
+      <ul className="list-disc mb-8">
         <li className="ml-8 pb-1"><code>getSelectedOption()</code> - Returns the currently selected option value (or null if nothing is selected)</li>
         <li className="ml-8 pb-1"><code>setSelectedOption(value)</code> - Programmatically sets the selected option</li>
         <li className="ml-8 pb-1"><code>clear()</code> - Clears the selection</li>
@@ -191,12 +191,12 @@ export default function DropdownsPage() {
       </Card>
 
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={selectWithRefCode}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -236,7 +236,7 @@ export default function DropdownsPage() {
 
       { /* MULTISELECT - BASIC USE */ }
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="multiselect">MultiSelect</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         The <code>MultiSelect</code> component allows users to select multiple options from a dropdown list. 
         Like <code>Select</code>, it can render with a default button-style trigger or accept a custom trigger element. 
         The component returns an array of selected values.
@@ -259,12 +259,12 @@ export default function DropdownsPage() {
       />
 
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={multiSelectCode}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -278,7 +278,7 @@ export default function DropdownsPage() {
       <Break amount={3} />
 
       {/* MULTISELECT WITH CUSTOM TRIGGER */}
-      <p className="text-gray-700 mb-4">You can provide a custom trigger element using the <code>trigger</code> prop (typically an icon button):</p>
+      <p className="mb-4">You can provide a custom trigger element using the <code>trigger</code> prop (typically an icon button):</p>
       
       <MultiSelect
         title="Select Options"
@@ -297,12 +297,12 @@ export default function DropdownsPage() {
       />
 
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={multiSelectWithTriggerCode}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -317,12 +317,12 @@ export default function DropdownsPage() {
 
       {/* MULTISELECT IMPERATIVE HANDLE */}
       <h2 className="mb-4 text-2xl uppercase font-semibold">MultiSelect with Ref (Imperative Handle)</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Like <code>Select</code>, the <code>MultiSelect</code> component also exposes methods through a ref for programmatic control.
       </p>
       
-      <p className="text-gray-700 mb-4">Available methods:</p>
-      <ul className="text-gray-700 list-disc mb-8">
+      <p className="mb-4">Available methods:</p>
+      <ul className="list-disc mb-8">
         <li className="ml-8 pb-1"><code>getSelectedOptions()</code> - Returns an array of currently selected option values</li>
         <li className="ml-8 pb-1"><code>setSelectedOptions(values[])</code> - Programmatically sets multiple selected options</li>
         <li className="ml-8 pb-1"><code>clear()</code> - Clears all selections</li>
@@ -392,12 +392,12 @@ export default function DropdownsPage() {
       </Card>
 
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={multiSelectWithRefCode}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -436,7 +436,7 @@ export default function DropdownsPage() {
 
       {/* DROPDOWN - BASIC USE */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="dropdown">Dropdown</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         The <code>Dropdown</code> component is a more flexible alternative to <code>Select</code> and <code>MultiSelect</code>. 
         Unlike those components, <code>Dropdown</code> does not manage state internally - it simply renders custom content in a dropdown menu. 
         Each option's <code>render</code> prop can contain any React element, making it perfect for action menus, navigation menus, or custom UI elements.
@@ -446,9 +446,9 @@ export default function DropdownsPage() {
       <Dropdown
         trigger={<Button variant="outline">Open Menu</Button>}
         options={[
-          { render: <button className="flex justify-between items-center w-full bg-gray-50 text-left px-4 py-2">Edit <CiViewColumn className="" /></button> },
-          { render: <button className="flex gap-2 items-center w-full bg-gray-100 text-left px-4 py-2">Delete <a className="font-thin text-gray-100" href="#">link</a></button> },
-          { render: <button className="w-full bg-gray-200 text-left px-4 py-2">
+          { render: <button className="flex justify-between items-center w-full bg-gray-100 text-left px-4 py-2 text-black">Edit <CiViewColumn className="" /></button> },
+          { render: <button className="flex gap-2 items-center w-full bg-gray-200 text-left px-4 py-2 text-black">Delete <a className="font-thin text-gray-100" href="#">link</a></button> },
+          { render: <button className="w-full bg-gray-300 text-left px-4 py-2 text-black">
             Customizable content
             {' '}
             ===
@@ -461,12 +461,12 @@ export default function DropdownsPage() {
       />
 
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={dropdownCode}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -480,7 +480,7 @@ export default function DropdownsPage() {
       <Break amount={3} />
 
       {/* DROPDOWN WITH CHILDREN */}
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Instead of using the <code>trigger</code> prop, you can pass the trigger element as <code>children</code>. 
         This is useful when you want the trigger to be inline with your JSX:
       </p>
@@ -499,12 +499,12 @@ export default function DropdownsPage() {
       </Dropdown>
 
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={dropdownWithChildrenCode}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -519,7 +519,7 @@ export default function DropdownsPage() {
 
       {/* DROPDOWN IMPERATIVE HANDLE */}
       <h2 className="mb-4 text-2xl uppercase font-semibold">Dropdown with Ref (Imperative Handle)</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Like <code>Select</code> and <code>MultiSelect</code>, the <code>Dropdown</code> component exposes methods through a ref for programmatic control.
       </p>
       
@@ -574,12 +574,12 @@ export default function DropdownsPage() {
       </Card>
 
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={dropdownWithRefCode}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -593,7 +593,7 @@ export default function DropdownsPage() {
 
       {/* DROPDOWN WITH CUSTOM STYLED OPTIONS AND VALUES */}
       <h2 className="mb-4 text-2xl uppercase font-semibold mt-8">Dropdown with Custom Styled Options and Values</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         You can fully customize the appearance of dropdown options using Tailwind classes (or any CSS classes) and retrieve the selected option's <code>value</code> through the <code>onChange</code> callback. 
         Each option can have a <code>value</code> property that gets passed to <code>onChange</code> when selected. 
         This is useful when you want rich visual options but need to work with simple identifiers in your code.
@@ -618,12 +618,12 @@ export default function DropdownsPage() {
       />
 
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={dropdownWithCustomStyledOptionsCode}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -657,7 +657,7 @@ export default function DropdownsPage() {
 
       {/* DROPDOWN WITH MANY OPTIONS */}
       <h2 className="mb-4 text-2xl uppercase font-semibold">Dropdown with Many Options</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         When a dropdown has many options, it automatically limits its height to 400px and becomes scrollable. 
         The dropdown also intelligently positions itself - it will open upward if there's not enough space below the trigger, 
         and adjust its horizontal position based on available screen space.
@@ -698,12 +698,12 @@ export default function DropdownsPage() {
       />
 
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={dropdownWithManyOptionsCode}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (

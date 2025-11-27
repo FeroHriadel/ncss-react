@@ -9,24 +9,33 @@ import {
   collapsibleDefaultOpenCode, 
   collapsibleCustomTriggerCode,
   collapsibleNestedCode,
-  collapsibleStyledCode 
+  collapsibleStyledCode,
+  collapsibleOnToggleCode
 } from "../utils/CollapsiblePageCode";
 import { FaChevronDown } from "react-icons/fa";
+import { useState } from "react";
 
 
 
 export default function CollapsiblePage() {
+  const [status, setStatus] = useState("Closed");
+
+  function handleToggle(isOpen: boolean) {
+    setStatus(isOpen ? "Open" : "Closed");
+  }
+
   return (
     <Container className="px-4 pt-24">
       {/* INTRO */}
       <h1 className="mb-4 uppercase font-bold text-3xl">Collapsible</h1>
-      <p className="text-gray-800 text-lg mb-12">
+      <p className="text-lg mb-12">
         The <code>Collapsible</code> component creates expandable/collapsible content sections with custom triggers.
       </p>
       <Card className="mb-12 p-4 bg-gray-100 flex flex-col gap-4">
         <a href="#basic"><div><code>Basic Collapsible</code> - Simple expandable section</div></a>
         <a href="#default-open"><div><code>Default Open</code> - Start in expanded state</div></a>
         <a href="#custom-trigger"><div><code>Custom Trigger</code> - Custom trigger elements with icons</div></a>
+        <a href="#on-toggle"><div><code>onToggle Callback</code> - React to open/close events</div></a>
         <a href="#nested"><div><code>Nested Collapsibles</code> - Collapsibles inside collapsibles</div></a>
         <a href="#styled"><div><code>Custom Styling</code> - Styled collapsible content</div></a>
       </Card>
@@ -35,22 +44,22 @@ export default function CollapsiblePage() {
 
       {/* BASIC COLLAPSIBLE */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="basic">Basic Collapsible</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         The simplest form uses a button or text as the trigger element:
       </p>
 
       <Collapsible trigger={<Button>Click to Expand</Button>}>
         <Card className="mt-2 p-4 bg-gray-50">
-          <p className="text-gray-700">
+          <p>
             This is the collapsible content. It can contain any React elements.
           </p>
         </Card>
       </Collapsible>
       <Break amount={2} />
 
-      <Highlight theme={themes.vsLight} code={collapsibleBasicCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={collapsibleBasicCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -65,7 +74,7 @@ export default function CollapsiblePage() {
 
       {/* DEFAULT OPEN */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="default-open">Default Open</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Use the <code>defaultOpen</code> prop to start with the content expanded:
       </p>
 
@@ -74,16 +83,16 @@ export default function CollapsiblePage() {
         defaultOpen={true}
       >
         <Card className="mt-2 p-4 bg-gray-50">
-          <p className="text-gray-700">
+          <p>
             This collapsible starts in the open state by default.
           </p>
         </Card>
       </Collapsible>
       <Break amount={2} />
 
-      <Highlight theme={themes.vsLight} code={collapsibleDefaultOpenCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={collapsibleDefaultOpenCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -98,7 +107,7 @@ export default function CollapsiblePage() {
 
       {/* CUSTOM TRIGGER */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="custom-trigger">Custom Trigger</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         The <code>trigger</code> prop accepts any React element. Here's an example with icons that change based on state:
       </p>
 
@@ -112,16 +121,53 @@ export default function CollapsiblePage() {
       >
         <Card className="mt-2 p-4 bg-gray-50">
           <h3 className="font-semibold mb-2">Product Details</h3>
-          <p className="text-gray-700 mb-2">Price: $99.99</p>
-          <p className="text-gray-700 mb-2">Stock: Available</p>
-          <p className="text-gray-700">Shipping: Free</p>
+          <p className="mb-2">Price: $99.99</p>
+          <p className="mb-2">Stock: Available</p>
+          <p>Shipping: Free</p>
         </Card>
       </Collapsible>
       <Break amount={2} />
 
-      <Highlight theme={themes.vsLight} code={collapsibleCustomTriggerCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={collapsibleCustomTriggerCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      {/* ON TOGGLE CALLBACK */}
+      <h2 className="mb-4 text-2xl uppercase font-semibold" id="on-toggle">onToggle Callback</h2>
+      <p className="mb-4">
+        Use the <code>onToggle</code> callback to react to open/close events. The callback receives a boolean indicating the new state:
+      </p>
+
+      <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded">
+        <p className="font-semibold">Current Status: {status}</p>
+      </div>
+
+      <Collapsible 
+        trigger={<Button>Toggle and Check Status</Button>}
+        onToggle={handleToggle}
+      >
+        <Card className="mt-2 p-4 bg-gray-50">
+          <p>
+            Watch the status above change when you open or close this collapsible!
+          </p>
+        </Card>
+      </Collapsible>
+      <Break amount={2} />
+
+      <Highlight theme={themes.vsDark} code={collapsibleOnToggleCode} language="tsx">
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -136,17 +182,17 @@ export default function CollapsiblePage() {
 
       {/* NESTED COLLAPSIBLES */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="nested">Nested Collapsibles</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Collapsibles can be nested to create hierarchical expandable sections:
       </p>
 
       <Collapsible trigger={<Button>Main Section</Button>}>
         <Card className="mt-2 p-4 bg-gray-50">
-          <p className="text-gray-700 mb-4">This is the main section content.</p>
+          <p className="mb-4">This is the main section content.</p>
           
           <Collapsible trigger={<Button size="sm">Subsection 1</Button>}>
             <Card className="mt-2 p-3 bg-white">
-              <p className="text-gray-700 text-sm">Content of subsection 1</p>
+              <p className="text-sm">Content of subsection 1</p>
             </Card>
           </Collapsible>
           
@@ -154,16 +200,16 @@ export default function CollapsiblePage() {
           
           <Collapsible trigger={<Button size="sm">Subsection 2</Button>}>
             <Card className="mt-2 p-3 bg-white">
-              <p className="text-gray-700 text-sm">Content of subsection 2</p>
+              <p className="text-sm">Content of subsection 2</p>
             </Card>
           </Collapsible>
         </Card>
       </Collapsible>
       <Break amount={2} />
 
-      <Highlight theme={themes.vsLight} code={collapsibleNestedCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={collapsibleNestedCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -178,7 +224,7 @@ export default function CollapsiblePage() {
 
       {/* CUSTOM STYLING */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="styled">Custom Styling</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Use <code>className</code> and <code>style</code> props to customize the collapsible body:
       </p>
 
@@ -193,16 +239,16 @@ export default function CollapsiblePage() {
           marginTop: '0.5rem'
         }}
       >
-        <h3 className="font-semibold text-blue-900 mb-2">Custom Styled Content</h3>
-        <p className="text-blue-800">
+        <h3 className="font-semibold mb-2">Custom Styled Content</h3>
+        <p>
           This collapsible body has custom background, border, and padding styles applied.
         </p>
       </Collapsible>
       <Break amount={2} />
 
-      <Highlight theme={themes.vsLight} code={collapsibleStyledCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={collapsibleStyledCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -222,6 +268,7 @@ export default function CollapsiblePage() {
           <li><code>children</code> (required): Content to display when expanded</li>
           <li><code>trigger</code> (required): Element that toggles the collapsible (clicked to open/close)</li>
           <li><code>defaultOpen</code> (optional, default: false): Whether to start in expanded state</li>
+          <li><code>onToggle</code> (optional): Callback function called when toggled, receives boolean (isOpen)</li>
           <li><code>className</code> (optional): Additional CSS classes for the collapsible body</li>
           <li><code>style</code> (optional): Inline styles for the collapsible body</li>
           <li><code>id</code> (optional): HTML id attribute for the collapsible body</li>

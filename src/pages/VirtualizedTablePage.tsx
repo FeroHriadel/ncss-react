@@ -89,9 +89,9 @@ export default function VirtualizedTablePage() {
     /* INTRO  */
     <Container className="px-4 pt-24">
       <h1 className="mb-4 uppercase font-bold text-3xl">Virtualized Table</h1>
-      <p className="text-gray-800 text-lg mb-8">Table for rendering 1000s of rows of data efficiently using virtualization.</p>
-      <p className="text-gray-700 mb-4">Features:</p>
-      <ul className="text-gray-700 list-disc mb-16">
+      <p className="text-lg mb-8">Table for rendering 1000s of rows of data efficiently using virtualization.</p>
+      <p className="mb-4">Features:</p>
+      <ul className="list-disc mb-16">
         <li className="ml-8 pb-1">Virtualized rendering for performance</li>
         <li className="ml-8 pb-1">Fleible column height (unlike most virtualized tables)</li>
         <li className="ml-8 pb-1">Column reordering (drag and drop column to reorder)</li>
@@ -139,15 +139,15 @@ export default function VirtualizedTablePage() {
 
       {/* BASIC USE */}
       <h2 className="mb-4 text-2xl uppercase font-semibold">Basic use</h2>
-      <p className="mb-8 text-gray-700">Just pass your data (object[]) as data prop to VirtualizedTable component:</p>
+      <p className="mb-8">Just pass your data (object[]) as data prop to VirtualizedTable component:</p>
 
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={basicUse}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -164,24 +164,24 @@ export default function VirtualizedTablePage() {
 
       {/* COLUMNS CONFIG */}
       <h2 className="mb-4 text-2xl uppercase font-semibold">Columns Config</h2>
-      <p className="text-gray-700 mb-4">If you need to configure the columns of the table, you can do so by passing a columnsConfig prop to the VirtualizedTable component.</p> 
+      <p className="mb-4">If you need to configure the columns of the table, you can do so by passing a columnsConfig prop to the VirtualizedTable component.</p> 
       
-      <p className="text-gray-700 mb-4">{`It is an array of {column, displayName, width} objects:`}</p>
-      <ul className="text-gray-700 list-disc mb-4">
+      <p className="mb-4">{`It is an array of {column, displayName, width} objects:`}</p>
+      <ul className="list-disc mb-4">
         <li className="ml-8 pb-1">column: the object key in your data array</li>
         <li className="ml-8 pb-1">displayName: renames the column header. If your data is e.g.: {`id: 1`} and you want to rename the column to "User ID", you would set displayName to "User ID".</li>
         <li className="ml-8 pb-1">width custom column width (e.g. "100px", "20%")</li>
       </ul>
 
-      <p className="text-gray-700 mb-8">{`The order in which you define the columns will be the order in which they appear in the table. E.g. if you define the columns as [ { column: 'id', ... }, { column: 'name', ... } ], the table will show the ID column first, followed by the Name column.`}</p>
+      <p className="mb-8">{`The order in which you define the columns will be the order in which they appear in the table. E.g. if you define the columns as [ { column: 'id', ... }, { column: 'name', ... } ], the table will show the ID column first, followed by the Name column.`}</p>
 
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={columnsConfig}
         language="tsx"
       >
-        {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+        {({ className, style, tokens, getLineProps, getTokenProps}) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -199,8 +199,8 @@ export default function VirtualizedTablePage() {
       {/* OTHER PROPS */}
       <h2 className="mb-4 text-2xl uppercase font-semibold">Other Props</h2>
 
-      <p className="text-gray-700 mb-4">{`In addition to the props mentioned above, the VirtualizedTable component also accepts the following props:`}</p>
-      <ul className="text-gray-700 list-disc mb-4">
+      <p className="mb-4">{`In addition to the props mentioned above, the VirtualizedTable component also accepts the following props:`}</p>
+      <ul className="list-disc mb-4">
         <li className="ml-8 pb-1">{`className: additional class names to apply to the table`}</li>
         <li className="ml-8 pb-1">{`style: additional styles to apply to the table`}</li>
         <li className="ml-8 pb-1">{`headerClassName: additional class names to apply to the table header`}</li>
@@ -218,15 +218,15 @@ export default function VirtualizedTablePage() {
 
       {/* FILTER PRESETS */}
       <h2 className="mb-4 text-2xl uppercase font-semibold">Filter Presets</h2>
-      <p className="text-gray-700">{`The VirtualizedTable component allows you to define filter presets that users can quickly apply to the table data.`}</p>
-      <p className="text-gray-700 mb-4">{`Filter presets are defined as an array of objects, each containing a label and a filter function:`}</p>
+      <p>{`The VirtualizedTable component allows you to define filter presets that users can quickly apply to the table data.`}</p>
+      <p className="mb-4">{`Filter presets are defined as an array of objects, each containing a label and a filter function:`}</p>
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={filterPresetsCode}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -243,14 +243,14 @@ export default function VirtualizedTablePage() {
 
       {/* REAL LIFE EXAMPLE */}
       <h2 className="mb-4 text-2xl uppercase font-semibold">Real-Life Example</h2>
-      <p className="text-gray-700 mb-4">{`A real life example of using the VirtualizedTable component would be displaying a large dataset, such as a list of users or products, where only a small subset of the data is visible at any given time. This allows for efficient rendering and smooth scrolling, even with thousands of rows. Here is a sample implementation of the VirtualizedTable component rendered on the top of the page. It also shows how to set filter presets`}</p>
+      <p className="mb-4">{`A real life example of using the VirtualizedTable component would be displaying a large dataset, such as a list of users or products, where only a small subset of the data is visible at any given time. This allows for efficient rendering and smooth scrolling, even with thousands of rows. Here is a sample implementation of the VirtualizedTable component rendered on the top of the page. It also shows how to set filter presets`}</p>
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={virtualizedTableRealLifeExampleCode}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (

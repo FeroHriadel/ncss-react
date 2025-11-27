@@ -183,7 +183,7 @@ export default function NavsPage() {
     <Container className="px-4 pt-24">
       {/* INTRO */}
       <h1 className="mb-4 uppercase font-bold text-3xl">Navigation Components</h1>
-      <p className="text-gray-800 text-lg mb-12">Navigation components: <code>TopNav</code>, <code>LeftNav</code>, <code>LeftNavPage</code></p>
+      <p className="text-lg mb-12">Navigation components: <code>TopNav</code>, <code>LeftNav</code>, <code>LeftNavPage</code></p>
       <Card className="mb-12 p-4 bg-gray-100 flex flex-col gap-4">
         <a href="#topnav"><div><code>TopNav</code> is a fixed top navigation bar with logo, links, dropdowns, and custom content support</div></a>
         <a href="#leftnav"><div><code>LeftNav</code> is a fixed left sidebar navigation with links and collapsible sections</div></a>
@@ -195,7 +195,7 @@ export default function NavsPage() {
 
       {/* TOPNAV */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="topnav">TopNav</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         The <code>TopNav</code> component provides a fixed top navigation bar with logo, links, dropdown menus, and custom content.
         It automatically switches to a hamburger menu on smaller screens.
       </p>
@@ -225,9 +225,9 @@ export default function NavsPage() {
         )}
       </div>
 
-      <Highlight theme={themes.vsLight} code={topNavBasicCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={topNavBasicCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -242,13 +242,13 @@ export default function NavsPage() {
 
       {/* TOPNAV WITH DROPDOWN */}
       <h3 className="mb-4 text-xl font-semibold">TopNav with Dropdown Menus</h3>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Links can have <code>options</code> to create dropdown menus. The dropdown automatically positions itself to stay on screen.
       </p>
 
-      <Highlight theme={themes.vsLight} code={topNavWithDropdownCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={topNavWithDropdownCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -263,14 +263,14 @@ export default function NavsPage() {
 
       {/* TOPNAV WITH CUSTOM CONTENT */}
       <h3 className="mb-4 text-xl font-semibold">TopNav with Custom Content</h3>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Add buttons, theme switchers, user avatars, or any custom content to the navigation bar.
         Use <code>customContentPosition</code> to control whether the content appears on the left or right side (default is "right"):
       </p>
 
-      <Highlight theme={themes.vsLight} code={topNavCustomContentCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={topNavCustomContentCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -283,13 +283,13 @@ export default function NavsPage() {
       </Highlight>
       <Break amount={2} />
 
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Custom content on the left side:
       </p>
 
-      <Highlight theme={themes.vsLight} code={topNavCustomContentLeftCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={topNavCustomContentLeftCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -377,7 +377,7 @@ export default function NavsPage() {
 
       {/* LEFTNAV */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="leftnav">LeftNav</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         The <code>LeftNav</code> component provides a fixed left sidebar navigation with links and collapsible sections.
         It can be toggled open/close on smaller screens.
       </p>
@@ -413,9 +413,9 @@ export default function NavsPage() {
         )}
       </div>
 
-      <Highlight theme={themes.vsLight} code={leftNavBasicCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={leftNavBasicCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -430,13 +430,13 @@ export default function NavsPage() {
 
       {/* LEFTNAV WITH COLLAPSIBLE */}
       <h3 className="mb-4 text-xl font-semibold">LeftNav with Collapsible Sections</h3>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Links with <code>options</code> render as collapsible sections that expand/collapse on click:
       </p>
 
-      <Highlight theme={themes.vsLight} code={leftNavWithCollapsibleCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={leftNavWithCollapsibleCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -506,7 +506,7 @@ export default function NavsPage() {
 
       {/* LEFTNAVPAGE */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="leftnavpage">LeftNavPage</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         The <code>LeftNavPage</code> component is a wrapper for your page content that automatically handles margin adjustments 
         when <code>LeftNav</code> is shown or hidden on different screen sizes. On screens wider than 1000px, it adds a left margin 
         to make room for the sidebar. On smaller screens, the margin is removed and the LeftNav slides in/out.
@@ -514,16 +514,16 @@ export default function NavsPage() {
 
       <div className="mb-8">
         <Card className="p-4 bg-blue-50 border-blue-200">
-          <p className="text-sm text-gray-700">
+          <p className="text-sm">
             <strong>💡 Tip:</strong> Always use <code>LeftNavPage</code> when using <code>LeftNav</code> to avoid manually managing 
             responsive margins and ensure your content doesn't overlap with the sidebar.
           </p>
         </Card>
       </div>
 
-      <Highlight theme={themes.vsLight} code={leftNavPageCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={leftNavPageCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -538,13 +538,13 @@ export default function NavsPage() {
 
       {/* LEFTNAVPAGE USAGE */}
       <h3 className="mb-4 text-xl font-semibold">Usage Guidelines</h3>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Match the <code>top</code> prop to your <code>TopNav</code> height and the <code>left</code> prop to your <code>LeftNav</code> width:
       </p>
 
-      <Highlight theme={themes.vsLight} code={leftNavPagePropsCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={leftNavPagePropsCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -608,14 +608,14 @@ export default function NavsPage() {
 
       {/* COMBINED NAVS */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="combined">Combined Navigation</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Use <code>TopNav</code>, <code>LeftNav</code>, and <code>LeftNavPage</code> together for a complete navigation layout. 
         The <code>LeftNavPage</code> automatically handles responsive margin adjustments.
       </p>
 
-      <Highlight theme={themes.vsLight} code={combinedNavsCode} language="tsx">
+      <Highlight theme={themes.vsDark} code={combinedNavsCode} language="tsx">
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -630,7 +630,7 @@ export default function NavsPage() {
 
       {/* LINK STRUCTURE */}
       <h3 className="mb-4 text-xl font-semibold">Link Structure</h3>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Both <code>TopNav</code> and <code>LeftNav</code> use the same link structure:
       </p>
       <Card className="mb-8 p-4 bg-gray-50">

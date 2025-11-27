@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import IconButton from "./IconButton";
 import { CiDark, CiLight } from "react-icons/ci";
 import useTheme from "../services/themeService";
@@ -8,7 +7,6 @@ import useTheme from "../services/themeService";
 export interface ThemeSwitchProps {
   className?: string;
   style?: React.CSSProperties;
-  defaultTheme?: "light" | "dark";
   onChange?: (newTheme: "light" | "dark") => void;
   iconSize?: number;
 }
@@ -17,22 +15,12 @@ export interface ThemeSwitchProps {
 export default function ThemeSwitch({ 
   className, 
   style, 
-  onChange = () => {}, 
-  defaultTheme = "light", 
+  onChange = () => {},  
   iconSize = 18,
 }: ThemeSwitchProps) {
 
   // values
-  const [firstRender, setFirstRender] = useState(true);
-  const { toggleTheme, setTheme, theme } = useTheme();
-
-  // apply default theme on first render
-  useEffect(() => {
-    if (!firstRender) return;
-    setFirstRender(false);
-    if (theme !== defaultTheme) { setTheme(defaultTheme); }
-  }, [theme, firstRender]);
-  
+  const { toggleTheme, theme } = useTheme();
 
   // helpers
   const handleThemeChange = () => {

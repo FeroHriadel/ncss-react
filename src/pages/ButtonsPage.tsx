@@ -13,11 +13,12 @@ import { IoMdClose } from "react-icons/io";
 
 
 export default function ButtonsPage() {
+
   return (
     <Container className="px-4 pt-24">
       {/* INTRO */}
       <h1 className="mb-4 uppercase font-bold text-3xl">Buttons</h1>
-      <p className="text-gray-800 text-lg mb-12">Button components: <code>Button</code>, <code>IconButton</code> <code>CloseButton</code> <code>ThemeSwitch</code></p>
+      <p className="text-lg mb-12">Button components: <code>Button</code>, <code>IconButton</code> <code>CloseButton</code> <code>ThemeSwitch</code></p>
       <Card className="mb-12 p-4 bg-gray-100 flex flex-col gap-4">
         <a href="#button"><div><code>Button</code> is not like html button but offers a few more customization options <br /></div></a>
         <a href="#icon-button"><div><code>IconButton</code> is intended to save time when you just need a clickable icon but don't want to waste time wrapping the icon in button and make it aria compliant <br /></div></a>
@@ -31,7 +32,7 @@ export default function ButtonsPage() {
 
       {/* BUTTON */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="button">Button</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         The <code>Button</code> component provides a styled button with multiple variants, sizes, and customization options. 
         It's more flexible than the standard HTML button element while maintaining accessibility.
       </p>
@@ -46,12 +47,12 @@ export default function ButtonsPage() {
       </Button>
 
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={buttonCode}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -66,7 +67,7 @@ export default function ButtonsPage() {
 
       {/* BUTTON VARIANTS */}
       <h3 className="mb-4 text-xl font-semibold">Button Variants</h3>
-      <p className="text-gray-700 mb-4">The <code>Button</code> component supports four variants:</p>
+      <p className="mb-4">The <code>Button</code> component supports four variants:</p>
 
       <div className="flex gap-2 mb-8 flex-wrap">
         <Button variant="dark">Dark</Button>
@@ -76,12 +77,12 @@ export default function ButtonsPage() {
       </div>
 
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={buttonVariantsCode}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -96,7 +97,7 @@ export default function ButtonsPage() {
 
       {/* BUTTON SIZES */}
       <h3 className="mb-4 text-xl font-semibold">Button Sizes</h3>
-      <p className="text-gray-700 mb-4">Buttons come in three sizes: small, medium (default), and large:</p>
+      <p className="mb-4">Buttons come in three sizes: small, medium (default), and large:</p>
 
       <div className="flex gap-2 items-center mb-8">
         <Button size="sm">Small</Button>
@@ -105,12 +106,12 @@ export default function ButtonsPage() {
       </div>
 
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={buttonSizesCode}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -125,17 +126,17 @@ export default function ButtonsPage() {
 
       {/* BUTTON DISABLED */}
       <h3 className="mb-4 text-xl font-semibold">Disabled State</h3>
-      <p className="text-gray-700 mb-4">Buttons can be disabled to prevent user interaction:</p>
+      <p className="mb-4">Buttons can be disabled to prevent user interaction:</p>
 
       <Button disabled className="mb-8">Disabled Button</Button>
 
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={buttonDisabledCode}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -173,7 +174,7 @@ export default function ButtonsPage() {
 
       {/* ICON BUTTON */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="icon-button">IconButton</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         The <code>IconButton</code> component is designed for icon-only buttons. 
         It automatically handles accessibility attributes and provides a clean, consistent appearance for icon actions.
       </p>
@@ -186,12 +187,12 @@ export default function ButtonsPage() {
       </div>
 
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={iconButtonCode}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -206,7 +207,7 @@ export default function ButtonsPage() {
 
       {/* ICON BUTTON SIZES */}
       <h3 className="mb-4 text-xl font-semibold">IconButton Sizes</h3>
-      <p className="text-gray-700 mb-4">You can customize the size of icon buttons:</p>
+      <p className="mb-4">You can customize the size of icon buttons:</p>
 
       <div className="flex gap-2 items-center mb-8">
         <IconButton icon={<FaHeart size={16} />} size="30px" title="Small heart" />
@@ -215,12 +216,12 @@ export default function ButtonsPage() {
       </div>
 
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={iconButtonSizesCode}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -255,7 +256,7 @@ export default function ButtonsPage() {
 
       {/* CLOSE BUTTON */}
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="close-button">CloseButton</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         The <code>CloseButton</code> component is a specialized button for closing actions. 
         It uses a red-styled close icon by default but can be customized with any icon. 
         This component is built on top of <code>IconButton</code> for consistency.
@@ -267,12 +268,12 @@ export default function ButtonsPage() {
       </div>
 
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={closeButtonCode}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -287,17 +288,17 @@ export default function ButtonsPage() {
 
       {/* CLOSE BUTTON CUSTOM ICON */}
       <h3 className="mb-4 text-xl font-semibold">Custom Close Icon</h3>
-      <p className="text-gray-700 mb-4">You can override the default close icon:</p>
+      <p className="mb-4">You can override the default close icon:</p>
 
       <CloseButton icon={<IoMdClose size={20} />} onClick={() => console.log('Custom close')} className="mb-8" />
 
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={closeButtonCustomIconCode}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -331,7 +332,7 @@ export default function ButtonsPage() {
       <hr />
       <Break amount={3} />
       <h2 className="mb-4 text-2xl uppercase font-semibold" id="theme-switch">ThemeSwitch</h2>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         The <code>ThemeSwitch</code> component provides a toggle button for switching between light and dark themes. 
         It displays a moon icon in light mode and a sun icon in dark mode, and can notify parent components when the theme changes.
       </p>
@@ -339,12 +340,12 @@ export default function ButtonsPage() {
       <ThemeSwitch className="mb-8" />
 
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={themeSwitchCode}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -358,7 +359,7 @@ export default function ButtonsPage() {
       <Break amount={3} />
 
       <h3 className="text-xl font-semibold mb-4">With Callback</h3>
-      <p className="text-gray-700 mb-4">
+      <p className="mb-4">
         Use the <code>onChange</code> prop to handle theme changes:
       </p>
 
@@ -368,12 +369,12 @@ export default function ButtonsPage() {
       />
 
       <Highlight
-        theme={themes.vsLight}
+        theme={themes.vsDark}
         code={themeSwitchWithCallbackCode}
         language="tsx"
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: '#e5e7eb' }}>
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (
@@ -389,7 +390,6 @@ export default function ButtonsPage() {
       <Card className="bg-gray-100 border border-gray-200 rounded p-4 mb-12">
         <h3 className="text-lg font-semibold mb-2">ThemeSwitch Props</h3>
         <ul className="space-y-2">
-          <li><code>defaultTheme</code> (optional, default: "light"): Initial theme - "light" or "dark"</li>
           <li><code>onChange</code> (optional): Callback function that receives the new theme value</li>
           <li><code>iconSize</code> (optional, default: 18): Size of the theme icon in pixels</li>
           <li><code>className</code> (optional): Additional CSS classes</li>

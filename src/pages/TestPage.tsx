@@ -105,7 +105,6 @@ export default function TestPage() {
         <IconButton ariaLabel="Settings Button" icon={<FaCheck />} />
         <IconButton ariaLabel="Disabled Settings Button" icon={<FaCheck />} disabled />
         <ThemeSwitch 
-          defaultTheme="light" 
           onChange={(newTheme) => console.log("Theme changed to:", newTheme)} 
         />
       </div>
