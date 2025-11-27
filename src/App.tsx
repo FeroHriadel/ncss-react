@@ -14,6 +14,7 @@ import TopNav from './components/navs/TopNav';
 import LeftNav, { LeftNavPage } from './components/navs/LeftNav';
 import ThemeSwitch from './components/buttons/ThemeSwitch';
 import TestPage from './pages/TestPage';
+import FormsPage from './pages/FormsPage';
 
 
 
@@ -40,14 +41,12 @@ function App() {
         { optionName: 'Virtualized Table', optionUrl: '/tables/virtualizedtable' }
       ]
     },
-    // {
-    //   linkName: 'Constructs',
-    //   options: [ 
-    //     { optionName: 'Navs', optionUrl: '/navs' },
-    //     { optionName: 'Tables', optionUrl: '/tables/table' },
-    //     { optionName: 'Virtualized Table', optionUrl: '/tables/virtualizedtable' }
-    //   ]
-    // }
+    {
+      linkName: 'Constructs',
+      options: [ 
+        { optionName: 'Forms', optionUrl: '/forms' },
+      ]
+    }
   ];
 
   // LeftNav links
@@ -95,6 +94,12 @@ function App() {
         { optionName: 'Virtualized Table', optionUrl: '/tables/virtualizedtable' } 
       ] 
     },
+    {
+      linkName: 'Constructs',
+      options: [ 
+        { optionName: 'Forms', optionUrl: '/forms' },
+      ]
+    }
   ];
 
 
@@ -125,6 +130,7 @@ function App() {
             <Route path="/collapsible" element={<CollapsiblePage />} />
             <Route path="/dialogs" element={<DialogsPage />} />
             <Route path="/dropdowns" element={<DropdownsPage />} />
+            <Route path="/forms" element={<FormsPage />} />
             <Route path="/inputs" element={<InputsPage />} />
             <Route path="/pills" element={<PillsPage />} />
             <Route path="/navs" element={<NavsPage />} />

@@ -89,11 +89,11 @@ export default function useTheme() {
       document.documentElement.style.setProperty('--nc-checkbox-icon', 'var(--nc-black-600)');
       document.documentElement.style.setProperty('--nc-checkbox-label', 'var(--nc-gray-300)');
       document.documentElement.style.setProperty('--nc-input-label', 'var(--nc-gray-400)');
-      document.documentElement.style.setProperty('--nc-input-border', 'var(--nc-gray-700)');
-      document.documentElement.style.setProperty('--nc-input-bg', 'var(--nc-black-800)');
+      document.documentElement.style.setProperty('--nc-input-border', 'var(--nc-gray-500)');
+      document.documentElement.style.setProperty('--nc-input-bg', 'var(--nc-black-700)');
       document.documentElement.style.setProperty('--nc-input-text', 'var(--nc-gray-300)');
-      document.documentElement.style.setProperty('--nc-input-hover-bg', 'var(--nc-black-900)');
-      document.documentElement.style.setProperty('--nc-input-placeholder', 'var(--nc-gray-600)');
+      document.documentElement.style.setProperty('--nc-input-hover-bg', 'var(--nc-black-600)');
+      document.documentElement.style.setProperty('--nc-input-placeholder', 'var(--nc-gray-400)');
       document.documentElement.style.setProperty('--nc-input-message-text', 'var(--nc-gray-400)');
       document.documentElement.style.setProperty('--nc-input-error-text', 'var(--nc-red-300)');
       document.documentElement.style.setProperty('--nc-switch-track-unchecked-bg', 'var(--nc-black-800)');
