@@ -35,6 +35,8 @@
 .top-nav-dropdown-trigger {
   color: var(--nc-nav-text);
   font-weight: 600;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .top-nav-dropdown-trigger:hover {
