@@ -25,8 +25,9 @@ export interface LeftNavProps {
   children?: React.ReactNode;
   width: string;
   top: string;
-  links: LeftNavLink[];
+  links?: LeftNavLink[];
   fixed?: boolean;
+  customContent?: React.ReactNode;
 }
 
 
@@ -38,8 +39,9 @@ export default function LeftNav({
   children,
   width = '280px',
   top = '0px',
-  links,
+  links = [],
   fixed = true,
+  customContent
 }: LeftNavProps) {
 
   // Show/Hide LeftNav functions
@@ -99,6 +101,9 @@ export default function LeftNav({
           onClick={hideLeftNav}
           aria-label="Close left navigation"
         />
+
+        { /* Custom content at the top of the LeftNav */}
+        {customContent}
 
         {links.map((link, index) => {
           // If link has options, render as Collapsible

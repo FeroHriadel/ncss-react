@@ -1,22 +1,21 @@
+import React, { useState } from 'react';
 import Card from "../cards/Card";
 import Input from "../inputs/Input";
 import Email from "../inputs/Email";
 import Password from "../inputs/Password";
 import Button from "../buttons/Button";
 import Break from "../spacers/Break";
-import './SignInForm.css';
+import './SignUpForm.css'; // Reusing SignInForm styles for now as they are likely similar
 import { Link } from "react-router-dom";
 
-
-
-export interface SignInFormData {
+export interface SignUpFormData {
   email?: string;
   username?: string;
   password?: string;
+  confirmPassword?: string;
 }
 
-
-export interface SignInFormProps {
+export interface SignUpFormProps {
   className?: string;
   id?: string;
   style?: React.CSSProperties;
@@ -26,36 +25,36 @@ export interface SignInFormProps {
   email?: boolean;
   username?: boolean;
   password?: boolean;
+  confirmPassword?: boolean;
   passwordMinLength?: number;
   passwordSpecialChar?: boolean;
   passwordNumber?: boolean;
   passwordUpperCase?: boolean;
-  onSubmit: (data: SignInFormData) => void;
+  onSubmit: (data: SignUpFormData) => void;
   validate?: boolean;
   customContent?: React.ReactNode;
-  signUpLink?: string | boolean;
-  resetPasswordLink?: string | boolean;
+  signInLink?: string | boolean;
 }
 
 type FormElements = HTMLFormControlsCollection & {
   email?: HTMLInputElement;
   username?: HTMLInputElement;
   password?: HTMLInputElement;
+  confirmPassword?: HTMLInputElement;
 }
 
-
-
-export default function SignInForm(props: SignInFormProps) {
+export default function SignUpForm(props: SignUpFormProps) {
   const { 
     className = "", 
-    id = "sign-in-form", 
+    id = "sign-up-form", 
     style = {},
     disabled = false,
     loading = false,
-    title = "Please Sign In",  
+    title = "Please Sign Up",  
     email = true, 
     username = false, 
     password = true, 
+    confirmPassword = false,
     passwordMinLength, 
     passwordSpecialChar,
     passwordNumber,
@@ -63,44 +62,63 @@ export default function SignInForm(props: SignInFormProps) {
     onSubmit = () => {},
     validate = true,
     customContent, 
-    signUpLink = true, 
-    resetPasswordLink = true } = props;
+    signInLink = true 
+  } = props;
 
+  const [pwdValue, setPwdValue] = useState('');
+  const [confirmPwdValue, setConfirmPwdValue] = useState('');
+  const [confirmError, setConfirmError] = useState('');
+
+  function handlePasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setPwdValue(e.target.value);
+    if (confirmPassword && confirmPwdValue && e.target.value !== confirmPwdValue) {
+      setConfirmError("Passwords do not match");
+    } else {
+      setConfirmError("");
+    }
+  }
+
+  function handleConfirmPasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setConfirmPwdValue(e.target.value);
+    if (pwdValue && e.target.value !== pwdValue) {
+      setConfirmError("Passwords do not match");
+    } else {
+      setConfirmError("");
+    }
+  }
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-    if (validate && formHasError()) return;
+    
+    if (confirmPassword && pwdValue !== confirmPwdValue) {
+      setConfirmError("Passwords do not match");
+      return;
+    }
+
+    // get email, username and password values
     const formElements = (event.target as HTMLFormElement).elements as FormElements;
-    const { email: emailInput, username: usernameInput, password: passwordInput } = formElements;
-    const data: {[key: string]: string} = {};
+    const { email: emailInput, username: usernameInput, password: passwordInput, confirmPassword: confirmPasswordInput } = formElements;
+    const data: SignUpFormData = {};
     if (email && emailInput) data.email = emailInput.value;
     if (username && usernameInput) data.username = usernameInput.value;
     if (password && passwordInput) data.password = passwordInput.value;
+    if (confirmPassword && confirmPasswordInput) data.confirmPassword = confirmPasswordInput.value;
+    
     onSubmit(data);
   }
 
   function isTitleText() {
     return typeof title === 'string';
   }
-
-  function formHasError() {
-    const formEl = document.getElementById(id) as HTMLFormElement;
-    if (!formEl) return false;
-    const emailError = formEl.querySelector('.email-error-message');
-    const usernameError = formEl.querySelector('.input-error-message');
-    const passwordError = formEl.querySelector('.password-error-message');
-    return !!(emailError || usernameError || passwordError);
-  }
-
   
   return (
-    <Card className={`sign-in-wrap ${className}`} style={style}>
+    <Card className={`sign-up-wrap ${className}`} style={style}>
       {/* Title Section - can be string or custom HTML */}
       {
         isTitleText() 
         ? 
         <>
-          <h2 className="sign-in-form-title">{title}</h2> 
+          <h2 className="sign-up-form-title">{title}</h2> 
           <Break amount={1} />
         </>
         : 
@@ -108,7 +126,7 @@ export default function SignInForm(props: SignInFormProps) {
       }
 
       {/* Form */}
-      <form className="sign-in-form" onSubmit={handleSubmit} id={id}>
+      <form className="sign-up-form" onSubmit={handleSubmit} id={id}>
         { /* Email Input */ }
         {
           email
@@ -120,7 +138,7 @@ export default function SignInForm(props: SignInFormProps) {
               id="email"
               placeholder="Enter your email"
               required
-              validate
+              validate={validate}
               width="100%"
               disabled={disabled}
             />
@@ -158,7 +176,7 @@ export default function SignInForm(props: SignInFormProps) {
               id="password"
               placeholder="Enter your password"
               required
-              validate
+              validate={validate}
               width="100%"
               minLength={passwordMinLength}
               requireSpecialCharacter={passwordSpecialChar}
@@ -166,40 +184,50 @@ export default function SignInForm(props: SignInFormProps) {
               requireUpperCase={passwordUpperCase}
               disabled={disabled}
               canShowPassword
+              onChange={handlePasswordChange}
             />
             <Break amount={1} />
           </>
         }
 
-        <Button type="submit" variant="dark" disabled={disabled}>
-          {loading ? 'Loading...' : 'Sign In'}
-        </Button>
+        { /* Confirm Password Input */ }
+        {
+          confirmPassword
+          &&
+          <>
+            <Password
+              label="Confirm Password"
+              name="confirmPassword"
+              id="confirmPassword"
+              placeholder="Confirm your password"
+              required
+              validate
+              width="100%"
+              disabled={disabled}
+              canShowPassword
+              onChange={handleConfirmPasswordChange}
+              errorMessage={confirmError}
+            />
+            <Break amount={1} />
+          </>
+        }
 
+        <Button type="submit" variant="dark" disabled={disabled || (confirmPassword && !!confirmError)}>
+          {loading ? 'Loading...' : 'Sign Up'}
+        </Button>
 
         { /* Custom Content */ }
         {customContent}
 
 
-        { /* Sign up link */ }
+        { /* Sign in link */ }
         {
-          signUpLink
+          signInLink
           &&
-          <span className="sign-in-form-link">
-            <i>Don't have an account? {' '}</i>
-            <Link to={typeof signUpLink === 'string' ? signUpLink : '/signup'}>
-              <b>Sign Up!</b>
-            </Link>
-          </span>
-        }
-
-        { /* Reset password link */ }
-        {
-          resetPasswordLink
-          &&
-          <span className="sign-in-form-link">
-            <i>Forgot password? {' '}</i>
-            <Link to={typeof resetPasswordLink === 'string' ? resetPasswordLink : '/reset-password'}>
-              <b>Reset Password.</b>
+          <span className="sign-up-form-link">
+            <i>Already have an account? {' '}</i>
+            <Link to={typeof signInLink === 'string' ? signInLink : '/signin'}>
+              <b>Sign In!</b>
             </Link>
           </span>
         }

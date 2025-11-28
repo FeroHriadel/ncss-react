@@ -51,7 +51,7 @@ export default function InputsPage() {
   const [description, setDescription] = useState('');
   const [accepted, setAccepted] = useState(false);
   const [notifications, setNotifications] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]); console.log(uploadedFiles);
 
   const inputRef = useRef<InputHandle>(null);
   const emailRef = useRef<EmailHandle>(null);

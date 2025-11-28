@@ -492,11 +492,17 @@ export default function NavsPage() {
               <td className="py-2 pr-4">true</td>
               <td className="py-2">Whether the nav is fixed to the left side</td>
             </tr>
-            <tr>
+            <tr className='border-b'>
               <td className="py-2 pr-4"><code>children</code></td>
               <td className="py-2 pr-4">React.ReactNode</td>
               <td className="py-2 pr-4">-</td>
               <td className="py-2">Additional content at the bottom of the sidebar</td>
+            </tr>
+            <tr>
+              <td className="py-2 pr-4"><code>customContent</code></td>
+              <td className="py-2 pr-4">React.ReactNode</td>
+              <td className="py-2 pr-4">-</td>
+              <td className="py-2">Additional content at the top of the sidebar</td>
             </tr>
           </tbody>
         </table>
