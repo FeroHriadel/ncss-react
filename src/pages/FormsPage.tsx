@@ -17,7 +17,7 @@ export default function FormsPage() {
 
   return (
     <Container className="pt-24 px-4 pb-8">
-      <SignInForm onSubmit={handleSignInSubmit} loading={signInLoading} disabled={signInLoading} />
+      <SignInForm onSubmit={handleSignInSubmit} loading={signInLoading} disabled={signInLoading} validate />
     </Container>
   );
 }

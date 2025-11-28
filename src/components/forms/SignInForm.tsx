@@ -31,6 +31,7 @@ export interface SignInFormProps {
   passwordNumber?: boolean;
   passwordUpperCase?: boolean;
   onSubmit: (data: SignInFormData) => void;
+  validate?: boolean;
   customContent?: React.ReactNode;
   signUpLink?: string;
   resetPasswordLink?: string;
@@ -60,6 +61,7 @@ export default function SignInForm(props: SignInFormProps) {
     passwordNumber,
     passwordUpperCase, 
     onSubmit = () => {},
+    validate = true,
     customContent, 
     signUpLink = true, 
     resetPasswordLink = true } = props;
@@ -128,7 +130,7 @@ export default function SignInForm(props: SignInFormProps) {
               id="username"
               placeholder="Enter your user name"
               required
-              validate
+              validate={validate}
               width="100%"
               disabled={disabled}
             />
@@ -154,6 +156,7 @@ export default function SignInForm(props: SignInFormProps) {
               requireNumber={passwordNumber}
               requireUpperCase={passwordUpperCase}
               disabled={disabled}
+              canShowPassword
             />
             <Break amount={1} />
           </>
