@@ -109,6 +109,17 @@
   --nc-switch-track-checked-hover-bg: var(--nc-gray-950);
   --nc-switch-thumb-bg: var(--nc-gray-100);
 
+    /* Navs */
+  --nc-nav-bg: var(--nc-gray-200);
+  --nc-nav-text: var(--nc-gray-700);
+  --nc-nav-text-hover: var(--nc-gray-900);
+  --nc-nav-option-hover-bg: var(--nc-gray-100);
+  --nc-nav-border: var(--nc-gray-300);
+  --nc-topdeck-nav-bg: rgba(255, 255, 255, 0.7);
+  --nc-topdeck-nav-border: var(--nc-gray-300);
+  --nc-topdeck-nav-text: var(--nc-gray-700);
+  --nc-topdeck-nav-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+
   /* Pills */
   --nc-pill-bg: var(--nc-gray-100);
   --nc-pill-text: var(--nc-gray-600);
@@ -133,13 +144,6 @@
    --nc-toast-error-bg: var(--nc-red-900);
   --nc-toast-error-text: var(--nc-white);
   --nc-toast-error-border: var(--nc-black-800);
-
-  /* Navs */
-  --nc-nav-bg: var(--nc-gray-200);
-  --nc-nav-text: var(--nc-gray-700);
-  --nc-nav-text-hover: var(--nc-gray-900);
-  --nc-nav-option-hover-bg: var(--nc-gray-100);
-  --nc-nav-border: var(--nc-gray-300);
 }
 
 * {
