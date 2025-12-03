@@ -5,7 +5,7 @@
   min-height: 35px;
   padding: 0.5rem; /* p-2 */
   border-radius: 0.25rem; /* rounded */
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   appearance: none;

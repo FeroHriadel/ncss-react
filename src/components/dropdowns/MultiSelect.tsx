@@ -27,6 +27,8 @@ export interface MultiSelectProps {
   openX?: "left" | "right";
   openY?: "up" | "down";
   width?: string;
+  label?: string;
+  required?: boolean;
 }
 
 export interface MultiSelectHandle {
@@ -55,7 +57,9 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
     onChange,
     openX,
     openY,
-    width
+    width,
+    label,
+    required = false,
   },
   ref
 ) {
@@ -103,6 +107,7 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
   // Should options open to the right or left
   function hasSpaceOnRight() {
     if (openX === "left") return false;
+    if (openX === "right") return true;
     if (!triggerRef.current) return false;
     const { right: triggerRight } = triggerRef.current.getBoundingClientRect();
     const menuWidth = Math.max(triggerWidth || 0, 200);
@@ -167,6 +172,8 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
     return `${selectedOptions.length} selected`;
   };
 
+  const multiselectId = id || `ncss-multiselect-${Math.random().toString(10)}`;
+
 
   // Render
   return (
@@ -177,9 +184,19 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
         pointerEvents: disabled ? 'none' : 'auto', width: width || 'auto', 
         ...style }} 
       ref={dropdownRef} 
-      id={id}
+      id={multiselectId}
     >
       
+      {label && (
+        <label
+          htmlFor={multiselectId}
+          className="multiselect-label"
+        >
+          {label}
+          {required && <span className="multiselect-required-mark">*</span>}
+        </label>
+      )}
+
       {/* Trigger */}
       {trigger ? (
         <span

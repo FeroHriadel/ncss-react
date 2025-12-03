@@ -26,6 +26,7 @@ export interface TableProps {
   filterPresets?: FilterPreset[];
   className?: string;
   style?: React.CSSProperties;
+  id?: string;
   controlBarClassName?: string;
   controlBarStyle?: React.CSSProperties;
   headerClassName?: string;
@@ -47,6 +48,7 @@ function Table({
   filterPresets,
   style, 
   className,
+  id='ncss-table',
   ariaLabel,
   ariaDescribedBy,
   controlBarClassName,
@@ -62,12 +64,11 @@ function Table({
 
     // COLUMNS    
       // Determine columns from config or infer from data
-      function getColumns() {
+      const columns = React.useMemo(() => {
         if (columnsConfig && columnsConfig.length > 0) return columnsConfig;
         if (data.length > 0) return Object.keys(data[0]).map(key => ({ column: key, displayValue: key }));
         return [];
-      }
-      const columns = getColumns();
+      }, [columnsConfig, data]);
       
       // Get column width style
       function getColumnStyle(columnObj: { column: string; displayValue: string; width?: string }) {
@@ -109,29 +110,6 @@ function Table({
         handleZoomIn,
         handleZoomOut,
       } = useTableZoom(1, 0.5, 1.5, 0.1);
-
-      // Lock section height to prevent jumping
-      const sectionRef = React.useRef<HTMLElement>(null);
-      const [lockedHeight, setLockedHeight] = React.useState<string | null>(null);
-      
-      React.useEffect(() => {
-        // Measure and lock height on first render
-        if (sectionRef.current && !lockedHeight) {
-          const measuredHeight = sectionRef.current.getBoundingClientRect().height;
-          setLockedHeight(`${measuredHeight}px`);
-        }
-      }, [lockedHeight]);
-
-      // Lock header height to prevent body height changes during zoom
-      const [lockedHeaderHeight, setLockedHeaderHeight] = React.useState<string | null>(null);
-      
-      React.useEffect(() => {
-        // Measure and lock header height on first render
-        if (headerRef.current && !lockedHeaderHeight) {
-          const measuredHeaderHeight = headerRef.current.getBoundingClientRect().height;
-          setLockedHeaderHeight(`${measuredHeaderHeight}px`);
-        }
-      }, [lockedHeaderHeight]);
 
       // Preserve scroll position during zoom changes
       const previousZoomRef = React.useRef(zoomLevel);
@@ -176,15 +154,11 @@ function Table({
     // RENDER
     return (
       /* MAIN WRAPPER - WRAPS EVERYTHING */
-      <section 
-        ref={sectionRef}
-        className={`virtualized-table-wrap ${className || ''}`}
+      <section
+        id={id}
+        className={`table-wrap ${className || ''}`}
         style={{
           willChange: 'contents',
-          height: lockedHeight || 'auto',
-          minHeight: lockedHeight || 'auto',
-          maxHeight: lockedHeight || 'auto',
-          overflow: 'hidden',
           ...style
         }}
         role="region"
@@ -200,7 +174,7 @@ function Table({
             maxZoom={maxZoom}
             handleZoomIn={handleZoomIn}
             handleZoomOut={handleZoomOut}
-            columns={getColumns()}
+            columns={columns}
             setColumnsFilter={setColumnsFilter}
             filterState={filterState}
             setFilterConditions={setFilterConditions}
@@ -217,7 +191,7 @@ function Table({
         {/* Header and Body wrapper */}
         <div 
           ref={wrapperRef}
-          className="virtualized-table-wrapper"
+          className="table-wrapper"
           tabIndex={0}
           onKeyDown={handleKeyDown}
           onClick={() => wrapperRef.current?.focus()}
@@ -227,8 +201,8 @@ function Table({
         >
           
           {/* Fixed Header */}
-          <div className="virtualized-table-header-body-wrapper">
-            <div className="virtualized-table-header-container">
+          <div className="table-header-body-wrapper">
+            <div className="table-header-container">
               <TableHeader
                 headerRef={headerRef as React.RefObject<HTMLDivElement>}
                 visibleColumns={filteredColumns}
@@ -241,16 +215,11 @@ function Table({
                 sortDirection={filterState.sortDirection}
                 setSortColumn={setSortColumn}
                 headerClassName={headerClassName}
-                headerStyle={{
-                  height: lockedHeaderHeight || undefined,
-                  minHeight: lockedHeaderHeight || undefined,
-                  maxHeight: lockedHeaderHeight || undefined,
-                  ...headerStyle
-                }}
+                headerStyle={headerStyle}
               />
             </div>
             {/* Spacer to account for custom scrollbar */}
-            <div className="virtualized-table-scrollbar-spacer"></div>
+            <div className="table-scrollbar-spacer"></div>
           </div>
 
           {/* Table Body */}

@@ -1,0 +1,4 @@
+.nc-label {
+  font-size: 0.875rem; /* text-sm */
+  color: var(--nc-input-label); /* text-gray-600 */
+}

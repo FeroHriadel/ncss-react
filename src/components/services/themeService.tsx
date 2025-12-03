@@ -117,6 +117,15 @@ export default function useTheme() {
       document.documentElement.style.setProperty('--nc-table-row-striped-bg', 'var(--nc-black-700)');
       document.documentElement.style.setProperty('--nc-table-row-hover-bg', 'var(--nc-black-600)');
 
+      // toasts
+      document.documentElement.style.setProperty('--nc-toast-bg', 'var(--nc-black-700)');
+      document.documentElement.style.setProperty('--nc-toast-text', 'var(--nc-gray-300)');
+      document.documentElement.style.setProperty('--nc-toast-border', 'var(--nc-gray-500)');
+      document.documentElement.style.setProperty('--nc-toast-shadow', '0 4px 6px rgba(255, 255, 255, 0.1), 0 10px 10px -1px rgba(255, 255, 255, 0.06)');
+      document.documentElement.style.setProperty('--nc-toast-error-bg', 'var(--nc-red-950)');
+      document.documentElement.style.setProperty('--nc-toast-error-text', 'var(--nc-gray-300)');
+      document.documentElement.style.setProperty('--nc-toast-error-border', 'var(--nc-black-700)');
+
       //navs
       document.documentElement.style.setProperty('--nc-nav-bg', 'var(--nc-black-700)');
       document.documentElement.style.setProperty('--nc-nav-text', 'var(--nc-gray-300)');
@@ -213,6 +222,15 @@ export default function useTheme() {
       document.documentElement.style.setProperty('--nc-table-row-bg', 'var(--nc-white)');
       document.documentElement.style.setProperty('--nc-table-row-striped-bg', 'var(--nc-gray-100)');
       document.documentElement.style.setProperty('--nc-table-row-hover-bg', 'var(--nc-gray-200)');
+
+      // toasts
+      document.documentElement.style.setProperty('--nc-toast-bg', 'var(--nc-white)');
+      document.documentElement.style.setProperty('--nc-toast-text', 'var(--nc-gray-700)');
+      document.documentElement.style.setProperty('--nc-toast-border', 'var(--nc-gray-300)');
+      document.documentElement.style.setProperty('--nc-toast-shadow', '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)');
+      document.documentElement.style.setProperty('--nc-toast-error-bg', 'var(--nc-red-900)');
+      document.documentElement.style.setProperty('--nc-toast-error-text', 'var(--nc-white)');
+      document.documentElement.style.setProperty('--nc-toast-error-border', 'var(--nc-black-800)');
 
       //navs
       document.documentElement.style.setProperty('--nc-nav-bg', 'var(--nc-gray-200)');

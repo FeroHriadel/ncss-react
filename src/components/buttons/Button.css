@@ -15,6 +15,7 @@
   align-items: center;
   font-weight: 500; /* font-medium */
   transition: all 0.15s ease-in-out;
+  vertical-align: top; /* Align with inline-block elements like Input and Select */
 }
 
 .button-base:active {

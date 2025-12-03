@@ -25,6 +25,8 @@ export interface SelectProps {
 	openX?: "left" | "right";
 	openY?: "up" | "down";
 	width?: string;
+	label?: string;
+	required?: boolean;
 }
 
 export interface SelectHandle {
@@ -51,7 +53,9 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 		onChange,
 		openX,
 		openY,
-		width,
+		width = '200px',
+		label,
+		required = false,
 	},
 	ref
 ) {
@@ -105,6 +109,7 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 
 	function hasSpaceOnRight() {
 		if (openX === "left") return false;
+		if (openX === "right") return true;
 		if (!triggerRef.current) return false;
 		const { right: triggerRight } = triggerRef.current.getBoundingClientRect();
 		const menuWidth = (measuredMenuWidth && measuredMenuWidth > triggerWidth)
@@ -154,26 +159,41 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 		? measuredMenuWidth
 		: Math.max(triggerWidth || 0, 200);
 
+	const selectId = id || `ncss-select-${Math.random().toString(10)}`;
+
 		return (
 			<div 
 				className={`select-wrapper ${className || ''}`}
 				style={{ width, opacity: disabled ? 0.5 : 1, pointerEvents: disabled ? 'none' : 'auto', ...style }} 
 				ref={dropdownRef} 
-				id={id}
+				id={selectId}
 			>
-				{trigger ? (
+				{label && (
+					<label
+						htmlFor={selectId}
+						className="select-label"
+					>
+						{label}
+						{required && <span className="select-required-mark">*</span>}
+					</label>
+				)}
+				{
+					trigger 
+					?
+					/* Custom Trigger */
 					<span ref={triggerRef} onClick={disabled ? undefined : toggleDropdownOpen} className="select-trigger-custom">
 						{trigger}
 					</span>
-				) : (
+					:
+					/* Default Trigger */
 					<span ref={triggerRef} className="select-trigger-default">
 						<Button
 							onClick={toggleDropdownOpen}
 							disabled={disabled}
 							title={title}
-              variant="outline"
+              				variant="outline"
 							className="!justify-start active:scale-[1] w-full overflow-hidden"
-              style={{ width: '100%' }}
+              				style={{ width: width ? width : '200px', ...style }}
 						>
 							{/* Invisible placeholder to maintain button height */}
 							<span className="select-button-placeholder">-</span>
@@ -190,7 +210,7 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 						</span>
 						<FaChevronDown className="select-chevron" aria-hidden="true" />
 					</span>
-				)}
+				}
 
 				{/* Options Menu */}
 				{open && (

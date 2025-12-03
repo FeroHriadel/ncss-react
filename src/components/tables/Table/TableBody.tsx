@@ -194,6 +194,7 @@ const TableBody: React.FC<TableBodyProps> = ({
               onMouseLeave={() => setHoveredRowIndex(null)}
               role="row"
               aria-rowindex={rowIndex + 1}
+              data-row={JSON.stringify(row)}
             >
               {/* Table cells */}
               {columns.map((col, colIndex) => {

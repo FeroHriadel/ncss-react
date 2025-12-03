@@ -3,7 +3,7 @@
 .checkbox-container {
   display: inline-flex;
   align-items: center;
-  vertical-align: middle;
+  vertical-align: center;
 }
 
 .checkbox-wrapper {

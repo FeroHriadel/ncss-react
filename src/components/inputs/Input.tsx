@@ -24,6 +24,9 @@ export interface InputProps {
   title?: string;
   autoComplete?: string;
   validate?: boolean;
+  defaultValue?: string | number;
+  inputStyle?: React.CSSProperties;
+  inputClassName?: string;
 }
 
 export interface InputHandle {
@@ -52,6 +55,9 @@ const Input = forwardRef<InputHandle, InputProps>((props, ref) => {
     title,
     autoComplete,
     validate = false,
+    defaultValue,
+    inputStyle,
+    inputClassName
   } = props;
   const inputRef = useRef<HTMLInputElement>(null);
   const [internalError, setInternalError] = useState<string>('');
@@ -125,8 +131,9 @@ const Input = forwardRef<InputHandle, InputProps>((props, ref) => {
           required={required}
           title={title}
           autoComplete={autoComplete}
-          className={`input-field ${disabled ? 'input-field-disabled' : ''}`}
-          style={width ? { width } : undefined}
+          className={`input-field ${disabled ? 'input-field-disabled ' + inputClassName : inputClassName}`}
+          style={{width: width ? width : undefined, ...inputStyle }}
+          defaultValue={defaultValue}
         />
         {displayError && (
           <p className='input-error-message'>

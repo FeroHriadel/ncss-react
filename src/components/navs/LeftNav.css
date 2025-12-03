@@ -97,8 +97,7 @@
 }
 
 .left-nav-page {
-  min-height: 100vh;
-  padding-top: 2rem;
+  padding-bottom: 2rem;
   padding-left: 1rem;
   padding-right: 1rem;
 }

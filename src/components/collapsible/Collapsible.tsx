@@ -9,6 +9,8 @@ export interface CollapsibleProps {
   defaultOpen?: boolean;
   children: React.ReactNode;
   trigger: React.ReactNode;
+  triggerWrapStyle?: React.CSSProperties;
+  triggerWrapClassName?: string;
   onToggle?: (isOpen: boolean) => void;
 }
 
@@ -21,6 +23,8 @@ export default function Collapsible({
   defaultOpen = false,
   children,
   trigger,
+  triggerWrapStyle,
+  triggerWrapClassName,
   onToggle,
 }: CollapsibleProps) {
 
@@ -35,18 +39,18 @@ export default function Collapsible({
   }
 
   return (
-    <>
-      <span className="collapsible-trigger" onClick={toggleOpen}>
+    <div className={`collapsible-wrap ${className || ''}`} id={id} style={style}>
+      <span className={`collapsible-trigger ${triggerWrapClassName || ''}`} style={triggerWrapStyle} onClick={toggleOpen}>
         {trigger}
       </span>
 
       {
         isOpen 
         && 
-        <div className={`collapsible-body ${className || ''}`} id={id} style={style}>
+        <div className="collapsible-body" >
           {children}
         </div>
       }
-    </>
+    </div>
   )
 }

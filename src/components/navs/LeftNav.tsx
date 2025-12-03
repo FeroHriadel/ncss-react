@@ -120,6 +120,8 @@ export default function LeftNav({
                       <FaChevronDown size={10} className="left-nav-chevron" style={{ color: 'var(--nc-nav-text)' }} />
                   </button>
                 }
+                style={{width: '100%'}}
+                triggerWrapStyle={{width: '100%'}}
               >
                 {link.options.map((opt) => (
                   <Link 
@@ -180,7 +182,7 @@ export function LeftNavPage({ top = '96px', left = '200px', children, className,
 
       <div
         className={`left-nav-page ${className || ''}`}
-        style={{ top, ...style }}
+        style={{ paddingTop: `calc(${top} + 2rem)`, ...style }}
         id={id}
       >
         {children}

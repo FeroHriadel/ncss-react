@@ -22,6 +22,8 @@ export interface DropdownProps {
   openX?: "left" | "right";
   openY?: "up" | "down";
   onChange?: (selectedOption: string | null) => void;
+  label?: string;
+  required?: boolean;
 }
 
 export interface DropdownHandle {
@@ -34,7 +36,7 @@ export interface DropdownHandle {
 
 
 const Dropdown = forwardRef<DropdownHandle, DropdownProps>(function Dropdown(
-  { options, className, style, optionsClassName, optionsStyle, id, disabled, trigger, children, closeOnSelect = true, openX, openY, onChange = () => {} },
+  { options, className, style, optionsClassName, optionsStyle, id, disabled, trigger, children, closeOnSelect = true, openX, openY, onChange = () => {}, label, required = false },
   ref
 ) {
   
@@ -109,6 +111,8 @@ const Dropdown = forwardRef<DropdownHandle, DropdownProps>(function Dropdown(
     isOpen: () => isOpen,
   }), [isOpen]);
 
+  const dropdownId = id || `ncss-dropdown-${Math.random().toString(10)}`;
+
 
   // Render 
   return (
@@ -116,9 +120,19 @@ const Dropdown = forwardRef<DropdownHandle, DropdownProps>(function Dropdown(
     <div 
       ref={wrapperRef}
       className={`dropdown-wrapper ${disabled ? '' : 'dropdown-not-disabled '}${className || ''}`}
-      id={id} 
+      id={dropdownId} 
       style={{ opacity: disabled ? 0.5 : 1, pointerEvents: disabled ? 'none' : 'auto', ...style }}
     >
+
+      {label && (
+        <label
+          htmlFor={dropdownId}
+          className="dropdown-label"
+        >
+          {label}
+          {required && <span className="dropdown-required-mark">*</span>}
+        </label>
+      )}
 
       {/* trigger button - render trigger or children (children has precedence) */}
       <span 

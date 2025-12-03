@@ -34,6 +34,15 @@ export function useTableFilter({ data, columns }: UseTableFilterOptions) {
   // Loading state - indicates when data is being filtered/sorted
   const [isSorting, setIsSorting] = useState(false);
 
+  // Update filter state when columns change (e.g., when data loads)
+  useEffect(() => {
+    setFilterState(prev => ({
+      ...prev,
+      columnsFilter: columns.map(col => col.column),
+      columnOrder: columns.map(col => col.column),
+    }));
+  }, [columns]);
+
 
   // HELPER FUNCTIONS
   // Normalize any value to string for comparison

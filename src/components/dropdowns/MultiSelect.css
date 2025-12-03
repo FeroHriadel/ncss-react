@@ -5,6 +5,16 @@
   display: inline-block;
 }
 
+.multiselect-label {
+  margin-bottom: 0.5rem; /* mb-2 */
+  font-size: 0.875rem; /* text-sm */
+  color: var(--nc-input-label); /* text-gray-600 */
+}
+
+.multiselect-required-mark {
+  margin-left: 0.25rem; /* ml-1 */
+}
+
 .multiselect-trigger-custom {
   display: inline-block;
   outline: none;

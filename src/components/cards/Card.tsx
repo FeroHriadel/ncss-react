@@ -11,6 +11,7 @@ export interface CardProps {
   ariaLabel?: string;
   ariaLabelledBy?: string;
   role?: string;
+  width?: string
 }
 
 
@@ -21,16 +22,17 @@ export default function Card({
   id, 
   ariaLabel, 
   ariaLabelledBy,
-  role = 'article'
+  role = 'article',
+  width
 }: CardProps) {
   return (
     <div 
       className={`card ${className}`} 
-      style={style} 
       id={id}
       role={role}
       aria-label={ariaLabel}
       aria-labelledby={ariaLabelledBy}
+      {...(width ? { style: { ...style, width } } : {})}
     >
       {children}
     </div>

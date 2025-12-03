@@ -5,7 +5,6 @@
   display: inline-block;
   user-select: none;
   position: relative;
-  width: 100%;
 }
 
 .collapsible-body {

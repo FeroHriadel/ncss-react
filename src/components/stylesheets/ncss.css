@@ -125,6 +125,15 @@
   --nc-table-row-striped-bg: var(--nc-gray-100);
   --nc-table-row-hover-bg: var(--nc-gray-200);
 
+  /* Toasts */
+  --nc-toast-bg: var(--nc-white);
+  --nc-toast-text: var(--nc-gray-700);
+  --nc-toast-border: var(--nc-gray-300);
+  --nc-toast-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+   --nc-toast-error-bg: var(--nc-red-900);
+  --nc-toast-error-text: var(--nc-white);
+  --nc-toast-error-border: var(--nc-black-800);
+
   /* Navs */
   --nc-nav-bg: var(--nc-gray-200);
   --nc-nav-text: var(--nc-gray-700);
@@ -151,4 +160,5 @@ h1, h2, h3, h4, h5, h6 {
 
 a {
   outline-offset: 3px;
+  outline-color: var(--nc-gray-600);
 }
