@@ -34,6 +34,7 @@ interface VirtualizedTableBodyProps {
   measureElement: (node: HTMLTableRowElement | null, index: number) => void;
   bodyClassName?: string;
   bodyStyle?: React.CSSProperties;
+  controlBarHeight?: number;
 }
 
 
@@ -57,7 +58,8 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
   hover,
   getTotalSize,
   getVirtualItems,
-  measureElement
+  measureElement,
+  controlBarHeight = 0
 }) => {
 
   // VALUES
@@ -227,6 +229,11 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
   
   
   // RENDER
+  // Calculate adjusted height by subtracting control bar height
+  const baseHeight = parseInt(height) || 400;
+  const adjustedHeight = controlBarHeight > 0 ? `${baseHeight}px` : height;
+  const adjustedMaxHeight = controlBarHeight > 0 ? `${baseHeight}px` : height;
+
   return (
   <div className="vt-body-wrapper">
     {/* Main scrollable container */}
@@ -234,10 +241,10 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
       ref={bodyRef}
       className="vt-body"
       style={{
-        height: totalSize > 0 && totalSize < (parseInt(height) || 400) 
+        height: totalSize > 0 && totalSize < baseHeight 
           ? `${totalSize}px` 
-          : height,
-        maxHeight: height,
+          : adjustedHeight,
+        maxHeight: adjustedMaxHeight,
         scrollbarWidth: 'none',
         msOverflowStyle: 'none',
       }}
@@ -396,9 +403,9 @@ const VirtualizedTableBody: React.FC<VirtualizedTableBodyProps> = ({
       ref={scrollbarRef}
       className="vt-scrollbar"
       style={{ 
-        height: totalSize > 0 && totalSize < (parseInt(height) || 400) 
+        height: totalSize > 0 && totalSize < baseHeight 
           ? `${totalSize}px` 
-          : height
+          : adjustedHeight
       }}
       onMouseDown={handleScrollbarMouseDown}
     >

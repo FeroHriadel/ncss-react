@@ -60,6 +60,7 @@ function VirtualizedTable({
     const bodyRef = React.useRef<HTMLDivElement | null>(null);
     const scrollbarRef = React.useRef<HTMLDivElement | null>(null);
     const wrapperRef = React.useRef<HTMLDivElement>(null);
+    const controlBarRef = React.useRef<HTMLDivElement>(null);
 
     // COLUMNS    
       // Determine columns from config or infer from data
@@ -114,6 +115,8 @@ function VirtualizedTable({
       // Lock section height to prevent jumping
       const sectionRef = React.useRef<HTMLElement>(null);
       const [lockedHeight, setLockedHeight] = React.useState<string | null>(null);
+      const [controlBarHeight, setControlBarHeight] = React.useState<number>(0);
+      const [initialControlBarHeight, setInitialControlBarHeight] = React.useState<number>(0);
       
       React.useEffect(() => {
         // Measure and lock height on first render
@@ -122,6 +125,28 @@ function VirtualizedTable({
           setLockedHeight(`${measuredHeight}px`);
         }
       }, [lockedHeight]);
+
+      // Track control bar height (including filter pills when they appear)
+      React.useEffect(() => {
+        if (controlBarRef.current) {
+          const height = controlBarRef.current.getBoundingClientRect().height;
+          
+          // Store initial height on first measurement
+          if (initialControlBarHeight === 0) {
+            setInitialControlBarHeight(height);
+          }
+          
+          setControlBarHeight(height);
+          
+          // Adjust locked section height when control bar height changes
+          if (lockedHeight && initialControlBarHeight > 0) {
+            const heightDiff = height - initialControlBarHeight;
+            const currentLockedHeight = parseInt(lockedHeight);
+            const newLockedHeight = currentLockedHeight + heightDiff;
+            setLockedHeight(`${newLockedHeight}px`);
+          }
+        }
+      }, [filterState.conditions.length]); // Re-measure when filters change
 
       // Lock header height to prevent body height changes during zoom
       const [lockedHeaderHeight, setLockedHeaderHeight] = React.useState<string | null>(null);
@@ -202,6 +227,7 @@ function VirtualizedTable({
         {/* Control Bar */}
         {controls && (
           <VirtualizedTableControlBar
+            ref={controlBarRef}
             zoomLevel={zoomLevel}
             minZoom={minZoom}
             maxZoom={maxZoom}
@@ -281,6 +307,7 @@ function VirtualizedTable({
           getTotalSize={getTotalSize}
           getVirtualItems={getVirtualItems}
           measureElement={measureElement}
+          controlBarHeight={controlBarHeight}
         />
         </div>
       </section>

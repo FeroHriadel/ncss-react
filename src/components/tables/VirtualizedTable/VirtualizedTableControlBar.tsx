@@ -37,7 +37,7 @@ interface ControlBarProps {
 
 
 
-const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
+const VirtualizedTableControlBar = React.forwardRef<HTMLDivElement, ControlBarProps>(({
   zoomLevel,
   minZoom,
   maxZoom,
@@ -54,7 +54,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
   controlBarClassName,
   controlBarStyle,
   isSorting,
-}) => {
+}, ref) => {
 
   // Refs & values
   const multiselectRef = React.useRef<MultiSelectHandle>(null);
@@ -115,7 +115,7 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
 
   // Render
   return (
-    <>
+    <div ref={ref}>
       {/* Row number (left side) and controls (right side) Container */}
       <div 
         className={`vt-control-bar ${controlBarClassName || ''}`} 
@@ -221,8 +221,10 @@ const VirtualizedTableControlBar: React.FC<ControlBarProps> = ({
           </div>
         </div>
       )}
-    </>
+    </div>
   )
-};
+});
+
+VirtualizedTableControlBar.displayName = 'VirtualizedTableControlBar';
 
 export default VirtualizedTableControlBar;
