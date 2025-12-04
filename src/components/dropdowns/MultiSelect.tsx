@@ -70,6 +70,7 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
   const [open, setOpen] = React.useState(false);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
   const [selectedOptions, setSelectedOptions] = React.useState<string[]>([...preselectedOptions]);
+  const [focusedIndex, setFocusedIndex] = React.useState(-1);
 
   // Trigger width: ensure dropdown is at least as wide as the trigger (or 200px)
   const triggerRef = React.useRef<HTMLSpanElement | null>(null);
@@ -127,17 +128,35 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
   }
 
   // Toggle dropdown open state
-  function toggleDropdownOpen() { setOpen((prev) => !prev); }
+  function toggleDropdownOpen() { 
+    setOpen((prev) => {
+      if (!prev) {
+        // Opening
+        setFocusedIndex(0);
+      } else {
+        // Closing
+        setFocusedIndex(-1);
+        // Focus will return to trigger automatically when menu closes
+      }
+      return !prev;
+    });
+  }
 
 
   // Close dropdown when clicking outside
   React.useEffect(() => {
     function handleClickOutside (event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) setOpen(false);
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setOpen(false);
+        setFocusedIndex(-1);
+      }
     }
     
     function handleEscapeKey(event: KeyboardEvent) {
-      if (event.key === 'Escape') setOpen(false);
+      if (event.key === 'Escape') {
+        setOpen(false);
+        setFocusedIndex(-1);
+      }
     }
     
     if (open) {
@@ -175,6 +194,31 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
   };
 
   const multiselectId = id || `ncss-multiselect-${Math.random().toString(10)}`;
+  const menuId = `${multiselectId}-menu`;
+
+  // Keyboard navigation for dropdown menu
+  function handleMenuKeyDown(e: React.KeyboardEvent) {
+    if (!open) return;
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setFocusedIndex(prev => (prev + 1) % options.length);
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setFocusedIndex(prev => (prev - 1 + options.length) % options.length);
+        break;
+      case 'Home':
+        e.preventDefault();
+        setFocusedIndex(0);
+        break;
+      case 'End':
+        e.preventDefault();
+        setFocusedIndex(options.length - 1);
+        break;
+    }
+  }
 
 
   // Render
@@ -209,6 +253,7 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
           role="button"
           aria-haspopup="listbox"
           aria-expanded={open}
+          aria-controls={menuId}
           aria-label={title}
           tabIndex={0}
           className="multiselect-trigger-custom"
@@ -219,24 +264,52 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
             }
             if (e.key === 'Escape' && open) {
               setOpen(false);
+              setFocusedIndex(-1);
+            }
+            if (e.key === 'ArrowDown' && !open) {
+              e.preventDefault();
+              setOpen(true);
+              setFocusedIndex(0);
+            }
+            if (e.key === 'ArrowUp' && !open) {
+              e.preventDefault();
+              setOpen(true);
+              setFocusedIndex(options.length - 1);
             }
           }}
         >
           {trigger}
         </span>
       ) : (
-        <span ref={triggerRef} className="multiselect-trigger-default">
-          <Button
+        <span 
+          ref={triggerRef} 
+          className="multiselect-trigger-default"
+          onKeyDown={(e: React.KeyboardEvent) => {
+            if (e.key === 'ArrowDown' && !open) {
+              e.preventDefault();
+              setOpen(true);
+              setFocusedIndex(0);
+            }
+            if (e.key === 'ArrowUp' && !open) {
+              e.preventDefault();
+              setOpen(true);
+              setFocusedIndex(options.length - 1);
+            }
+          }}
+        >
+            <Button
             onClick={toggleDropdownOpen}
             disabled={disabled}
             title={title}
             variant="outline"
             className="!justify-start active:scale-[1] w-full overflow-hidden"
             style={{ width: '100%' }}
-          >
+            ariaHaspopup="listbox"
+            ariaExpanded={open}
+            >
             {/* Invisible placeholder to maintain button height */}
             <span className="multiselect-button-placeholder">-</span>
-          </Button>
+            </Button>
           {/* Text overlay */}
           <span 
             className="multiselect-text-overlay"
@@ -251,11 +324,14 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
       {/* Dropdown Body */}
       {open && (
         <div
+          id={menuId}
           className={`multiselect-options ${hasSpaceBelow() ? 'multiselect-options-bottom' : 'multiselect-options-top'} ${hasSpaceOnRight() ? 'multiselect-options-left' : 'multiselect-options-right'} ${optionsClassName || ''}`}
           style={{ zIndex: 9999, width: `${effectiveMinWidth}px`, ...optionsStyle }}
           role="listbox"
           aria-label={title}
           aria-multiselectable="true"
+          onKeyDown={handleMenuKeyDown}
+          tabIndex={-1}
         >
 
           {/* Dropdown Header */}
@@ -266,15 +342,18 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
           {/* Dropdown Options */}
           <div className="multiselect-options-wrap">
             <ul className="multiselect-options-list" role="presentation">
-              {options.map(opt => {
+              {options.map((opt, index) => {
                 const isSelected = selectedOptions.includes(opt.value);
+                const isFocused = focusedIndex === index;
                 return (
                   <li 
                     key={opt.value} 
                     onClick={() => handleOptionClick(opt.value)}
+                    onMouseEnter={() => setFocusedIndex(index)}
                     role="option"
                     aria-selected={isSelected}
                     tabIndex={0}
+                    className={isFocused ? 'multiselect-option-focused' : ''}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();

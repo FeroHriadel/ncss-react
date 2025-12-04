@@ -105,6 +105,10 @@
   padding: 0;
 }
 
+.multiselect-options-list li.multiselect-option-focused .multiselect-option {
+  background-color: var(--nc-multiselect-option-hover-bg);
+}
+
 .multiselect-option {
   width: 100%;
   text-align: left;
