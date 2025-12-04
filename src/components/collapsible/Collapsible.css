@@ -5,18 +5,19 @@
   display: inline-block;
   user-select: none;
   position: relative;
+  border: 1px solid transparent;
 }
 
 .collapsible-trigger:focus {
-  border: 1px solid var(--nc-gray-600);
+  border-color: var(--nc-gray-600);
 }
 
 .collapsible-trigger:focus:not(:focus-visible) {
-  border: none;
+  border-color: transparent;
 }
 
 .collapsible-trigger:focus-visible {
-  border: 1px solid var(--nc-gray-600);
+  border-color: var(--nc-gray-600);
 }
 
 .collapsible-body {

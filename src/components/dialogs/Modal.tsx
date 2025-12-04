@@ -52,23 +52,58 @@ export default function Modal({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
-  // Focus management
+  // Focus management and focus trap
   useEffect(() => {
     if (isOpen && dialogRef.current) {
       // Save currently focused element
       const previouslyFocused = document.activeElement as HTMLElement;
       
       // Focus the dialog
-      const focusableElements = dialogRef.current.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      const firstFocusable = focusableElements[0] as HTMLElement;
+      const getFocusableElements = () => {
+        if (!dialogRef.current) return [];
+        return Array.from(
+          dialogRef.current.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          )
+        ) as HTMLElement[];
+      };
+
+      const focusableElements = getFocusableElements();
+      const firstFocusable = focusableElements[0];
       if (firstFocusable) {
         firstFocusable.focus();
       }
 
+      // Focus trap handler
+      const handleTab = (e: KeyboardEvent) => {
+        if (e.key !== 'Tab') return;
+        
+        const focusable = getFocusableElements();
+        if (focusable.length === 0) return;
+
+        const firstElement = focusable[0];
+        const lastElement = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+          // Shift + Tab
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement.focus();
+          }
+        } else {
+          // Tab
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement.focus();
+          }
+        }
+      };
+
+      window.addEventListener('keydown', handleTab);
+
       // Return focus when closed
       return () => {
+        window.removeEventListener('keydown', handleTab);
         if (previouslyFocused) {
           previouslyFocused.focus();
         }
@@ -103,6 +138,7 @@ export default function Modal({
             role="dialog"
             aria-modal="true"
             aria-labelledby={id ? `${id}-title` : undefined}
+            aria-label={id ? undefined : "Dialog"}
           >
 
             {/* Close Button */}
