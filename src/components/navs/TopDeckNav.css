@@ -37,6 +37,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+  margin: 0 1rem;
 }
 
 .top-deck-nav-link {

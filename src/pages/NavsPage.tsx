@@ -4,6 +4,8 @@ import Break from "../components/spacers/Break";
 import Container from "../components/wrappers/Container";
 import TopNav from "../components/navs/TopNav";
 import LeftNav from "../components/navs/LeftNav";
+import TopDeckNav from "../components/navs/TopDeckNav";
+import ThemeSwitch from "../components/buttons/ThemeSwitch";
 import { Highlight, themes } from "prism-react-renderer";
 
 // Code examples
@@ -63,6 +65,68 @@ const topNavCustomContentLeftCode = `<TopNav
     </div>
   }
   customContentPosition="left"  // Positions content on the left side
+/>`;
+
+const topDeckNavSimpleCode = `import TopDeckNav from './components/navs/TopDeckNav';
+
+const links = [
+  { linkName: 'Home', linkUrl: '/' },
+  { linkName: 'About', linkUrl: '/about' },
+  { linkName: 'Contact', linkUrl: '/contact' }
+];
+
+<TopDeckNav
+  logo={<span className="font-bold text-xl">MyApp</span>}
+  logoUrl="/"
+  links={links}
+/>`;
+
+const topDeckNavComplexCode = `import TopDeckNav from './components/navs/TopDeckNav';
+import ThemeSwitch from './components/buttons/ThemeSwitch';
+
+const navLinks = [
+  { linkName: 'Home', linkUrl: '/' },
+  {
+    linkName: 'Components',
+    options: [ 
+      { optionName: 'Buttons', optionUrl: '/buttons' },
+      { optionName: 'Cards', optionUrl: '/cards' },
+      { optionName: 'Inputs', optionUrl: '/inputs' },
+      { optionName: 'Tables', optionUrl: '/tables' }
+    ]
+  },
+  {
+    linkName: 'Pages',
+    options: [ 
+      { optionName: 'Dashboard', optionUrl: '/dashboard' },
+      { optionName: 'Settings', optionUrl: '/settings' }
+    ]
+  }
+];
+
+<TopDeckNav 
+  links={navLinks}
+  customContent={<ThemeSwitch />}
+  customContentPosition="left"
+  logo={
+    <span className='font-extrabold text-2xl' 
+      style={{filter: 'drop-shadow(2px 2px 2px rgba(0,0,0,0.2))'}}>
+      NCSS
+    </span>
+  }
+  logoUrl="/"
+  sidebar={
+    <div style={{padding: '1rem'}}>
+      <h3>Sidebar Navigation</h3>
+      <ul>
+        <li><a href="/">Dashboard</a></li>
+        <li><a href="/profile">Profile</a></li>
+        <li><a href="/settings">Settings</a></li>
+      </ul>
+    </div>
+  }
+  height="5rem"
+  className="shadow-lg"
 />`;
 
 const leftNavBasicCode = `import LeftNav from './components/navs/LeftNav';
@@ -166,6 +230,7 @@ const leftNavPagePropsCode = `<LeftNavPage
 export default function NavsPage() {
   const [showTopNav, setShowTopNav] = useState(false);
   const [showLeftNav, setShowLeftNav] = useState(false);
+  const [showTopDeckNav, setShowTopDeckNav] = useState(false);
 
   const demoLinks = [
     { linkName: 'Home', linkUrl: '/' },
@@ -179,15 +244,35 @@ export default function NavsPage() {
     },
   ];
 
+  const topDeckDemoLinks = [
+    { linkName: 'Home', linkUrl: '/' },
+    {
+      linkName: 'Components',
+      options: [ 
+        { optionName: 'Buttons', optionUrl: '/buttons' },
+        { optionName: 'Cards', optionUrl: '/cards' },
+        { optionName: 'Inputs', optionUrl: '/inputs' }
+      ]
+    },
+    {
+      linkName: 'Pages',
+      options: [ 
+        { optionName: 'Dashboard', optionUrl: '/dashboard' },
+        { optionName: 'Settings', optionUrl: '/settings' }
+      ]
+    }
+  ];
+
   return (
     <Container className="px-4 pt-24">
       {/* INTRO */}
       <h1 className="mb-4 uppercase font-bold text-3xl">Navigation Components</h1>
-      <p className="text-lg mb-12">Navigation components: <code>TopNav</code>, <code>LeftNav</code>, <code>LeftNavPage</code></p>
+      <p className="text-lg mb-12">Navigation components: <code>TopNav</code>, <code>LeftNav</code>, <code>LeftNavPage</code>, <code>TopDeckNav</code></p>
       <Card className="mb-12 p-4 bg-gray-100 flex flex-col gap-4">
         <a href="#topnav"><div><code>TopNav</code> is a fixed top navigation bar with logo, links, dropdowns, and custom content support</div></a>
         <a href="#leftnav"><div><code>LeftNav</code> is a fixed left sidebar navigation with links and collapsible sections</div></a>
         <a href="#leftnavpage"><div><code>LeftNavPage</code> wraps page content and automatically adjusts margins when LeftNav is shown/hidden</div></a>
+        <a href="#topdecknav"><div><code>TopDeckNav</code> is a modern top navigation with dropdown menus and collapsible sidebar for mobile</div></a>
         <a href="#combined"><div><code>TopNav + LeftNav + LeftNavPage</code> can be used together for a complete navigation layout</div></a>
       </Card>
       <hr />
@@ -229,9 +314,9 @@ export default function NavsPage() {
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
-              <div key={i} {...getLineProps({ line, key: i })}>
+              <div key={i} {...getLineProps({ line })}>
                 {line.map((token, key) => (
-                  <span key={key} {...getTokenProps({ token, key })} />
+                  <span key={key} {...getTokenProps({ token })} />
                 ))}
               </div>
             ))}
@@ -250,9 +335,9 @@ export default function NavsPage() {
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
-              <div key={i} {...getLineProps({ line, key: i })}>
+              <div key={i} {...getLineProps({ line })}>
                 {line.map((token, key) => (
-                  <span key={key} {...getTokenProps({ token, key })} />
+                  <span key={key} {...getTokenProps({ token })} />
                 ))}
               </div>
             ))}
@@ -272,9 +357,9 @@ export default function NavsPage() {
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
-              <div key={i} {...getLineProps({ line, key: i })}>
+              <div key={i} {...getLineProps({ line })}>
                 {line.map((token, key) => (
-                  <span key={key} {...getTokenProps({ token, key })} />
+                  <span key={key} {...getTokenProps({ token })} />
                 ))}
               </div>
             ))}
@@ -291,9 +376,9 @@ export default function NavsPage() {
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
-              <div key={i} {...getLineProps({ line, key: i })}>
+              <div key={i} {...getLineProps({ line })}>
                 {line.map((token, key) => (
-                  <span key={key} {...getTokenProps({ token, key })} />
+                  <span key={key} {...getTokenProps({ token })} />
                 ))}
               </div>
             ))}
@@ -417,9 +502,9 @@ export default function NavsPage() {
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
-              <div key={i} {...getLineProps({ line, key: i })}>
+              <div key={i} {...getLineProps({ line })}>
                 {line.map((token, key) => (
-                  <span key={key} {...getTokenProps({ token, key })} />
+                  <span key={key} {...getTokenProps({ token })} />
                 ))}
               </div>
             ))}
@@ -438,9 +523,9 @@ export default function NavsPage() {
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
-              <div key={i} {...getLineProps({ line, key: i })}>
+              <div key={i} {...getLineProps({ line })}>
                 {line.map((token, key) => (
-                  <span key={key} {...getTokenProps({ token, key })} />
+                  <span key={key} {...getTokenProps({ token })} />
                 ))}
               </div>
             ))}
@@ -531,9 +616,9 @@ export default function NavsPage() {
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
-              <div key={i} {...getLineProps({ line, key: i })}>
+              <div key={i} {...getLineProps({ line })}>
                 {line.map((token, key) => (
-                  <span key={key} {...getTokenProps({ token, key })} />
+                  <span key={key} {...getTokenProps({ token })} />
                 ))}
               </div>
             ))}
@@ -552,9 +637,9 @@ export default function NavsPage() {
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
-              <div key={i} {...getLineProps({ line, key: i })}>
+              <div key={i} {...getLineProps({ line })}>
                 {line.map((token, key) => (
-                  <span key={key} {...getTokenProps({ token, key })} />
+                  <span key={key} {...getTokenProps({ token })} />
                 ))}
               </div>
             ))}
@@ -623,9 +708,9 @@ export default function NavsPage() {
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
             {tokens.map((line, i) => (
-              <div key={i} {...getLineProps({ line, key: i })}>
+              <div key={i} {...getLineProps({ line })}>
                 {line.map((token, key) => (
-                  <span key={key} {...getTokenProps({ token, key })} />
+                  <span key={key} {...getTokenProps({ token })} />
                 ))}
               </div>
             ))}
@@ -657,6 +742,197 @@ export default function NavsPage() {
 }`}
         </pre>
       </Card>
+
+      {/* TOP-DECK-NAV */}
+      <hr />
+      <Break amount={3} />
+
+      <h2 className="mb-4 text-2xl uppercase font-semibold" id="topdecknav">TopDeckNav</h2>
+      <p className="mb-4">
+        The <code>TopDeckNav</code> component is a modern, sleek navigation bar that combines a top bar with an optional collapsible sidebar.
+        It features dropdown menus for links with options, a hamburger menu for the sidebar, and supports custom content positioning.
+      </p>
+
+      <div className="mb-8">
+        <button 
+          onClick={() => setShowTopDeckNav(!showTopDeckNav)}
+          className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-950 mb-4"
+        >
+          {showTopDeckNav ? 'Hide' : 'Show'} TopDeckNav Demo
+        </button>
+        
+        {showTopDeckNav && (
+          <div className="relative border-2 border-gray-300 rounded-lg" style={{ height: '400px' }}>
+            <TopDeckNav
+              logo={<span className="font-bold text-xl">NCSS</span>}
+              logoUrl="/"
+              links={topDeckDemoLinks}
+              height="5rem"
+              fixed={false}
+              style={{
+                maxWidth: 'calc(100% - 2rem)',
+              }}
+              customContent={<ThemeSwitch />}
+              customContentPosition="left"
+              sidebar={
+                <div style={{padding: '1rem'}}>
+                  <h4 className="font-bold mb-2">Sidebar Menu</h4>
+                  <ul className="space-y-2">
+                    <li><a href="/" className="hover:underline">Dashboard</a></li>
+                    <li><a href="/profile" className="hover:underline">Profile</a></li>
+                    <li><a href="/settings" className="hover:underline">Settings</a></li>
+                  </ul>
+                </div>
+              }
+            />
+            <div className="p-4 pt-24">
+              <p className="text-gray-600">Page content goes here...</p>
+              <p className="text-gray-600 mt-2">Click the hamburger menu to see the sidebar slide down.</p>
+              <p className="text-gray-600 mt-2">Click on "Components" or "Pages" to see dropdown menus.</p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* SIMPLE EXAMPLE */}
+      <h3 className="mb-4 text-xl font-semibold">Simple Usage</h3>
+      <p className="mb-4">
+        Basic <code>TopDeckNav</code> with logo and simple links:
+      </p>
+
+      <Highlight theme={themes.vsDark} code={topDeckNavSimpleCode} language="tsx">
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      {/* COMPLEX EXAMPLE */}
+      <h3 className="mb-4 text-xl font-semibold">Advanced Usage</h3>
+      <p className="mb-4">
+        <code>TopDeckNav</code> with dropdown menus, sidebar, custom content, and styling:
+      </p>
+
+      <Highlight theme={themes.vsDark} code={topDeckNavComplexCode} language="tsx">
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      {/* TOPDECKNAV PROPS */}
+      <h3 className="mb-4 text-xl font-semibold">TopDeckNav Props</h3>
+      <Card className="mb-8 p-4">
+        <table className="w-full text-left">
+          <thead>
+            <tr className="border-b">
+              <th className="pb-2 pr-4">Prop</th>
+              <th className="pb-2 pr-4">Type</th>
+              <th className="pb-2 pr-4">Default</th>
+              <th className="pb-2">Description</th>
+            </tr>
+          </thead>
+          <tbody className="text-sm">
+            <tr className="border-b">
+              <td className="py-2 pr-4"><code>logo</code></td>
+              <td className="py-2 pr-4">React.ReactNode</td>
+              <td className="py-2 pr-4">-</td>
+              <td className="py-2">Logo content (text, image, component)</td>
+            </tr>
+            <tr className="border-b">
+              <td className="py-2 pr-4"><code>logoUrl</code></td>
+              <td className="py-2 pr-4">string</td>
+              <td className="py-2 pr-4">-</td>
+              <td className="py-2">URL to navigate when logo is clicked</td>
+            </tr>
+            <tr className="border-b">
+              <td className="py-2 pr-4"><code>links</code></td>
+              <td className="py-2 pr-4">TopNavLink[]</td>
+              <td className="py-2 pr-4">[]</td>
+              <td className="py-2">Array of navigation links (with optional dropdown options)</td>
+            </tr>
+            <tr className="border-b">
+              <td className="py-2 pr-4"><code>sidebar</code></td>
+              <td className="py-2 pr-4">React.ReactNode</td>
+              <td className="py-2 pr-4">-</td>
+              <td className="py-2">Content for the collapsible sidebar (triggers hamburger menu)</td>
+            </tr>
+            <tr className="border-b">
+              <td className="py-2 pr-4"><code>customContent</code></td>
+              <td className="py-2 pr-4">React.ReactNode</td>
+              <td className="py-2 pr-4">-</td>
+              <td className="py-2">Custom content (e.g., ThemeSwitch, user avatar)</td>
+            </tr>
+            <tr className="border-b">
+              <td className="py-2 pr-4"><code>customContentPosition</code></td>
+              <td className="py-2 pr-4">"left" | "right"</td>
+              <td className="py-2 pr-4">"right"</td>
+              <td className="py-2">Position of custom content in the navbar</td>
+            </tr>
+            <tr className="border-b">
+              <td className="py-2 pr-4"><code>height</code></td>
+              <td className="py-2 pr-4">string</td>
+              <td className="py-2 pr-4">'5rem'</td>
+              <td className="py-2">Height of the navigation bar</td>
+            </tr>
+            <tr className="border-b">
+              <td className="py-2 pr-4"><code>fixed</code></td>
+              <td className="py-2 pr-4">boolean</td>
+              <td className="py-2 pr-4">true</td>
+              <td className="py-2">Whether the nav is fixed to the top</td>
+            </tr>
+            <tr className="border-b">
+              <td className="py-2 pr-4"><code>className</code></td>
+              <td className="py-2 pr-4">string</td>
+              <td className="py-2 pr-4">-</td>
+              <td className="py-2">Additional CSS classes</td>
+            </tr>
+            <tr className="border-b">
+              <td className="py-2 pr-4"><code>style</code></td>
+              <td className="py-2 pr-4">React.CSSProperties</td>
+              <td className="py-2 pr-4">-</td>
+              <td className="py-2">Inline styles</td>
+            </tr>
+            <tr>
+              <td className="py-2 pr-4"><code>id</code></td>
+              <td className="py-2 pr-4">string</td>
+              <td className="py-2 pr-4">"top-deck-nav"</td>
+              <td className="py-2">DOM id attribute</td>
+            </tr>
+          </tbody>
+        </table>
+      </Card>
+
+      <div className="mb-8">
+        <Card className="p-4 bg-blue-50 border-blue-200">
+          <p className="text-sm">
+            <strong>💡 Key Features:</strong>
+          </p>
+          <ul className="text-sm mt-2 space-y-1 ml-4">
+            <li>• <strong>Dropdown Menus:</strong> Links with <code>options</code> render as dropdown menus on desktop</li>
+            <li>• <strong>Collapsible Sidebar:</strong> Provide <code>sidebar</code> prop to enable a hamburger menu that opens a sliding sidebar</li>
+            <li>• <strong>Responsive:</strong> On smaller screens, all links collapse into a dropdown menu</li>
+            <li>• <strong>Custom Content:</strong> Add theme switchers, buttons, or user avatars with <code>customContent</code></li>
+          </ul>
+        </Card>
+      </div>
+
 
       <Break amount={6} />
     </Container>

@@ -5,20 +5,26 @@ export function useForm() {
   }
   
   // Retrieves form values as an object given a form id (including custom ncss components like MultiSelect, Select)
-  function getFormValues(formId: string): Record<string, string | boolean | string[]> {
+  function getFormValues(formId: string): Record<string, string | boolean | string[] | FileList> {
     const form = document.getElementById(formId) as HTMLFormElement;
     if (!form) {
       console.error(`Form with id "${formId}" not found`);
       return {};
     }
-    const formData: Record<string, string | boolean | string[]> = {};
+    const formData: Record<string, string | boolean | string[] | FileList> = {};
     const elements = form.elements;
     for (let i = 0; i < elements.length; i++) {
       const element = elements[i] as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
       
       if (element.name) {
+        // Handle file inputs - return FileList
+        if (element instanceof HTMLInputElement && element.type === 'file') {
+          if (element.files) {
+            formData[element.name] = element.files;
+          }
+        }
         // Handle checkboxes - use checked property instead of value
-        if (element instanceof HTMLInputElement && element.type === 'checkbox') {
+        else if (element instanceof HTMLInputElement && element.type === 'checkbox') {
           formData[element.name] = element.checked;
         }
         // Handle radio buttons

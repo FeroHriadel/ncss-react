@@ -14,6 +14,7 @@ import MultiSelect from "../components/dropdowns/MultiSelect";
 import Select from "../components/dropdowns/Select";
 import Password from "../components/inputs/Password";
 import Email from "../components/inputs/Email";
+import FileUpload from "../components/inputs/FileUpload";
 
 
 
@@ -39,6 +40,7 @@ export default function FormsPage() {
       <Card className="mb-12 p-4 bg-gray-100 flex flex-col gap-4">
         <a href="#sign-in"><div><code>SignInForm</code></div></a>
         <a href="#sign-up"><div><code>SignUpForm</code></div></a>
+        <a href="#form-service"><div><code>formService</code></div></a>
       </Card>
       <hr />
       <Break amount={3} />
@@ -57,9 +59,9 @@ export default function FormsPage() {
           {({ className, style, tokens, getLineProps, getTokenProps }) => (
             <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
               {tokens.map((line, i) => (
-                <div key={i} {...getLineProps({ line, key: i })}>
+                <div key={i} {...getLineProps({ line })}>
                   {line.map((token, key) => (
-                    <span key={key} {...getTokenProps({ token, key })} />
+                    <span key={key} {...getTokenProps({ token })} />
                   ))}
                 </div>
               ))}
@@ -103,9 +105,9 @@ export default function FormsPage() {
           {({ className, style, tokens, getLineProps, getTokenProps }) => (
             <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
               {tokens.map((line, i) => (
-                <div key={i} {...getLineProps({ line, key: i })}>
+                <div key={i} {...getLineProps({ line })}>
                   {line.map((token, key) => (
-                    <span key={key} {...getTokenProps({ token, key })} />
+                    <span key={key} {...getTokenProps({ token })} />
                   ))}
                 </div>
               ))}
@@ -141,7 +143,8 @@ export default function FormsPage() {
 
 
       <section>
-        <h2 className="mb-4 text-2xl uppercase font-semibold" id="sign-up">Get Form Values simply</h2>
+        <h2 className="mb-4 text-2xl uppercase font-semibold" id="form-service">FORM SERVICE</h2>
+        <h3 className="text-xl font-semibold">Get Form Values simply</h3>
         <p>formService exposes getFormValues to easily retrieve form values</p>
         <p className="mb-4">All inputs (and custom ncss inputs such as MultiSelect, Select...) must be passed a 'name' prop and the form needs an id attribute.</p>
 
@@ -162,6 +165,7 @@ export default function FormsPage() {
             <Select name="city" label="NCSS Select" className="mb-4" options={[{value: 'ny', displayValue: 'New York'}, {value: 'la', displayValue: 'Los Angeles'}]} width="260px" />
             <Password name="password" label="Password" className="mb-4" />
             <Email name="email" label="Email" className="mb-4" />
+            <FileUpload name="profile-images" label="Profile Pictures" className="mb-4" />
 
             <Button type="button" width="260px" onClick={() => {
               const values = getFormValues('example-form');
@@ -185,9 +189,9 @@ export default function FormsPage() {
           {({ className, style, tokens, getLineProps, getTokenProps }) => (
             <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
               {tokens.map((line, i) => (
-                <div key={i} {...getLineProps({ line, key: i })}>
+                <div key={i} {...getLineProps({ line })}>
                   {line.map((token, key) => (
-                    <span key={key} {...getTokenProps({ token, key })} />
+                    <span key={key} {...getTokenProps({ token })} />
                   ))}
                 </div>
               ))}

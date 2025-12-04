@@ -29,7 +29,7 @@ export interface FileUploadHandle {
 
 const FileUpload = forwardRef<FileUploadHandle, FileUploadProps>(function FileUpload(
   {
-    name,
+    name = 'uploaded-files',
     className = '',
     id,
     style,
