@@ -28,8 +28,42 @@
   align-items: center;
 }
 
+.top-deck-nav-right-side {
+  display: flex;
+  align-items: center;
+}
+
+.top-deck-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.top-deck-nav-link {
+  color: var(--nc-nav-text);
+  font-weight: 600;
+}
+
+.top-deck-nav-link:hover {
+  color: var(--nc-nav-text-hover);
+}
+
 .top-deck-nav-burger {
   margin-right: 1rem;
+}
+
+.top-deck-small-screen-options {
+  display: none !important;
+}
+
+@media (max-width: 1000px) {
+  .top-deck-small-screen-options {
+    display: inline-block !important;
+  }
+
+  .top-deck-nav-links {
+    display: none !important;
+  }
 }
 
 .top-deck-nav-sidebar {

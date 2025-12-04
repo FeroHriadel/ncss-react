@@ -19,9 +19,9 @@ export interface TopNavLink {
 }
 
 export interface TopNavProps {
-  logo: React.ReactNode;
+  logo?: React.ReactNode;
   logoUrl?: string;
-  links: TopNavLink[];
+  links?: TopNavLink[];
   height?: string;
   className?: string;
   style?: React.CSSProperties;
@@ -45,7 +45,7 @@ export default function TopNav({
 }: TopNavProps) {
 
   // Hamburger menu options
-  const hamburgerOptions = links.flatMap((link) => {
+  const hamburgerOptions = !links ? [] : links.flatMap((link) => {
     //if link has options, flatten them into individual Links
     if (link.options && link.options.length > 0) {
       return link.options.map((opt) => ({
@@ -83,7 +83,7 @@ export default function TopNav({
         {
 
           /* render dropdowns on wider screens */
-          links.map((link) => {
+          links?.map((link) => {
             if (link.options && link.options.length > 0) { //if link has options, render as dropdown
               return (
                 <Dropdown
@@ -107,7 +107,7 @@ export default function TopNav({
           })
         }
 
-        {/* custom content on wider screens */}
+        {/* custom content */}
         <span 
           className="top-nav-custom-content"
           style={{ order: customContentPosition === "left" ? -1 : 1 }}
