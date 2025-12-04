@@ -29,6 +29,7 @@ export default function Collapsible({
 }: CollapsibleProps) {
 
   const [isOpen, setIsOpen] = useState(defaultOpen);
+  const contentId = id ? `${id}-content` : `collapsible-content-${Math.random().toString(36).substr(2, 9)}`;
 
   function toggleOpen() {
     const newIsOpen = !isOpen;
@@ -38,16 +39,37 @@ export default function Collapsible({
     }
   }
 
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleOpen();
+    }
+  }
+
   return (
     <div className={`collapsible-wrap ${className || ''}`} id={id} style={style}>
-      <span className={`collapsible-trigger ${triggerWrapClassName || ''}`} style={triggerWrapStyle} onClick={toggleOpen}>
+      <div 
+        className={`collapsible-trigger ${triggerWrapClassName || ''}`} 
+        style={triggerWrapStyle} 
+        onClick={toggleOpen}
+        onKeyDown={handleKeyDown}
+        aria-expanded={isOpen}
+        aria-controls={contentId}
+        role="button"
+        tabIndex={0}
+      >
         {trigger}
-      </span>
+      </div>
 
       {
         isOpen 
         && 
-        <div className="collapsible-body" >
+        <div 
+          className="collapsible-body"
+          id={contentId}
+          role="region"
+          aria-hidden={!isOpen}
+        >
           {children}
         </div>
       }

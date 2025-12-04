@@ -7,6 +7,18 @@
   position: relative;
 }
 
+.collapsible-trigger:focus {
+  border: 1px solid var(--nc-gray-600);
+}
+
+.collapsible-trigger:focus:not(:focus-visible) {
+  border: none;
+}
+
+.collapsible-trigger:focus-visible {
+  border: 1px solid var(--nc-gray-600);
+}
+
 .collapsible-body {
   /* Collapsible content container */
   display: block;
