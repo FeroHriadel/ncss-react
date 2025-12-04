@@ -81,9 +81,10 @@ const Checkbox = forwardRef<CheckboxHandle, CheckboxProps>(function Checkbox(
               : ''
           }`}
         >
-          {isChecked && (
-            <FaCheck className="checkbox-check-icon" size={12} />
-          )}
+          <FaCheck 
+            className={`checkbox-check-icon ${isChecked ? '' : 'checkbox-check-icon-hidden'}`} 
+            size={12} 
+          />
         </span>
       </span>
       {label && (

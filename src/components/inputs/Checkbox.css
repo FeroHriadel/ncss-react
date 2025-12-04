@@ -29,9 +29,12 @@
   justify-content: center;
   width: 1.25rem; /* w-5 */
   height: 1.25rem; /* h-5 */
+  min-width: 1.25rem; /* Prevent shrinking */
+  min-height: 1.25rem; /* Prevent shrinking */
   border-radius: 0.25rem; /* rounded */
   border: 1px solid var(--nc-checkbox-border); /* border-gray-800 */
   transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  box-sizing: border-box; /* Ensure border is included in dimensions */
 }
 
 .checkbox-visual-cursor-pointer {
@@ -55,6 +58,12 @@
 
 .checkbox-check-icon {
   color: var(--nc-checkbox-icon); /* text-white */
+  transition: opacity 0.15s ease-in-out;
+}
+
+.checkbox-check-icon-hidden {
+  opacity: 0;
+  visibility: hidden;
 }
 
 .checkbox-label {
