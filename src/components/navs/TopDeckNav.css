@@ -80,5 +80,5 @@
   transition: height 0.2s ease;
   will-change: height;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: hidden;
 }

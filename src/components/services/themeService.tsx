@@ -133,7 +133,7 @@ export default function useTheme() {
       document.documentElement.style.setProperty('--nc-nav-option-hover-bg', 'var(--nc-black-600)');
       document.documentElement.style.setProperty('--nc-nav-border', 'var(--nc-gray-500)');
       document.documentElement.style.setProperty('--nc-topdeck-nav-bg', 'rgba(0, 0, 0, 0.7)');
-      document.documentElement.style.setProperty('--nc-topdeck-nav-border', 'var(--nc-gray-500)');
+      document.documentElement.style.setProperty('--nc-topdeck-nav-border', 'var(--nc-black-600)');
       document.documentElement.style.setProperty('--nc-topdeck-nav-text', 'var(--nc-gray-300)');
       document.documentElement.style.setProperty('--nc-topdeck-nav-shadow', '0 4px 6px rgba(0, 0, 0, 0.25)');
       return;
