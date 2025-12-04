@@ -46,3 +46,69 @@ export const complexSignInFormCode = `
   resetPasswordLink="https://example.com/reset-password"
 />
 `;
+
+export const formServiceExampleCode = `
+import { useForm } from '../components/services/formService';
+import Input from '../components/inputs/Input';
+import Checkbox from '../components/inputs/Checkbox';
+import MultiSelect from '../components/dropdowns/MultiSelect';
+import Select from '../components/dropdowns/Select';
+import Password from '../components/inputs/Password';
+import Email from '../components/inputs/Email';
+import Button from '../components/buttons/Button';
+
+export default function FormExample() {
+  const { getFormValues, isEmail, isPasswordCompliant } = useForm();
+
+  return (
+    <form id="example-form" className="flex flex-col">
+      <Input name="firstName" label="First Name" placeholder="John" />
+      <Input name="age" label="Age" type="number" placeholder="30" />
+      <Checkbox name="subscribe" label="Subscribe to newsletter" />
+      <Checkbox name="terms" label="Accept Terms and Conditions" />
+      <MultiSelect 
+        name="multi-select" 
+        label="MultiSelect" 
+        options={[
+          {value: 'opt1', displayValue: 'Option 1'}, 
+          {value: 'opt2', displayValue: 'Option 2'}
+        ]} 
+      />
+      <select name="country">
+        <option value="">Select Country</option>
+        <option value="us">United States</option>
+      </select>
+      <Select 
+        name="city" 
+        label="NCSS Select" 
+        options={[
+          {value: 'ny', displayValue: 'New York'}, 
+          {value: 'la', displayValue: 'Los Angeles'}
+        ]} 
+      />
+      <Password name="password" label="Password" />
+      <Email name="email" label="Email" />
+
+      <Button type="button" onClick={() => {
+        const values = getFormValues('example-form');
+        console.log(values);
+        
+        // Validate email
+        console.log('Is Email Valid?:', isEmail(values['email']));
+        
+        // Validate password compliance
+        console.log('Is Password Compliant?:', isPasswordCompliant({
+          value: values['password'],
+          upperCase: true,
+          lowerCase: false,
+          number: true,
+          specialChar: true,
+          minLength: 8
+        }));
+      }}>
+        Get Values
+      </Button>
+    </form>
+  );
+}
+`;

@@ -29,6 +29,7 @@ export interface MultiSelectProps {
   width?: string;
   label?: string;
   required?: boolean;
+  name?: string;
 }
 
 export interface MultiSelectHandle {
@@ -60,6 +61,7 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
     width,
     label,
     required = false,
+    name='ncss-multiselect' 
   },
   ref
 ) {
@@ -186,7 +188,8 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
       ref={dropdownRef} 
       id={multiselectId}
     >
-      
+      <input type="hidden" name={name} value={[...selectedOptions].join(',') || ''} />
+
       {label && (
         <label
           htmlFor={multiselectId}

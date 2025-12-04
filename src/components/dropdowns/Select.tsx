@@ -27,6 +27,7 @@ export interface SelectProps {
 	width?: string;
 	label?: string;
 	required?: boolean;
+	name?: string;
 }
 
 export interface SelectHandle {
@@ -56,6 +57,7 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 		width = '200px',
 		label,
 		required = false,
+		name = 'ncss-select'
 	},
 	ref
 ) {
@@ -147,6 +149,8 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 		};
 	}, [open]);
 
+
+
 	React.useImperativeHandle(ref, () => ({
 		getSelectedOption: () => selectedOption,
 		setSelectedOption: (opt: string | null) => { setSelectedOption(opt); if (onChange) onChange(opt); },
@@ -168,6 +172,7 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 				ref={dropdownRef} 
 				id={selectId}
 			>
+				<input type="hidden" name={name} value={selectedOption || ''} />
 				{label && (
 					<label
 						htmlFor={selectId}
