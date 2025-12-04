@@ -261,9 +261,13 @@ export default function VirtualizedTableFilter({ columns, closeModal, filterCond
       });
       
       //if we just set an operator and the row is now fully valid, add a new row
+      //but only if this is the last row in the list
       if (field === 'operator' && value !== null) {
-        const updatedRow = updatedRows.find(r => r.id === id);
-        if (updatedRow && isRowValid(updatedRow)) {
+        const rowIndex = updatedRows.findIndex(r => r.id === id);
+        const isLastRow = rowIndex === updatedRows.length - 1;
+        const updatedRow = updatedRows[rowIndex];
+        
+        if (updatedRow && isRowValid(updatedRow) && isLastRow) {
           const newRow: FilterRow = {
             id: Date.now(),
             column: null,
@@ -309,15 +313,6 @@ export default function VirtualizedTableFilter({ columns, closeModal, filterCond
       ...filter,
       id: Date.now() + index,
     }));
-    
-    // Add an empty row at the end for adding more filters
-    newRows.push({
-      id: Date.now() + preset.filters.length,
-      column: null,
-      condition: null,
-      value: '',
-      operator: null
-    });
     
     setFilterRows(newRows);
   };
