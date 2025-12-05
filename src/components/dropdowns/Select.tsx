@@ -65,6 +65,8 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 	const [open, setOpen] = React.useState(false);
 	const dropdownRef = React.useRef<HTMLDivElement>(null);
 	const [selectedOption, setSelectedOption] = React.useState<string | null>(preselectedOption);
+	const [focusedIndex, setFocusedIndex] = React.useState(-1);
+	const menuRef = React.useRef<HTMLDivElement>(null);
 
 	// Trigger width: ensure dropdown is at least as wide as the trigger (or 200px)
 	const triggerRef = React.useRef<HTMLSpanElement | null>(null);
@@ -95,6 +97,13 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 		window.addEventListener('resize', handleResize);
 		return () => window.removeEventListener('resize', handleResize);
 	}, [options, preselectedOption]);
+
+	// Autofocus menu when it opens
+	React.useEffect(() => {
+		if (open && menuRef.current) {
+			menuRef.current.focus();
+		}
+	}, [open]);
 
 	function hasSpaceBelow() {
 		if (openY === "up") return false;
@@ -127,15 +136,35 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 		if (onChange) onChange(value);
 	}
 
-	function toggleDropdownOpen() { setOpen((prev) => !prev); }
+	function toggleDropdownOpen() { 
+		setOpen((prev) => {
+			if (!prev) {
+				// Opening - focus first option or selected option
+				const selectedIndex = selectedOption 
+					? options.findIndex(opt => opt.value === selectedOption)
+					: 0;
+				setFocusedIndex(selectedIndex >= 0 ? selectedIndex : 0);
+			} else {
+				// Closing
+				setFocusedIndex(-1);
+			}
+			return !prev;
+		});
+	}
 
 	React.useEffect(() => {
 		function handleClickOutside(event: MouseEvent) {
-			if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) setOpen(false);
+			if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+				setOpen(false);
+				setFocusedIndex(-1);
+			}
 		}
 		
 		function handleEscapeKey(event: KeyboardEvent) {
-			if (event.key === 'Escape') setOpen(false);
+			if (event.key === 'Escape') {
+				setOpen(false);
+				setFocusedIndex(-1);
+			}
 		}
 		
 		if (open) {
@@ -164,6 +193,45 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 		: Math.max(triggerWidth || 0, 200);
 
 	const selectId = id || `ncss-select-${Math.random().toString(10)}`;
+	const menuId = `${selectId}-menu`;
+
+	// Keyboard navigation for dropdown menu
+	function handleMenuKeyDown(e: React.KeyboardEvent) {
+		if (!open) return;
+
+		switch (e.key) {
+			case 'ArrowDown':
+				e.preventDefault();
+				setFocusedIndex(prev => (prev + 1) % options.length);
+				break;
+			case 'ArrowUp':
+				e.preventDefault();
+				setFocusedIndex(prev => (prev - 1 + options.length) % options.length);
+				break;
+			case 'Home':
+				e.preventDefault();
+				setFocusedIndex(0);
+				break;
+			case 'End':
+				e.preventDefault();
+				setFocusedIndex(options.length - 1);
+				break;
+			case ' ':
+				e.preventDefault();
+				if (focusedIndex >= 0 && focusedIndex < options.length) {
+					const focusedOption = options[focusedIndex];
+					handleOptionClick(focusedOption.value);
+				}
+				break;
+			case 'Enter':
+				e.preventDefault();
+				if (focusedIndex >= 0 && focusedIndex < options.length) {
+					const focusedOption = options[focusedIndex];
+					handleOptionClick(focusedOption.value);
+				}
+				break;
+		}
+	}
 
 		return (
 			<div 
@@ -186,12 +254,56 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 					trigger 
 					?
 					/* Custom Trigger */
-					<span ref={triggerRef} onClick={disabled ? undefined : toggleDropdownOpen} className="select-trigger-custom">
+					<span 
+						ref={triggerRef} 
+						onClick={disabled ? undefined : toggleDropdownOpen} 
+						className="select-trigger-custom"
+						role="button"
+						tabIndex={0}
+						aria-haspopup="listbox"
+						aria-expanded={open}
+						aria-controls={menuId}
+						onKeyDown={(e) => {
+							if (e.key === 'Enter' || e.key === ' ') {
+								e.preventDefault();
+								if (!disabled) toggleDropdownOpen();
+							}
+							if (e.key === 'ArrowDown' && !open) {
+								e.preventDefault();
+								if (!disabled) {
+									setOpen(true);
+									setFocusedIndex(0);
+								}
+							}
+							if (e.key === 'ArrowUp' && !open) {
+								e.preventDefault();
+								if (!disabled) {
+									setOpen(true);
+									setFocusedIndex(options.length - 1);
+								}
+							}
+						}}
+					>
 						{trigger}
 					</span>
 					:
 					/* Default Trigger */
-					<span ref={triggerRef} className="select-trigger-default">
+					<span 
+						ref={triggerRef} 
+						className="select-trigger-default"
+						onKeyDown={(e: React.KeyboardEvent) => {
+							if (e.key === 'ArrowDown' && !open) {
+								e.preventDefault();
+								setOpen(true);
+								setFocusedIndex(0);
+							}
+							if (e.key === 'ArrowUp' && !open) {
+								e.preventDefault();
+								setOpen(true);
+								setFocusedIndex(options.length - 1);
+							}
+						}}
+					>
 						<Button
 							onClick={toggleDropdownOpen}
 							disabled={disabled}
@@ -199,6 +311,8 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
               				variant="outline"
 							className="!justify-start active:scale-[1] w-full overflow-hidden"
               				style={{ width: width ? width : '200px', ...style }}
+							ariaHaspopup="listbox"
+							ariaExpanded={open}
 						>
 							{/* Invisible placeholder to maintain button height */}
 							<span className="select-button-placeholder">-</span>
@@ -220,8 +334,14 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 				{/* Options Menu */}
 				{open && (
 					<div
+						ref={menuRef}
+						id={menuId}
 						className={`select-options ${hasSpaceBelow() ? 'select-options-bottom' : 'select-options-top'} ${hasSpaceOnRight() ? 'select-options-left' : 'select-options-right'} ${optionsClassName || ''}`}
 						style={{ zIndex: 50, minWidth: `${effectiveMinWidth}px`, ...optionsStyle }}
+						role="listbox"
+						aria-label={title}
+						onKeyDown={handleMenuKeyDown}
+						tabIndex={-1}
 					>
 						{/* Header title */}
 						<div className="select-header">
@@ -230,18 +350,28 @@ const Select = React.forwardRef<SelectHandle, SelectProps>(function Select(
 
 						{/* Options List */}
 						<div className="select-options-wrap">
-							<ul className="select-options-list">
-								{options.map(opt => (
-									<li key={opt.value} onClick={() => handleOptionClick(opt.value)}>
-										<span className="select-option">
-											<span className="select-option-text">{opt.displayValue}</span>
-											{selectedOption === opt.value
-												? <FaTick className="select-option-icon" aria-hidden="true" />
-												: <span className="select-option-spacer"></span>
-											}
-										</span>
-									</li>
-								))}
+							<ul className="select-options-list" role="presentation">
+								{options.map((opt, index) => {
+									const isFocused = focusedIndex === index;
+									return (
+										<li 
+											key={opt.value} 
+											onClick={() => handleOptionClick(opt.value)}
+											onMouseEnter={() => setFocusedIndex(index)}
+											role="option"
+											aria-selected={selectedOption === opt.value}
+											className={isFocused ? 'select-option-focused' : ''}
+										>
+											<span className="select-option">
+												<span className="select-option-text">{opt.displayValue}</span>
+												{selectedOption === opt.value
+													? <FaTick className="select-option-icon" aria-hidden="true" />
+													: <span className="select-option-spacer"></span>
+												}
+											</span>
+										</li>
+									);
+								})}
 							</ul>
 						</div>
 					</div>

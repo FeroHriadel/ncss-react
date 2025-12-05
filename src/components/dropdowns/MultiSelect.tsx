@@ -71,6 +71,7 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
   const dropdownRef = React.useRef<HTMLDivElement>(null);
   const [selectedOptions, setSelectedOptions] = React.useState<string[]>([...preselectedOptions]);
   const [focusedIndex, setFocusedIndex] = React.useState(-1);
+  const menuRef = React.useRef<HTMLDivElement>(null);
 
   // Trigger width: ensure dropdown is at least as wide as the trigger (or 200px)
   const triggerRef = React.useRef<HTMLSpanElement | null>(null);
@@ -91,6 +92,13 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [options, preselectedOptions]);
+
+  // Autofocus menu when it opens
+  React.useEffect(() => {
+    if (open && menuRef.current) {
+      menuRef.current.focus();
+    }
+  }, [open]);
 
 
   // Do options have space to open downwards
@@ -217,6 +225,13 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
         e.preventDefault();
         setFocusedIndex(options.length - 1);
         break;
+      case ' ':
+        e.preventDefault();
+        if (focusedIndex >= 0 && focusedIndex < options.length) {
+          const focusedOption = options[focusedIndex];
+          handleOptionClick(focusedOption.value);
+        }
+        break;
     }
   }
 
@@ -324,6 +339,7 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
       {/* Dropdown Body */}
       {open && (
         <div
+          ref={menuRef}
           id={menuId}
           className={`multiselect-options ${hasSpaceBelow() ? 'multiselect-options-bottom' : 'multiselect-options-top'} ${hasSpaceOnRight() ? 'multiselect-options-left' : 'multiselect-options-right'} ${optionsClassName || ''}`}
           style={{ zIndex: 9999, width: `${effectiveMinWidth}px`, ...optionsStyle }}
@@ -352,7 +368,6 @@ const MultiSelect = React.forwardRef<MultiSelectHandle, MultiSelectProps>(functi
                     onMouseEnter={() => setFocusedIndex(index)}
                     role="option"
                     aria-selected={isSelected}
-                    tabIndex={0}
                     className={isFocused ? 'multiselect-option-focused' : ''}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {

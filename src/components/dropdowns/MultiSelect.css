@@ -60,6 +60,7 @@
   border-radius: 0.25rem;
   box-shadow: var(--nc-multiselect-options-shadow);
   z-index: 90;
+  outline: none;
 }
 
 .multiselect-options.multiselect-options-top {
