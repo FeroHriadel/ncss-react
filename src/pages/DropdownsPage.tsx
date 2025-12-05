@@ -5,9 +5,11 @@ import MultiSelect from "../components/dropdowns/MultiSelect";
 import type { MultiSelectHandle } from "../components/dropdowns/MultiSelect";
 import Dropdown from "../components/dropdowns/Dropdown";
 import type { DropdownHandle } from "../components/dropdowns/Dropdown";
+import Popover from "../components/dropdowns/Popover";
+import type { PopoverHandle } from "../components/dropdowns/Popover";
 import Break from "../components/spacers/Break";
 import { Highlight, themes } from "prism-react-renderer";
-import { selectCode, selectWithTriggerCode, selectWithRefCode, multiSelectCode, multiSelectWithTriggerCode, multiSelectWithRefCode, dropdownCode, dropdownWithChildrenCode, dropdownWithRefCode, dropdownWithManyOptionsCode, dropdownWithCustomStyledOptionsCode } from "../utils/DropdownsPageCode";
+import { selectCode, selectWithTriggerCode, selectWithRefCode, multiSelectCode, multiSelectWithTriggerCode, multiSelectWithRefCode, dropdownCode, dropdownWithChildrenCode, dropdownWithRefCode, dropdownWithManyOptionsCode, dropdownWithCustomStyledOptionsCode, popoverCode, popoverWithRefCode } from "../utils/DropdownsPageCode";
 import { useRef } from "react";
 import Card from "../components/cards/Card";
 import Button from "../components/buttons/Button";
@@ -21,16 +23,18 @@ export default function DropdownsPage() {
   const selectRef = useRef<SelectHandle>(null);
   const multiSelectRef = useRef<MultiSelectHandle>(null);
   const dropdownRef = useRef<DropdownHandle>(null);
+  const popoverRef = useRef<PopoverHandle>(null);
 
   return (
     <Container className="px-4 pt-24">
       {/* INTRO */}
       <h1 className="mb-4 uppercase font-bold text-3xl">Dropdowns</h1>
-      <p className="text-lg mb-12">Dropdown components: <code>Select</code>, <code>Multiselect</code>, and <code>Dropdown</code>.</p>
+      <p className="text-lg mb-12">Dropdown components: <code>Select</code>, <code>Multiselect</code>, <code>Dropdown</code>, and <code>Popover</code>.</p>
       <Card className="mb-12 p-4 bg-gray-100 flex flex-col gap-4">
         <a href="#select"><div><code>Select</code> is a more customizable html select element <br /></div></a>
         <a href="#multiselect"><div><code>MultiSelect</code> is like <code>Select</code> but allows multiple selections <br /></div></a>
         <a href="#dropdown"><div><code>Dropdown</code> is intended to be a highly-adjustable "Select" container for custom content. It doesn't handle option click for you - you pass the custom onClick() handler to the option that suits your needs. E.g.: redirectTo, myFunction(), location.reload()...</div></a>
+        <a href="#popover"><div><code>Popover</code> displays content in a floating container when triggered, perfect for tooltips, menus, or additional information</div></a>
       </Card>
       <hr />
       <Break amount={3} />
@@ -717,6 +721,80 @@ export default function DropdownsPage() {
       <Break amount={3} />
 
 
+      {/* POPOVER - BASIC USE */}
+      <hr />
+      <Break amount={3} />
+      <h2 className="mb-4 text-2xl uppercase font-semibold" id="popover">Popover</h2>
+      <p className="mb-4">The <code>Popover</code> component displays content in a floating container when triggered. Perfect for tooltips, context menus, or additional information. Basic use:</p>
+
+      <Popover
+        trigger={<Button>Click Me</Button>}
+        className="mb-8"
+      >
+        <div className="p-4">
+          <h3 className="font-bold mb-2">Popover Content</h3>
+          <p>This is the content inside the popover.</p>
+          <p>You can put anything here!</p>
+        </div>
+      </Popover>
+
+      <Highlight
+        theme={themes.vsDark}
+        code={popoverCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      {/* POPOVER WITH REF */}
+      <p className="mb-4">You can control the <code>Popover</code> programmatically using a ref:</p>
+      
+      <div className="mb-8 flex gap-4 items-center flex-wrap">
+        <Popover
+          ref={popoverRef}
+          trigger={<IconButton icon={<BiDotsVerticalRounded />} title="More options" />}
+        >
+          <div className="p-4 min-w-[200px]">
+            <h3 className="font-bold mb-2">Options Menu</h3>
+            <button className="block w-full text-left px-2 py-1 hover:bg-gray-100 rounded">Edit</button>
+            <button className="block w-full text-left px-2 py-1 hover:bg-gray-100 rounded">Delete</button>
+            <button className="block w-full text-left px-2 py-1 hover:bg-gray-100 rounded">Share</button>
+          </div>
+        </Popover>
+        <Button onClick={() => popoverRef.current?.open()}>Open Popover</Button>
+        <Button onClick={() => popoverRef.current?.close()} variant="red">Close Popover</Button>
+        <Button onClick={() => popoverRef.current?.toggle()} variant="outline">Toggle Popover</Button>
+      </div>
+
+      <Highlight
+        theme={themes.vsDark}
+        code={popoverWithRefCode}
+        language="tsx"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
 
 
     </Container>

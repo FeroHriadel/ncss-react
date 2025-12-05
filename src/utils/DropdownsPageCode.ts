@@ -81,10 +81,55 @@ export const selectWithRefCode = `
         />
         
         <button onClick={handleGetSelected}>Get Selected</button>
-        <button onClick={handleSetOption}>Set to Option 2</button>
-        <button onClick={handleClear}>Clear Selection</button>
+        <button onClick={handleSetOptions}>Set Options 1 & 3</button>
+        <button onClick={handleClear}>Clear All</button>
         <button onClick={handleOpen}>Open Dropdown</button>
         <button onClick={handleClose}>Close Dropdown</button>
+      </>
+    );
+  }
+`;
+
+export const popoverCode = `
+  import Popover from "../components/dropdowns/Popover";
+
+  <Popover
+    trigger={<Button>Click Me</Button>}
+    className="mb-8"
+  >
+    <div className="p-4">
+      <h3 className="font-bold mb-2">Popover Content</h3>
+      <p>This is the content inside the popover.</p>
+      <p>You can put anything here!</p>
+    </div>
+  </Popover>
+`;
+
+export const popoverWithRefCode = `
+  import Popover from "../components/dropdowns/Popover";
+  import type { PopoverHandle } from "../components/dropdowns/Popover";
+  import { useRef } from "react";
+
+  export default function MyComponent() {
+    const popoverRef = useRef<PopoverHandle>(null);
+
+    return (
+      <>
+        <Popover
+          ref={popoverRef}
+          trigger={<IconButton icon={<BiDotsVerticalRounded />} title="More options" />}
+        >
+          <div className="p-4 min-w-[200px]">
+            <h3 className="font-bold mb-2">Options Menu</h3>
+            <button className="block w-full text-left px-2 py-1 hover:bg-gray-100 rounded">Edit</button>
+            <button className="block w-full text-left px-2 py-1 hover:bg-gray-100 rounded">Delete</button>
+            <button className="block w-full text-left px-2 py-1 hover:bg-gray-100 rounded">Share</button>
+          </div>
+        </Popover>
+        
+        <Button onClick={() => popoverRef.current?.open()}>Open Popover</Button>
+        <Button onClick={() => popoverRef.current?.close()} variant="red">Close Popover</Button>
+        <Button onClick={() => popoverRef.current?.toggle()} variant="outline">Toggle Popover</Button>
       </>
     );
   }

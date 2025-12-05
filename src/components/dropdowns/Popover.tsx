@@ -101,6 +101,15 @@ const Popover = forwardRef<PopoverHandle, PopoverProps>(function Popover(
   }), [isOpen]);
 
   const popoverId = id || `ncss-popover-${Math.random().toString(10)}`;
+  const contentId = `${popoverId}-content`;
+
+  // Keyboard handler for trigger
+  function handleTriggerKeyDown(e: React.KeyboardEvent) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      togglePopover();
+    }
+  }
 
 
   // Render 
@@ -117,6 +126,12 @@ const Popover = forwardRef<PopoverHandle, PopoverProps>(function Popover(
       <span 
         className="popover-trigger" 
         onClick={togglePopover}
+        onKeyDown={handleTriggerKeyDown}
+        role="button"
+        tabIndex={0}
+        aria-haspopup="true"
+        aria-expanded={isOpen}
+        aria-controls={contentId}
       >
         {trigger}
       </span>
@@ -125,10 +140,13 @@ const Popover = forwardRef<PopoverHandle, PopoverProps>(function Popover(
         // popover content
         isOpen
         &&
-        <div 
+        <div
+          id={contentId}
           className={`popover-content ${hasSpaceBelow() ? 'popover-content-bottom' : 'popover-content-top'} ${hasSpaceRight() ? 'popover-content-left' : 'popover-content-right'}`}
           style={{ ...(maxHeight && { maxHeight: `${maxHeight}px` }) }}
           onClick={() => { if (closeOnClick) setIsOpen(false); }}
+          role="region"
+          aria-label="Popover content"
         >
           {children}
         </div>

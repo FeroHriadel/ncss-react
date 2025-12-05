@@ -31,9 +31,8 @@
   cursor: pointer;
 }
 
-.dropdown-trigger:focus {
+.dropdown-trigger:focus, .dropdown-trigger:focus-visible {
   outline: none !important;
-  border-color: var(--nc-gray-600);
 }
 
 .dropdown-trigger:focus:not(:focus-visible) {
@@ -43,7 +42,6 @@
 
 .dropdown-trigger:focus-visible {
   outline: none !important;
-  border-color: var(--nc-gray-600);
 }
 
 .dropdown-options {
