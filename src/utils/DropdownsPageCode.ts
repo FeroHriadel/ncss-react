@@ -379,3 +379,46 @@ export const multiSelectWithRefCode = `
     );
   }
 `;
+
+export const nativeSelectCode = `
+  import NativeSelect from "../components/dropdowns/NativeSelect";
+
+  <NativeSelect className="mb-8">
+    <option value="">Select an option...</option>
+    <option value="option1">Option 1</option>
+    <option value="option2">Option 2</option>
+    <option value="option3">Option 3</option>
+  </NativeSelect>
+`;
+
+export const nativeSelectWithRefCode = `
+  import NativeSelect from "../components/dropdowns/NativeSelect";
+  import { useRef } from "react";
+
+  export default function MyComponent() {
+    const selectRef = useRef<HTMLSelectElement>(null);
+
+    const handleGetValue = () => {
+      console.log(selectRef.current?.value);
+    };
+
+    return (
+      <>
+        <NativeSelect 
+          ref={selectRef}
+          name="mySelect"
+          onChange={(e) => console.log(e.target.value)}
+          disabled={false}
+          required
+        >
+          <option value="">Choose...</option>
+          <option value="red">Red</option>
+          <option value="green">Green</option>
+          <option value="blue">Blue</option>
+        </NativeSelect>
+
+        <button onClick={handleGetValue}>Get Value</button>
+      </>
+    );
+  }
+`;

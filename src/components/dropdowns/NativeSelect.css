@@ -1,0 +1,48 @@
+/* NativeSelect.css */
+
+.native-select-container {
+  position: relative;
+  display: inline-block;
+}
+
+.native-select {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: transparent;
+  border: 1px solid var(--nc-gray-500);
+  border-radius: 0.25rem;
+  padding: 0.625rem 2.5rem 0.625rem 1rem;
+  font-size: 1rem;
+  color: var(--nc-multiselect-text);
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+  min-height: 2.5rem;
+}
+
+.native-select:hover {
+  background-color: var(--nc-gray-100);
+}
+
+.native-select:focus {
+  border-color: var(--nc-gray-600);
+  background-color: var(--nc-gray-100);
+}
+
+.native-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.native-select-chevron {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--nc-multiselect-text);
+  font-size: 0.75rem;
+  pointer-events: none;
+}
