@@ -1,4 +1,5 @@
 import ThemeSwitch from "../components/buttons/ThemeSwitch";
+import NativeInput from "../components/inputs/NativeInput";
 import TopDeckNav from "../components/navs/TopDeckNav";
 
 
@@ -40,6 +41,10 @@ export default function TestPage() {
         logo={<span className='font-extrabold text-2xl' style={{filter: 'drop-shadow(2px 2px 2px rgba(0,0,0,0.2))'}}>NCSS</span>}
         sidebar={<div style={{padding: '1rem'}}>Sidebar content</div>}
       />
+
+
+
+      <NativeInput />
     </>
   )
 }

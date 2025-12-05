@@ -307,3 +307,41 @@ export const fileUploadDisabledCode = `import FileUpload from '../components/inp
   label="Upload disabled"
   disabled
 />`;
+
+// NativeInput
+export const nativeInputCode = `import NativeInput from '../components/inputs/NativeInput';
+
+<NativeInput 
+  type="text"
+  placeholder="Enter text..."
+/>`;
+
+export const nativeInputWithRefCode = `import NativeInput from '../components/inputs/NativeInput';
+import { useRef } from 'react';
+
+const inputRef = useRef<HTMLInputElement>(null);
+
+const handleGetValue = () => {
+  console.log(inputRef.current?.value);
+};
+
+<NativeInput 
+  ref={inputRef}
+  type="email"
+  name="userEmail"
+  placeholder="email@example.com"
+  required
+/>
+
+<NativeInput 
+  type="number"
+  min="0"
+  max="100"
+  placeholder="Enter number"
+/>
+
+<NativeInput 
+  type="date"
+/>
+
+<button onClick={handleGetValue}>Get Value</button>`;

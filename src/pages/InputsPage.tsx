@@ -9,6 +9,7 @@ import Textarea, { type TextareaHandle } from "../components/inputs/Textarea";
 import Checkbox, { type CheckboxHandle } from "../components/inputs/Checkbox";
 import Switch, { type SwitchHandle } from "../components/inputs/Switch";
 import FileUpload, { type FileUploadHandle } from "../components/inputs/FileUpload";
+import NativeInput from "../components/inputs/NativeInput";
 import Button from "../components/buttons/Button";
 import { Highlight, themes } from "prism-react-renderer";
 import {
@@ -41,7 +42,9 @@ import {
   fileUploadOptionsCode,
   fileUploadValidationCode,
   fileUploadHandleCode,
-  fileUploadDisabledCode
+  fileUploadDisabledCode,
+  nativeInputCode,
+  nativeInputWithRefCode
 } from "../utils/InputsPageCode";
 
 export default function InputsPage() {
@@ -66,7 +69,7 @@ export default function InputsPage() {
       {/* INTRO */}
       <h1 className="mb-4 uppercase font-bold text-3xl">Input Components</h1>
       <p className="text-lg mb-12">
-        Input components: <code>Input</code>, <code>Email</code>, <code>Password</code>, <code>Textarea</code>, <code>Checkbox</code>, <code>Switch</code>, <code>FileUpload</code>
+        Input components: <code>Input</code>, <code>Email</code>, <code>Password</code>, <code>Textarea</code>, <code>Checkbox</code>, <code>Switch</code>, <code>FileUpload</code>, <code>NativeInput</code>
       </p>
       <Card className="mb-12 p-4 bg-gray-100 flex flex-col gap-4">
         <a href="#input"><div><code>Input</code> is a flexible text input with validation, controlled/uncontrolled modes, and imperative handle</div></a>
@@ -76,6 +79,7 @@ export default function InputsPage() {
         <a href="#checkbox"><div><code>Checkbox</code> is a styled checkbox with controlled/uncontrolled modes</div></a>
         <a href="#switch"><div><code>Switch</code> is a toggle switch with customizable size</div></a>
         <a href="#fileupload"><div><code>FileUpload</code> is a file upload input with drag & drop support</div></a>
+        <a href="#nativeinput"><div><code>NativeInput</code> is a styled native HTML <code>&lt;input&gt;</code> element with Input.tsx styling but standard browser behavior</div></a>
       </Card>
       <hr />
       <Break amount={3} />
@@ -1058,6 +1062,94 @@ export default function InputsPage() {
           <li><code>getValue()</code>: Returns File[] array</li>
           <li><code>setValue(files)</code>: Sets files programmatically (limited by browser security)</li>
           <li><code>clear()</code>: Clears selected files</li>
+        </ul>
+      </Card>
+
+      <Break amount={3} />
+      <hr />
+      <Break amount={3} />
+
+      {/* NATIVE INPUT */}
+      <h2 className="mb-4 text-2xl uppercase font-semibold" id="nativeinput">NativeInput</h2>
+      <p className="mb-4">
+        The <code>NativeInput</code> component is a styled native HTML <code>&lt;input&gt;</code> element. 
+        It looks like <code>Input</code> but behaves exactly like a standard browser input with no extra features.
+      </p>
+
+      <NativeInput 
+        type="text"
+        placeholder="Enter text..."
+        className="mb-8"
+      />
+
+      <Highlight theme={themes.vsDark} code={nativeInputCode} language="tsx">
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+      <Break amount={3} />
+
+      <p className="mb-4">
+        Since <code>NativeInput</code> is just a styled native <code>&lt;input&gt;</code>, 
+        you can use all standard HTML input attributes and access it with a ref:
+      </p>
+
+      <div className="mb-8 flex gap-4 items-center flex-wrap">
+        <NativeInput 
+          type="email"
+          name="userEmail"
+          placeholder="email@example.com"
+          required
+        />
+        <NativeInput 
+          type="number"
+          min="0"
+          max="100"
+          placeholder="Enter number"
+        />
+        <NativeInput 
+          type="date"
+        />
+      </div>
+
+      <Highlight theme={themes.vsDark} code={nativeInputWithRefCode} language="tsx">
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className + " rounded-lg p-6 overflow-x-auto"} style={{ ...style, backgroundColor: 'var(--nc-black-700)' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+
+      <Card className="mt-8 p-4 bg-gray-100">
+        <h3 className="text-lg font-semibold mb-2">NativeInput Props</h3>
+        <p className="mb-2">Accepts all standard HTML input attributes:</p>
+        <ul className="space-y-2">
+          <li><code>type</code>: text, email, password, number, date, etc.</li>
+          <li><code>name</code>: HTML name attribute</li>
+          <li><code>value</code>: Controlled value</li>
+          <li><code>onChange</code>: Change event handler</li>
+          <li><code>placeholder</code>: Placeholder text</li>
+          <li><code>required</code>: Makes field required</li>
+          <li><code>disabled</code>: Disables the input</li>
+          <li><code>min</code>, <code>max</code>: For number/date inputs</li>
+          <li><code>pattern</code>: Validation pattern</li>
+          <li><code>className</code>: Additional CSS classes</li>
+          <li><code>style</code>: Inline styles</li>
+          <li>...and all other native input attributes</li>
         </ul>
       </Card>
     </Container>

@@ -1,0 +1,39 @@
+/* NativeInput.css */
+
+.native-input {
+  outline: none;
+  border: 1px solid var(--nc-input-border);
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  background-color: var(--nc-input-bg);
+  color: var(--nc-input-text);
+  padding: 0.4375rem 0.75rem;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.native-input:hover,
+.native-input:focus {
+  background-color: var(--nc-input-hover-bg);
+}
+
+.native-input::placeholder {
+  color: var(--nc-input-placeholder);
+  font-weight: 300;
+  font-style: italic;
+}
+
+.native-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Override browser autofill styling */
+.native-input:-webkit-autofill,
+.native-input:-webkit-autofill:hover,
+.native-input:-webkit-autofill:focus,
+.native-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #f3f4f6 inset !important;
+  -webkit-text-fill-color: #374151 !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
